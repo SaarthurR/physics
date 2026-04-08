@@ -90,7 +90,17 @@ const sectionHintMap = {
   "chapter-6-superposition": ["superposition"],
   "chapter-6-phase-chart": ["phase chart", "phase difference", "delta phi"],
   "chapter-6-conditions": ["constructive interference", "destructive interference", "interference conditions"],
-  "chapter-7-reference": ["master formula", "formula reference", "formula sheet", "all formulas"],
+  "chapter-7-reference": [
+    "master formula",
+    "formula reference",
+    "formula sheet",
+    "all formulas",
+    "equation sheet",
+    "equation cheat sheet",
+    "formula cheat sheet",
+    "cheat sheet",
+    "reference sheet",
+  ],
 };
 
 const settingsKey = "waves-study-chat-settings";
@@ -1248,6 +1258,9 @@ function findBestSectionForQuery(query) {
   const normalizedQuery = extractSemanticQuery(query);
   const tokens = [...expandQueryTokens(normalizedQuery)].filter((token) => token.length > 1);
   const wantsFormula = /\b(formula|equation|reference|sheet)\b/.test(normalizedQuery);
+  const wantsReferenceSheet =
+    /\b(reference|sheet|cheat)\b/.test(normalizedQuery) ||
+    (/\bequation\b/.test(normalizedQuery) && /\b(sheet|cheat)\b/.test(normalizedQuery));
   const wantsTransverseLongitudinal =
     /\btransverse\b/.test(normalizedQuery) && /\blongitudinal\b/.test(normalizedQuery);
   const wantsWaveSpeed =
@@ -1285,6 +1298,12 @@ function findBestSectionForQuery(query) {
       if (wantsFormula) {
         if (/\b(formula|equation|reference)\b/.test(sectionTitle)) score += 9;
         if (record.text.includes("=")) score += 5;
+      }
+
+      if (wantsReferenceSheet) {
+        if (record.id === "chapter-7-reference") score += 34;
+        if (/\b(reference|sheet|cheat)\b/.test(sectionTitle)) score += 10;
+        if (record.id === "chapter-2-equation") score -= 8;
       }
 
       if (wantsTransverseLongitudinal) {
@@ -2222,6 +2241,9 @@ function shouldAnswerAlongsideNavigation(question) {
 function normalize(value) {
   return value
     .toLowerCase()
+    .replaceAll("cheet", "cheat")
+    .replaceAll("eqation", "equation")
+    .replaceAll("eqaution", "equation")
     .replaceAll("λ", " lambda ")
     .replaceAll("δ", " delta ")
     .replaceAll("Δ", " delta ")
