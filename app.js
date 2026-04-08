@@ -18,6 +18,8 @@ const autoCompactToggle = document.querySelector("#auto-compact-toggle");
 const studyLaterRoot = document.querySelector("#study-later-root");
 const studyConceptsButton = document.querySelector("#study-concepts-button");
 const studyConceptsCount = document.querySelector("#study-concepts-count");
+const studyConceptsShell = document.querySelector("#study-concepts-shell");
+const studyConceptsClose = document.querySelector("#study-concepts-close");
 
 const chatBubble = document.querySelector("#chat-bubble");
 const selectionAction = document.querySelector("#selection-action");
@@ -125,6 +127,7 @@ wireStudyLaterSection();
 wireResponsivePanels();
 wireScrollSpy();
 wireChatEvents();
+wireStudyConceptsShell();
 wireChatDragAndResize();
 wireSelectionAssist();
 
@@ -423,9 +426,7 @@ function wireChatEvents() {
   });
 
   studyConceptsButton.addEventListener("click", () => {
-    const target = document.getElementById("study-concepts-section");
-    if (!target) return;
-    revealSection(target, true);
+    toggleStudyConceptsShell();
   });
 
   providerSelect.addEventListener("change", () => {
@@ -568,6 +569,9 @@ function wireChatEvents() {
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && chatShell.classList.contains("is-open")) {
       closeChat();
+    }
+    if (event.key === "Escape" && studyConceptsShell.classList.contains("is-open")) {
+      closeStudyConceptsShell();
     }
   });
 }
@@ -784,6 +788,36 @@ function autoResizeChatInput() {
   chatInput.style.overflowY = chatInput.scrollHeight > chatTextareaMaxHeight ? "auto" : "hidden";
 }
 
+function wireStudyConceptsShell() {
+  studyConceptsClose.addEventListener("click", closeStudyConceptsShell);
+
+  document.addEventListener("pointerdown", (event) => {
+    if (!studyConceptsShell.classList.contains("is-open")) return;
+    if (studyConceptsShell.contains(event.target) || studyConceptsButton.contains(event.target)) return;
+    closeStudyConceptsShell();
+  });
+}
+
+function openStudyConceptsShell() {
+  studyConceptsShell.classList.add("is-open");
+  studyConceptsShell.setAttribute("aria-hidden", "false");
+  studyConceptsButton.setAttribute("aria-expanded", "true");
+}
+
+function closeStudyConceptsShell() {
+  studyConceptsShell.classList.remove("is-open");
+  studyConceptsShell.setAttribute("aria-hidden", "true");
+  studyConceptsButton.setAttribute("aria-expanded", "false");
+}
+
+function toggleStudyConceptsShell() {
+  if (studyConceptsShell.classList.contains("is-open")) {
+    closeStudyConceptsShell();
+    return;
+  }
+  openStudyConceptsShell();
+}
+
 function loadStudyLaterItems() {
   const saved = safeJsonParse(localStorage.getItem(studyLaterKey));
   studyLaterItems = Array.isArray(saved?.items) ? saved.items : [];
@@ -800,39 +834,12 @@ function updateStudyConceptsCount() {
 }
 
 function renderStudyLaterSection() {
-  const wasOpen = document.getElementById("study-concepts-section")?.classList.contains("is-open");
   studyLaterRoot.innerHTML = `
-    <section class="doc-chapter study-chapter" id="study-concepts-anchor">
-      <div class="doc-chapter-head">
-        <p class="chapter-eyebrow">Study Later</p>
-        <h3>Study concepts</h3>
-      </div>
-      <div class="doc-section-stack">
-        <article class="doc-section" id="study-concepts-section">
-          <button
-            class="doc-section-trigger"
-            type="button"
-            aria-expanded="false"
-            aria-controls="study-concepts-panel"
-          >
-            <span class="doc-section-title">Highlights to revisit with AI</span>
-            <span class="doc-section-chevron" aria-hidden="true">+</span>
-          </button>
-          <div class="doc-section-panel" id="study-concepts-panel">
-            <div class="doc-section-body">
-              ${renderStudyLaterBody()}
-            </div>
-          </div>
-        </article>
-      </div>
-    </section>
+    <div class="study-concepts-body">
+      ${renderStudyLaterBody()}
+    </div>
   `;
   updateStudyConceptsCount();
-  const section = document.getElementById("study-concepts-section");
-  bindSectionAccordion(section);
-  if (wasOpen || studyLaterSession) {
-    openSection(section);
-  }
 }
 
 function renderStudyLaterBody() {
@@ -944,7 +951,6 @@ function renderStudyLaterBody() {
         current.isLoading
           ? '<p class="study-note">Building a question from your highlight...</p>'
           : `<p class="quiz-prompt">${escapeHtml(current.card?.question || "What key idea should you remember from this highlight?")}</p>
-             <p class="study-card-context">Saved text: ${escapeHtml(current.item.text)}</p>
              <form class="quiz-short-form" data-study-form>
                <textarea
                  class="quiz-short-input"
@@ -960,7 +966,9 @@ function renderStudyLaterBody() {
              ${feedbackMarkup}`
       }
     </div>
-    ${listMarkup}
+    <div class="study-card-footer">
+      <p class="study-note">Saved concepts in this round: ${session.totalTarget}</p>
+    </div>
   `;
 }
 
@@ -1024,7 +1032,7 @@ function addStudyLaterItem(text, meta) {
 
   saveStudyLaterItems();
   renderStudyLaterSection();
-  syncOpenPanelHeight(document.getElementById("study-concepts-panel"));
+  openStudyConceptsShell();
   return true;
 }
 
@@ -1055,7 +1063,7 @@ async function initializeStudyLaterSession() {
     completed: false,
   };
   renderStudyLaterSection();
-  revealSection(document.getElementById("study-concepts-section"), true);
+  openStudyConceptsShell();
   await prepareCurrentStudyLaterCard();
 }
 
@@ -1079,7 +1087,6 @@ async function prepareCurrentStudyLaterCard() {
     lastAnswer: "",
   };
   renderStudyLaterSection();
-  syncOpenPanelHeight(document.getElementById("study-concepts-panel"));
 
   try {
     const card = await generateStudyLaterCard(item);
@@ -1100,7 +1107,6 @@ async function prepareCurrentStudyLaterCard() {
     if (studyLaterSession?.current && studyLaterSession.current.item.id === item.id) {
       studyLaterSession.current.isLoading = false;
       renderStudyLaterSection();
-      syncOpenPanelHeight(document.getElementById("study-concepts-panel"));
     }
   }
 }
@@ -1116,7 +1122,6 @@ async function submitStudyLaterAnswer(form) {
   current.isGrading = true;
   current.lastAnswer = answer;
   renderStudyLaterSection();
-  syncOpenPanelHeight(document.getElementById("study-concepts-panel"));
 
   try {
     current.currentResult = await gradeStudyLaterAnswer(current.item, current.card, answer);
@@ -1131,7 +1136,6 @@ async function submitStudyLaterAnswer(form) {
   } finally {
     current.isGrading = false;
     renderStudyLaterSection();
-    syncOpenPanelHeight(document.getElementById("study-concepts-panel"));
   }
 }
 
@@ -1216,10 +1220,6 @@ function wireSelectionAssist() {
     if (!selectedDocumentText) return;
 
     addStudyLaterItem(selectedDocumentText, selectedDocumentSource);
-    const target = document.getElementById("study-concepts-section");
-    if (target) {
-      revealSection(target, false);
-    }
     hideSelectionAction();
   });
 }

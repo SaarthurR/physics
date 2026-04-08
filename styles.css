@@ -404,18 +404,6 @@ textarea:focus-visible {
   line-height: 1.02;
 }
 
-.study-concepts-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
-  border: 1px solid rgba(95, 129, 195, 0.16);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.9);
-  color: var(--accent-deep);
-  font-weight: 700;
-}
-
 .study-concepts-count {
   min-width: 24px;
   height: 24px;
@@ -828,6 +816,39 @@ textarea:focus-visible {
   box-shadow: 0 18px 50px rgba(59, 90, 153, 0.24);
 }
 
+.study-concepts-fab {
+  position: fixed;
+  right: 120px;
+  bottom: 22px;
+  z-index: 60;
+  width: 62px;
+  height: 62px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(135deg, #f3b15c, #d97b31);
+  box-shadow: 0 18px 50px rgba(191, 118, 45, 0.24);
+}
+
+.study-concepts-fab svg {
+  width: 26px;
+  height: 26px;
+}
+
+.study-concepts-fab .study-concepts-count {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 26px;
+  height: 26px;
+  background: #fff7ef;
+  color: #9b4d14;
+  box-shadow: 0 8px 18px rgba(103, 54, 18, 0.14);
+}
+
 .selection-action {
   position: fixed;
   z-index: 80;
@@ -853,6 +874,32 @@ textarea:focus-visible {
   background: linear-gradient(135deg, #f59d4e, #d9732c);
 }
 
+.selection-action[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 8px);
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(28, 36, 43, 0.9);
+  color: #fff;
+  font-size: 0.74rem;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(4px);
+  pointer-events: none;
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease;
+}
+
+.selection-action[data-tooltip]:hover::after,
+.selection-action[data-tooltip]:focus-visible::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .selection-action.is-visible {
   opacity: 1;
   pointer-events: auto;
@@ -869,9 +916,62 @@ textarea:focus-visible {
 
 .study-empty,
 .study-note,
-.study-card-context,
 .study-concept-source {
   color: var(--muted);
+}
+
+.study-concepts-shell {
+  position: fixed;
+  right: 22px;
+  bottom: 96px;
+  z-index: 68;
+  width: min(430px, calc(100vw - 32px));
+  max-height: min(72vh, 760px);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid rgba(36, 50, 58, 0.14);
+  border-radius: 26px;
+  background:
+    linear-gradient(180deg, rgba(255, 252, 247, 0.98), rgba(246, 250, 252, 0.96)),
+    rgba(255, 255, 255, 0.95);
+  box-shadow: 0 28px 110px rgba(21, 31, 37, 0.22);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px) scale(0.98);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+.study-concepts-shell.is-open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+.study-concepts-header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.study-concepts-header h2 {
+  font-size: clamp(1.5rem, 3vw, 1.9rem);
+  line-height: 1.04;
+}
+
+.study-concepts-root {
+  min-height: 0;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.study-concepts-body {
+  display: grid;
+  gap: 14px;
 }
 
 .study-toolbar,
@@ -917,7 +1017,7 @@ textarea:focus-visible {
 }
 
 .study-concept-text,
-.study-card-context {
+.study-card-footer {
   margin: 0;
   line-height: 1.72;
 }
@@ -1288,6 +1388,10 @@ textarea:focus-visible {
 
   .chat-bubble-label {
     display: none;
+  }
+
+  .study-concepts-fab {
+    right: 96px;
   }
 
   .study-concept-item {
