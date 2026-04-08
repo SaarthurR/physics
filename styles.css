@@ -606,8 +606,8 @@ textarea:focus-visible {
 .chat-shell {
   position: fixed;
   z-index: 70;
-  display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr) auto auto;
+  display: flex;
+  flex-direction: column;
   gap: 14px;
   min-width: 320px;
   min-height: 380px;
@@ -620,11 +620,17 @@ textarea:focus-visible {
   box-shadow: 0 28px 110px rgba(21, 31, 37, 0.22);
   opacity: 0;
   pointer-events: none;
+  overflow: hidden;
 }
 
 .chat-shell.is-open {
   opacity: 1;
   pointer-events: auto;
+}
+
+.chat-shell.is-condensed {
+  gap: 12px;
+  padding: 16px;
 }
 
 .chat-header {
@@ -638,6 +644,10 @@ textarea:focus-visible {
 .chat-header h2 {
   font-size: clamp(1.7rem, 4vw, 2.2rem);
   line-height: 1;
+}
+
+.chat-shell.is-condensed .chat-header h2 {
+  font-size: clamp(1.35rem, 3vw, 1.7rem);
 }
 
 .chat-actions {
@@ -699,10 +709,12 @@ textarea:focus-visible {
 
 .chat-messages {
   display: grid;
+  flex: 1 1 auto;
   gap: 12px;
   overflow: auto;
   align-content: start;
   min-height: 0;
+  min-width: 0;
 }
 
 .message {
@@ -736,6 +748,9 @@ textarea:focus-visible {
 
 .chat-form {
   display: block;
+  flex: 0 0 auto;
+  margin-top: auto;
+  min-width: 0;
 }
 
 .chat-composer {
@@ -746,6 +761,7 @@ textarea:focus-visible {
   border: 1px solid var(--line);
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.76);
+  min-width: 0;
 }
 
 .chat-mode-switch {
@@ -773,6 +789,7 @@ textarea:focus-visible {
 }
 
 .chat-form textarea {
+  min-width: 0;
   min-height: 90px;
   height: 90px;
   max-height: 160px;
@@ -800,6 +817,7 @@ textarea:focus-visible {
 .chat-send svg {
   width: 18px;
   height: 18px;
+  flex: none;
 }
 
 .resize-handle {

@@ -32,6 +32,51 @@ const apiKeyInput = document.querySelector("#api-key-input");
 const modeButtons = [...document.querySelectorAll("[data-mode]")];
 const resizeHandles = [...document.querySelectorAll("[data-resize]")];
 const chatTextareaMaxHeight = 160;
+const chatViewportInset = 12;
+const chatMinWidth = 320;
+const chatMinHeight = 380;
+const chatCondensedWidth = 320;
+const chatCondensedHeight = 520;
+
+const sectionHintMap = {
+  "chapter-1-core": [
+    "transverse waves",
+    "longitudinal waves",
+    "transverse vs longitudinal",
+    "difference between transverse and longitudinal",
+    "perpendicular parallel",
+  ],
+  "chapter-2-equation": [
+    "wave equation",
+    "sinusoidal wave equation",
+    "the equation",
+    "equation for a wave",
+    "formula for a wave",
+    "full wave equation",
+  ],
+  "chapter-2-symbols": [
+    "wave speed",
+    "velocity of a wave",
+    "velocity formula",
+    "speed formula",
+    "wavelength",
+    "frequency",
+    "period",
+    "amplitude",
+    "phase",
+    "phase constant",
+  ],
+  "chapter-2-direction": ["minus sign", "plus sign", "wave direction", "right moving", "left moving"],
+  "chapter-2-source-medium": ["source vs medium", "depends on source", "depends on medium"],
+  "chapter-4-intensity": ["intensity", "inverse square law", "power per unit area", "loud things fade"],
+  "chapter-4-decibels": ["decibels", "log scale", "db", "sound level"],
+  "chapter-5-moving-source": ["doppler formula", "moving source", "approaching source", "receding source"],
+  "chapter-5-full-formula": ["moving observer", "full doppler formula", "observer moving"],
+  "chapter-6-superposition": ["superposition"],
+  "chapter-6-phase-chart": ["phase chart", "phase difference", "delta phi"],
+  "chapter-6-conditions": ["constructive interference", "destructive interference", "interference conditions"],
+  "chapter-7-reference": ["master formula", "formula reference", "formula sheet", "all formulas"],
+};
 
 const settingsKey = "waves-study-chat-settings";
 const chatLayoutKey = "waves-study-chat-layout";
@@ -40,6 +85,7 @@ const responseModeKey = "waves-study-response-mode";
 const chatState = { messages: [] };
 let pendingShowDocQuery = null;
 let selectedDocumentText = "";
+let lastStudyTopicQuery = "";
 
 renderFormulaStrip();
 renderOutline();
@@ -335,6 +381,31 @@ function wireChatEvents() {
     chatInput.value = "";
     autoResizeChatInput();
 
+    const documentQuery = resolveDocumentNavigationQuery(question);
+    if (documentQuery) {
+      const navigated = showInDocument(documentQuery);
+      const response = navigated
+        ? [
+            "1. Opened the best matching section in the study guide.",
+            "2. Expanded that section, closed the previous one, and highlighted the most relevant line.",
+            "3. If you want, I can also explain that exact part step by step.",
+          ].join("\n")
+        : [
+            "1. I tried to open the best matching place in the document.",
+            "2. I could not match that request confidently enough to jump there.",
+            "3. Try naming the concept or formula one more time and I will take you to it.",
+          ].join("\n");
+
+      addMessage("assistant", response, navigated ? "" : "message-error");
+      chatState.messages.push({ role: "assistant", content: response });
+      pendingShowDocQuery = null;
+      return;
+    }
+
+    if (!isGenericDocumentPrompt(question)) {
+      lastStudyTopicQuery = question;
+    }
+
     const loadingId = addMessage("assistant", "Thinking through the guide...");
 
     try {
@@ -342,10 +413,7 @@ function wireChatEvents() {
       updateMessage(loadingId, answer, "message-assistant");
       chatState.messages.push({ role: "assistant", content: answer });
 
-      if (isExplicitShowRequest(question)) {
-        showInDocument(question);
-        pendingShowDocQuery = null;
-      } else if (shouldOfferShowInDocument(question)) {
+      if (shouldOfferShowInDocument(question)) {
         pendingShowDocQuery = question;
         addMessage(
           "assistant",
@@ -529,27 +597,84 @@ function showInDocument(query) {
     const highlightTarget = highlightBestSnippet(match.section, query) || match.section;
     centerTarget(highlightTarget);
   });
+  condenseChatForDocumentFocus();
 
   return true;
 }
 
 function findBestSectionForQuery(query) {
   const records = getSectionRecords();
-  const normalizedQuery = normalize(query);
-  const tokens = [...tokenSet(normalizedQuery)].filter((token) => token.length > 2);
+  const normalizedQuery = extractSemanticQuery(query);
+  const tokens = [...expandQueryTokens(normalizedQuery)].filter((token) => token.length > 1);
+  const wantsFormula = /\b(formula|equation|reference|sheet)\b/.test(normalizedQuery);
+  const wantsTransverseLongitudinal =
+    /\btransverse\b/.test(normalizedQuery) && /\blongitudinal\b/.test(normalizedQuery);
+  const wantsWaveSpeed =
+    /\bvelocity\b/.test(normalizedQuery) ||
+    (/\b(wave speed|speed)\b/.test(normalizedQuery) && /\bwave\b/.test(normalizedQuery));
+  const wantsDoppler = /\bdoppler\b/.test(normalizedQuery);
+  const wantsDirection = /\b(minus sign|plus sign|direction|right moving|left moving)\b/.test(normalizedQuery);
+  const wantsInterference =
+    /\b(interference|superposition|constructive|destructive|phase chart|phase difference)\b/.test(
+      normalizedQuery,
+    );
+  const wantsLocation = /\b(where|show|open|take|document)\b/.test(normalize(query));
 
   const ranked = records
     .map((record) => {
-      const haystack = normalize(`${record.chapterTitle} ${record.sectionTitle} ${record.text}`);
+      const chapterTitle = normalize(record.chapterTitle);
+      const sectionTitle = normalize(record.sectionTitle);
+      const sectionHints = (sectionHintMap[record.id] || []).map((hint) => normalize(hint));
+      const haystack = normalize(`${record.chapterTitle} ${record.sectionTitle} ${record.text} ${sectionHints.join(" ")}`);
       let score = 0;
 
       tokens.forEach((token) => {
-        if (normalize(record.sectionTitle).includes(token)) score += 5;
-        if (normalize(record.chapterTitle).includes(token)) score += 3;
+        if (sectionTitle.includes(token)) score += 5;
+        if (chapterTitle.includes(token)) score += 3;
         if (haystack.includes(token)) score += 2;
       });
 
-      if (haystack.includes(normalizedQuery) && normalizedQuery.length > 8) score += 8;
+      if (normalizedQuery.length > 5 && haystack.includes(normalizedQuery)) score += 14;
+
+      sectionHints.forEach((hint) => {
+        if (hint && normalizedQuery.includes(hint)) score += 12;
+      });
+
+      if (wantsFormula) {
+        if (/\b(formula|equation|reference)\b/.test(sectionTitle)) score += 9;
+        if (record.text.includes("=")) score += 5;
+      }
+
+      if (wantsTransverseLongitudinal) {
+        if (record.id === "chapter-1-core") score += 26;
+        if (record.id === "final-recap-10") score += 10;
+        if (/\btransverse\b/.test(haystack)) score += 8;
+        if (/\blongitudinal\b/.test(haystack)) score += 8;
+        if (/\bperpendicular\b|\bparallel\b/.test(haystack)) score += 5;
+      }
+
+      if (wantsWaveSpeed) {
+        if (record.id === "chapter-2-symbols") score += 18;
+        if (record.id === "chapter-7-reference") score += 14;
+        if (/\bwave speed\b/.test(haystack)) score += 12;
+        if (/\bv\b|\bspeed\b/.test(haystack)) score += 7;
+      }
+
+      if (wantsDoppler) {
+        if (record.id === "chapter-5-moving-source") score += 14;
+        if (record.id === "chapter-5-full-formula") score += 12;
+      }
+
+      if (wantsDirection && record.id === "chapter-2-direction") score += 18;
+
+      if (wantsInterference) {
+        if (record.id === "chapter-6-phase-chart") score += 10;
+        if (record.id === "chapter-6-conditions") score += 10;
+        if (record.id === "chapter-6-superposition") score += 8;
+      }
+
+      if (wantsLocation && score > 0) score += 2;
+
       return { ...record, score };
     })
     .sort((a, b) => b.score - a.score);
@@ -562,6 +687,7 @@ function findBestSectionForQuery(query) {
 function getSectionRecords() {
   const chapterRecords = STUDY_GUIDE.chapters.flatMap((chapter) =>
     chapter.sections.map((section) => ({
+      id: section.id,
       section: document.getElementById(section.id),
       sectionTitle: section.title,
       chapterTitle: chapter.title,
@@ -570,6 +696,7 @@ function getSectionRecords() {
   );
 
   const recapRecords = STUDY_GUIDE.recap.sections.map((section) => ({
+    id: section.id,
     section: document.getElementById(section.id),
     sectionTitle: section.title,
     chapterTitle: STUDY_GUIDE.recap.title,
@@ -621,7 +748,9 @@ function highlightBestSnippet(section, query) {
 }
 
 function isExplicitShowRequest(question) {
-  return /(show me in the document|show me where|where does the document say|where does it say|take me to the document)/i.test(question);
+  return /(?:show me in the document|show me where|where does the document say|where does it say|take me to the document|open the section|open that section|open it|take me there|go to that part|show that part)/i.test(
+    question,
+  );
 }
 
 function shouldOfferShowInDocument(question) {
@@ -663,8 +792,14 @@ You are a warm physics tutor embedded inside a waves study website.
 Teach in clear English with a concept-first style.
 Prioritize the supplied study-guide context.
 Response mode: ${responseMode}.
-If response mode is concise, answer directly and briefly, with minimal extra explanation.
-If response mode is explained, go a little deeper, teach the concept clearly, and walk through reasoning when helpful.
+Always structure your answer in a student-friendly way with short labeled sections.
+If response mode is concise, use:
+1. Direct Answer
+2. Why It Matters (only if helpful)
+If response mode is explained, use:
+1. Core Idea
+2. Why It Works
+3. Memory Tip or Common Mistake
 When useful:
 - explain intuitively before formula
 - point out common mistakes
@@ -802,6 +937,16 @@ function openChat() {
   chatShell.classList.add("is-open");
   chatShell.setAttribute("aria-hidden", "false");
   chatBubble.setAttribute("aria-expanded", "true");
+  setChatLayout({
+    left:
+      chatShell.offsetLeft ||
+      window.innerWidth - (chatShell.offsetWidth || chatCondensedWidth) - chatViewportInset,
+    top:
+      chatShell.offsetTop ||
+      window.innerHeight - (chatShell.offsetHeight || chatCondensedHeight) - chatViewportInset,
+    width: chatShell.offsetWidth || chatCondensedWidth,
+    height: chatShell.offsetHeight || chatCondensedHeight,
+  });
 }
 
 function closeChat() {
@@ -813,14 +958,21 @@ function closeChat() {
 function applySavedChatLayout() {
   const saved = safeJsonParse(localStorage.getItem(chatLayoutKey));
   const defaultLayout = {
-    width: Math.min(480, window.innerWidth - 32),
-    height: Math.min(720, window.innerHeight - 32),
-    left: Math.max(12, window.innerWidth - Math.min(480, window.innerWidth - 32) - 18),
-    top: Math.max(12, window.innerHeight - Math.min(720, window.innerHeight - 32) - 24),
+    width: Math.min(480, window.innerWidth - chatViewportInset * 2),
+    height: Math.min(720, window.innerHeight - chatViewportInset * 2),
+    left: Math.max(
+      chatViewportInset,
+      window.innerWidth - Math.min(480, window.innerWidth - chatViewportInset * 2) - 18,
+    ),
+    top: Math.max(
+      chatViewportInset,
+      window.innerHeight - Math.min(720, window.innerHeight - chatViewportInset * 2) - 24,
+    ),
   };
 
   const layout = saved || defaultLayout;
   setChatLayout(layout);
+  chatShell.classList.toggle("is-condensed", layout.width <= chatCondensedWidth + 8);
 }
 
 function wireChatDragAndResize() {
@@ -865,8 +1017,16 @@ function wireChatDragAndResize() {
 
     if (dragState.type === "move") {
       setChatLayout({
-        left: clamp(dragState.startLeft + dx, 0, window.innerWidth - chatShell.offsetWidth),
-        top: clamp(dragState.startTop + dy, 0, window.innerHeight - chatShell.offsetHeight),
+        left: clamp(
+          dragState.startLeft + dx,
+          chatViewportInset,
+          window.innerWidth - chatShell.offsetWidth - chatViewportInset,
+        ),
+        top: clamp(
+          dragState.startTop + dy,
+          chatViewportInset,
+          window.innerHeight - chatShell.offsetHeight - chatViewportInset,
+        ),
         width: chatShell.offsetWidth,
         height: chatShell.offsetHeight,
       });
@@ -881,24 +1041,24 @@ function wireChatDragAndResize() {
     let nextWidth = startWidth;
     let nextHeight = startHeight;
 
-    if (dragState.dir.includes("e")) nextWidth = clamp(startWidth + dx, minWidth, window.innerWidth - startLeft);
-    if (dragState.dir.includes("s")) nextHeight = clamp(startHeight + dy, minHeight, window.innerHeight - startTop);
+    if (dragState.dir.includes("e")) nextWidth = startWidth + dx;
+    if (dragState.dir.includes("s")) nextHeight = startHeight + dy;
 
     if (dragState.dir.includes("w")) {
-      nextWidth = clamp(startWidth - dx, minWidth, window.innerWidth);
-      nextLeft = clamp(startLeft + dx, 0, startLeft + startWidth - minWidth);
+      nextWidth = startWidth - dx;
+      nextLeft = startLeft + dx;
     }
 
     if (dragState.dir.includes("n")) {
-      nextHeight = clamp(startHeight - dy, minHeight, window.innerHeight);
-      nextTop = clamp(startTop + dy, 0, startTop + startHeight - minHeight);
+      nextHeight = startHeight - dy;
+      nextTop = startTop + dy;
     }
 
     setChatLayout({
       left: nextLeft,
       top: nextTop,
-      width: nextWidth,
-      height: nextHeight,
+      width: Math.max(minWidth, nextWidth),
+      height: Math.max(minHeight, nextHeight),
     });
   });
 
@@ -906,18 +1066,11 @@ function wireChatDragAndResize() {
   window.addEventListener("pointercancel", () => stopDrag());
 
   window.addEventListener("resize", () => {
-    const current = {
+    setChatLayout({
       left: chatShell.offsetLeft,
       top: chatShell.offsetTop,
-      width: Math.min(chatShell.offsetWidth, window.innerWidth - 12),
-      height: Math.min(chatShell.offsetHeight, window.innerHeight - 12),
-    };
-
-    setChatLayout({
-      left: clamp(current.left, 0, Math.max(0, window.innerWidth - current.width)),
-      top: clamp(current.top, 0, Math.max(0, window.innerHeight - current.height)),
-      width: current.width,
-      height: current.height,
+      width: chatShell.offsetWidth,
+      height: chatShell.offsetHeight,
     });
   });
 
@@ -936,10 +1089,24 @@ function wireChatDragAndResize() {
 }
 
 function setChatLayout({ left, top, width, height }) {
-  chatShell.style.left = `${Math.round(left)}px`;
-  chatShell.style.top = `${Math.round(top)}px`;
-  chatShell.style.width = `${Math.round(width)}px`;
-  chatShell.style.height = `${Math.round(height)}px`;
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+  const maxWidth = Math.max(260, viewportWidth - chatViewportInset * 2);
+  const maxHeight = Math.max(260, viewportHeight - chatViewportInset * 2);
+  const resolvedWidth = clamp(width, Math.min(chatMinWidth, maxWidth), maxWidth);
+  const resolvedHeight = clamp(height, Math.min(chatMinHeight, maxHeight), maxHeight);
+  const minLeft = chatViewportInset;
+  const minTop = chatViewportInset;
+  const maxLeft = Math.max(minLeft, viewportWidth - resolvedWidth - chatViewportInset);
+  const maxTop = Math.max(minTop, viewportHeight - resolvedHeight - chatViewportInset);
+  const resolvedLeft = clamp(left, minLeft, maxLeft);
+  const resolvedTop = clamp(top, minTop, maxTop);
+
+  chatShell.style.left = `${Math.round(resolvedLeft)}px`;
+  chatShell.style.top = `${Math.round(resolvedTop)}px`;
+  chatShell.style.width = `${Math.round(resolvedWidth)}px`;
+  chatShell.style.height = `${Math.round(resolvedHeight)}px`;
+  chatShell.classList.toggle("is-condensed", resolvedWidth <= chatCondensedWidth + 8);
 }
 
 function persistChatLayout() {
@@ -954,8 +1121,98 @@ function persistChatLayout() {
   );
 }
 
+function condenseChatForDocumentFocus() {
+  const width = Math.min(chatCondensedWidth, window.innerWidth - chatViewportInset * 2);
+  const height = Math.min(
+    Math.max(chatShell.offsetHeight || chatCondensedHeight, 440),
+    window.innerHeight - chatViewportInset * 2,
+  );
+
+  chatShell.classList.add("is-condensed");
+  setChatLayout({
+    left: window.innerWidth - width - chatViewportInset,
+    top: Math.min(chatShell.offsetTop || chatViewportInset, window.innerHeight - height - chatViewportInset),
+    width,
+    height,
+  });
+  persistChatLayout();
+}
+
+function resolveDocumentNavigationQuery(question) {
+  if (!isExplicitShowRequest(question)) return null;
+
+  const semanticQuery = extractSemanticQuery(question);
+  const semanticTokens = [...tokenSet(semanticQuery)].filter((token) => token.length > 2);
+  if (semanticTokens.length >= 2) {
+    lastStudyTopicQuery = semanticQuery;
+    return semanticQuery;
+  }
+
+  return lastStudyTopicQuery || pendingShowDocQuery || null;
+}
+
+function isGenericDocumentPrompt(question) {
+  return Boolean(resolveDocumentNavigationQuery(question)) || isAffirmative(question);
+}
+
 function normalize(value) {
-  return value.toLowerCase().replace(/[^a-z0-9\s]/g, " ");
+  return value.toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function extractSemanticQuery(value) {
+  const normalized = normalize(value);
+  return normalized
+    .replace(
+      /\b(can|could|would|please|show|open|take|me|to|the|in|document|where|does|it|say|this|that|section|part|for|of|a|an)\b/g,
+      " ",
+    )
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function expandQueryTokens(value) {
+  const tokens = tokenSet(value);
+  const expanded = new Set(tokens);
+
+  if (tokens.has("velocity")) {
+    expanded.add("speed");
+    expanded.add("wave");
+    expanded.add("wave speed");
+    expanded.add("v");
+  }
+
+  if (tokens.has("formula")) {
+    expanded.add("equation");
+    expanded.add("reference");
+  }
+
+  if (tokens.has("equation")) {
+    expanded.add("formula");
+    expanded.add("wave equation");
+  }
+
+  if (tokens.has("wavelength")) {
+    expanded.add("lambda");
+  }
+
+  if (tokens.has("frequency")) {
+    expanded.add("period");
+    expanded.add("hz");
+  }
+
+  if (tokens.has("doppler")) {
+    expanded.add("observed");
+    expanded.add("source");
+    expanded.add("observer");
+  }
+
+  if (tokens.has("interference")) {
+    expanded.add("constructive");
+    expanded.add("destructive");
+    expanded.add("phase");
+  }
+
+  return expanded;
 }
 
 function tokenSet(value) {
