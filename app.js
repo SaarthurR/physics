@@ -677,13 +677,12 @@ function revealSection(targetSection, shouldCenter, forceExclusive = false) {
 }
 
 function openExclusiveSection(targetSection, shouldCenter) {
-  document.querySelectorAll(".doc-section").forEach((section) => {
-    if (section === targetSection) {
-      openSection(section);
-    } else {
+  document.querySelectorAll(".doc-section.is-open").forEach((section) => {
+    if (section !== targetSection) {
       closeSection(section);
     }
   });
+  openSection(targetSection);
 
   if (shouldCenter) {
     requestAnimationFrame(() => {
@@ -696,6 +695,10 @@ function openSection(section) {
   const trigger = section.querySelector(".doc-section-trigger");
   const panel = section.querySelector(".doc-section-panel");
   if (!trigger || !panel) return;
+  if (section.classList.contains("is-open")) {
+    syncOpenPanelHeight(panel);
+    return;
+  }
 
   trigger.setAttribute("aria-expanded", "true");
   section.classList.add("is-open");
@@ -706,6 +709,7 @@ function closeSection(section) {
   const trigger = section.querySelector(".doc-section-trigger");
   const panel = section.querySelector(".doc-section-panel");
   if (!trigger || !panel) return;
+  if (!section.classList.contains("is-open")) return;
 
   trigger.setAttribute("aria-expanded", "false");
   section.classList.remove("is-open");
