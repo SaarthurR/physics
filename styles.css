@@ -502,6 +502,154 @@ textarea:focus-visible {
   margin-top: 18px;
 }
 
+.quiz-shell {
+  display: grid;
+  gap: 16px;
+}
+
+.quiz-toolbar,
+.quiz-progress {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.quiz-kicker {
+  margin: 0 0 4px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+}
+
+.quiz-title,
+.quiz-prompt {
+  margin: 0;
+}
+
+.quiz-title {
+  font-family: "Fraunces", serif;
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+.quiz-progress {
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.quiz-card,
+.quiz-summary {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid rgba(95, 129, 195, 0.14);
+  border-radius: 20px;
+  background: rgba(95, 129, 195, 0.07);
+}
+
+.quiz-prompt {
+  color: var(--ink);
+  line-height: 1.7;
+  font-weight: 600;
+}
+
+.quiz-choices {
+  display: grid;
+  gap: 10px;
+}
+
+.quiz-choice,
+.quiz-submit,
+.quiz-restart,
+.quiz-next {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--ink);
+  transition:
+    transform 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.quiz-choice,
+.quiz-submit,
+.quiz-next {
+  padding: 12px 14px;
+}
+
+.quiz-restart {
+  padding: 10px 14px;
+}
+
+.quiz-choice:hover,
+.quiz-submit:hover,
+.quiz-restart:hover,
+.quiz-next:hover {
+  transform: translateY(-1px);
+}
+
+.quiz-choice.is-correct {
+  border-color: rgba(53, 117, 69, 0.32);
+  background: rgba(53, 117, 69, 0.14);
+  color: #1f5b2c;
+}
+
+.quiz-choice.is-incorrect {
+  border-color: rgba(154, 59, 59, 0.32);
+  background: rgba(154, 59, 59, 0.14);
+  color: #7b2323;
+}
+
+.quiz-choice.is-muted {
+  opacity: 0.76;
+}
+
+.quiz-short-form {
+  display: grid;
+  gap: 12px;
+}
+
+.quiz-short-input {
+  width: 100%;
+  min-height: 90px;
+  padding: 12px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--ink);
+  resize: vertical;
+}
+
+.quiz-feedback {
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  border-radius: 18px;
+}
+
+.quiz-feedback strong,
+.quiz-feedback p {
+  margin: 0;
+}
+
+.quiz-feedback.is-correct {
+  background: rgba(53, 117, 69, 0.12);
+  color: #1f5b2c;
+}
+
+.quiz-feedback.is-incorrect {
+  background: rgba(154, 59, 59, 0.12);
+  color: #7b2323;
+}
+
 .formula-box,
 .formula-inline,
 .callout {

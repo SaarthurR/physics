@@ -1,4 +1,4 @@
-import { FORMULA_STRIP, STUDY_GUIDE } from "./content.js";
+import { FORMULA_STRIP, QUIZ_BANK, STUDY_GUIDE } from "./content.js";
 
 const HARDCODED_GROQ_KEY =
   "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";
@@ -83,9 +83,12 @@ const chatLayoutKey = "waves-study-chat-layout";
 const sidebarStateKey = "waves-study-sidebar-collapsed";
 const responseModeKey = "waves-study-response-mode";
 const chatState = { messages: [] };
+const quizStates = new Map();
+const quizSessionLength = 5;
 let pendingShowDocQuery = null;
 let selectedDocumentText = "";
 let lastStudyTopicQuery = "";
+let chatSettingsState = null;
 
 renderFormulaStrip();
 renderOutline();
@@ -95,6 +98,7 @@ applySavedChatLayout();
 loadSidebarState();
 loadResponseMode();
 wireSectionAccordions();
+wireQuizSections();
 wireScrollSpy();
 wireChatEvents();
 wireChatDragAndResize();
@@ -135,6 +139,15 @@ function renderOutline() {
                 `,
               )
               .join("")}
+            <li>
+              <a
+                class="outline-link outline-link-section outline-link-quiz"
+                href="#${chapter.id}-quiz"
+                data-outline-link="${chapter.id}-quiz"
+              >
+                Chapter ${escapeHtml(String(Number(chapter.number)))} Quiz
+              </a>
+            </li>
           </ul>
         </li>
       `,
@@ -217,6 +230,7 @@ function renderDocument() {
                 `,
               )
               .join("")}
+            ${renderQuizSection(chapter)}
           </div>
         </section>
       `,
@@ -259,6 +273,27 @@ function renderDocument() {
   documentRoot.innerHTML = chapterMarkup + recapMarkup;
 }
 
+function renderQuizSection(chapter) {
+  return `
+    <article class="doc-section doc-quiz-section" id="${chapter.id}-quiz">
+      <button
+        class="doc-section-trigger"
+        type="button"
+        aria-expanded="false"
+        aria-controls="${chapter.id}-quiz-panel"
+      >
+        <span class="doc-section-title">Chapter ${escapeHtml(String(Number(chapter.number)))} Quiz</span>
+        <span class="doc-section-chevron" aria-hidden="true">+</span>
+      </button>
+      <div class="doc-section-panel" id="${chapter.id}-quiz-panel">
+        <div class="doc-section-body">
+          <div class="quiz-shell" data-quiz-root="${chapter.id}"></div>
+        </div>
+      </div>
+    </article>
+  `;
+}
+
 function wireSectionAccordions() {
   document.querySelectorAll(".doc-section").forEach((section) => {
     const trigger = section.querySelector(".doc-section-trigger");
@@ -278,7 +313,11 @@ function wireSectionAccordions() {
 
 function wireScrollSpy() {
   const targets = [
-    ...STUDY_GUIDE.chapters.flatMap((chapter) => [chapter.id, ...chapter.sections.map((section) => section.id)]),
+    ...STUDY_GUIDE.chapters.flatMap((chapter) => [
+      chapter.id,
+      ...chapter.sections.map((section) => section.id),
+      `${chapter.id}-quiz`,
+    ]),
     STUDY_GUIDE.recap.id,
     ...STUDY_GUIDE.recap.sections.map((section) => section.id),
   ]
@@ -326,9 +365,9 @@ function wireChatEvents() {
   });
 
   providerSelect.addEventListener("change", () => {
-    if (!modelInput.value || Object.values(defaultModels).includes(modelInput.value)) {
-      modelInput.value = defaultModels[providerSelect.value];
-    }
+    persistProviderInputs(chatSettingsState?.provider || "groq");
+    chatSettingsState.provider = providerSelect.value;
+    applyProviderSettings(providerSelect.value);
     saveSettings();
   });
 
@@ -356,7 +395,7 @@ function wireChatEvents() {
     const question = chatInput.value.trim();
     if (!question) return;
 
-    const apiKey = apiKeyInput.value.trim();
+    const { apiKey } = getActiveProviderConfig();
     if (!apiKey) {
       addMessage("assistant", "Open the gear menu and add an API key first.", "message-error");
       return;
@@ -440,12 +479,91 @@ function wireChatEvents() {
 
 function loadSettings() {
   const saved = safeJsonParse(localStorage.getItem(settingsKey));
-  const provider = saved?.provider || "groq";
-
-  providerSelect.value = provider;
-  modelInput.value = saved?.model || defaultModels[provider];
-  apiKeyInput.value = saved?.apiKey || HARDCODED_GROQ_KEY;
+  chatSettingsState = normalizeChatSettings(saved);
+  providerSelect.value = chatSettingsState.provider;
+  applyProviderSettings(chatSettingsState.provider);
   autoResizeChatInput();
+}
+
+function normalizeChatSettings(saved) {
+  const providers = {
+    groq: {
+      model: defaultModels.groq,
+      apiKey: HARDCODED_GROQ_KEY,
+    },
+    openrouter: {
+      model: defaultModels.openrouter,
+      apiKey: "",
+    },
+  };
+
+  if (saved?.providers) {
+    providers.groq.model = saved.providers.groq?.model || defaultModels.groq;
+    providers.groq.apiKey = saved.providers.groq?.apiKey || HARDCODED_GROQ_KEY;
+    providers.openrouter.model = saved.providers.openrouter?.model || defaultModels.openrouter;
+    providers.openrouter.apiKey = saved.providers.openrouter?.apiKey || "";
+  } else if (saved) {
+    const legacyProvider = saved.provider === "openrouter" ? "openrouter" : "groq";
+    const legacyModel = saved.model?.trim();
+    const legacyApiKey = saved.apiKey?.trim();
+
+    if (legacyProvider === "groq") {
+      providers.groq.model =
+        legacyModel && !/gemma/i.test(legacyModel) ? legacyModel : defaultModels.groq;
+      providers.groq.apiKey = legacyApiKey || HARDCODED_GROQ_KEY;
+    } else {
+      providers.openrouter.model = legacyModel || defaultModels.openrouter;
+      providers.openrouter.apiKey = legacyApiKey || "";
+    }
+  }
+
+  if (!providers.groq.model || /gemma/i.test(providers.groq.model)) {
+    providers.groq.model = defaultModels.groq;
+  }
+
+  if (!providers.groq.apiKey) {
+    providers.groq.apiKey = HARDCODED_GROQ_KEY;
+  }
+
+  if (!providers.openrouter.model) {
+    providers.openrouter.model = defaultModels.openrouter;
+  }
+
+  return {
+    provider: saved?.provider === "openrouter" ? "openrouter" : "groq",
+    providers,
+  };
+}
+
+function applyProviderSettings(provider) {
+  const settings = chatSettingsState?.providers?.[provider];
+  modelInput.value = settings?.model || defaultModels[provider];
+  apiKeyInput.value =
+    provider === "groq" ? settings?.apiKey || HARDCODED_GROQ_KEY : settings?.apiKey || "";
+  modelInput.placeholder = defaultModels[provider];
+  apiKeyInput.placeholder =
+    provider === "groq" ? "Groq key stored here" : "Paste your OpenRouter key";
+}
+
+function persistProviderInputs(provider) {
+  if (!chatSettingsState?.providers?.[provider]) return;
+
+  chatSettingsState.providers[provider].model = modelInput.value.trim() || defaultModels[provider];
+  chatSettingsState.providers[provider].apiKey =
+    provider === "groq" ? apiKeyInput.value.trim() || HARDCODED_GROQ_KEY : apiKeyInput.value.trim();
+}
+
+function getActiveProviderConfig() {
+  const provider = providerSelect.value;
+  persistProviderInputs(provider);
+  return {
+    provider,
+    model: chatSettingsState.providers[provider].model || defaultModels[provider],
+    apiKey:
+      provider === "groq"
+        ? chatSettingsState.providers[provider].apiKey || HARDCODED_GROQ_KEY
+        : chatSettingsState.providers[provider].apiKey || "",
+  };
 }
 
 function loadSidebarState() {
@@ -768,22 +886,21 @@ function stripHtml(html) {
 }
 
 function saveSettings() {
+  if (!chatSettingsState) {
+    chatSettingsState = normalizeChatSettings(null);
+  }
+
+  persistProviderInputs(chatSettingsState.provider);
   localStorage.setItem(
     settingsKey,
-    JSON.stringify({
-      provider: providerSelect.value,
-      model: modelInput.value.trim() || defaultModels[providerSelect.value],
-      apiKey: apiKeyInput.value.trim() || HARDCODED_GROQ_KEY,
-    }),
+    JSON.stringify(chatSettingsState),
   );
 }
 
 async function requestTutorAnswer(question) {
   saveSettings();
 
-  const provider = providerSelect.value;
-  const model = modelInput.value.trim() || defaultModels[provider];
-  const apiKey = apiKeyInput.value.trim() || HARDCODED_GROQ_KEY;
+  const { provider, model, apiKey } = getActiveProviderConfig();
   const context = buildContext(question);
   const responseMode = getResponseMode();
 
@@ -815,52 +932,17 @@ Relevant study-guide context:
 ${context}
 `.trim();
 
-  const payload = {
+  const content = await callChatModel({
+    provider,
     model,
+    apiKey,
+    temperature: 0.4,
     messages: [
       { role: "system", content: systemPrompt },
       ...chatState.messages.slice(-6),
       { role: "user", content: userPrompt },
     ],
-    temperature: 0.4,
-  };
-
-  const requestConfig =
-    provider === "groq"
-      ? {
-          url: "https://api.groq.com/openai/v1/chat/completions",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${apiKey}`,
-          },
-        }
-      : {
-          url: "https://openrouter.ai/api/v1/chat/completions",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${apiKey}`,
-            "HTTP-Referer": window.location.href,
-            "X-Title": "Waves Study Guide",
-          },
-        };
-
-  const response = await fetch(requestConfig.url, {
-    method: "POST",
-    headers: requestConfig.headers,
-    body: JSON.stringify(payload),
   });
-
-  const data = await response.json().catch(() => ({}));
-
-  if (!response.ok) {
-    const message =
-      data?.error?.message ||
-      data?.message ||
-      `Request failed with status ${response.status}.`;
-    throw new Error(message);
-  }
-
-  const content = data?.choices?.[0]?.message?.content;
   if (!content) {
     throw new Error("The model returned an empty response.");
   }
@@ -903,6 +985,343 @@ function buildContext(question) {
     .slice(0, 3)
     .map(({ source }) => `[${source.title}]\n${source.text}`)
     .join("\n\n");
+}
+
+async function callChatModel({ provider, model, apiKey, messages, temperature = 0.4 }) {
+  const payload = {
+    model,
+    messages,
+    temperature,
+  };
+
+  const requestConfig =
+    provider === "groq"
+      ? {
+          url: "https://api.groq.com/openai/v1/chat/completions",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${apiKey}`,
+          },
+        }
+      : {
+          url: "https://openrouter.ai/api/v1/chat/completions",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${apiKey}`,
+            "HTTP-Referer": window.location.href,
+            "X-Title": "Waves Study Guide",
+          },
+        };
+
+  const response = await fetch(requestConfig.url, {
+    method: "POST",
+    headers: requestConfig.headers,
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const message =
+      data?.error?.message ||
+      data?.message ||
+      `Request failed with status ${response.status}.`;
+    throw new Error(message);
+  }
+
+  return data?.choices?.[0]?.message?.content || "";
+}
+
+function wireQuizSections() {
+  document.querySelectorAll("[data-quiz-root]").forEach((root) => {
+    const chapterId = root.getAttribute("data-quiz-root");
+    if (!chapterId) return;
+
+    initializeQuiz(chapterId);
+
+    root.addEventListener("click", async (event) => {
+      const restartButton = event.target.closest("[data-quiz-restart]");
+      if (restartButton) {
+        initializeQuiz(chapterId);
+        return;
+      }
+
+      const nextButton = event.target.closest("[data-quiz-next]");
+      if (nextButton) {
+        advanceQuizQuestion(chapterId);
+        return;
+      }
+
+      const choiceButton = event.target.closest("[data-quiz-choice]");
+      if (!choiceButton) return;
+
+      const state = quizStates.get(chapterId);
+      const question = state?.queue?.[0];
+      if (!state || !question || question.type !== "mc" || state.isGrading || state.currentResult) return;
+
+      const selectedIndex = Number(choiceButton.getAttribute("data-quiz-choice"));
+      state.attempts += 1;
+      state.currentResult = {
+        correct: selectedIndex === question.answer,
+        selectedIndex,
+        feedback: question.explanation,
+      };
+      renderQuiz(chapterId);
+    });
+
+    root.addEventListener("submit", async (event) => {
+      const form = event.target.closest("[data-quiz-form]");
+      if (!form) return;
+      event.preventDefault();
+
+      const state = quizStates.get(chapterId);
+      const question = state?.queue?.[0];
+      if (!state || !question || question.type !== "short" || state.isGrading || state.currentResult) return;
+
+      const formData = new FormData(form);
+      const answer = String(formData.get("quiz-answer") || "").trim();
+      if (!answer) return;
+
+      state.isGrading = true;
+      state.lastShortAnswer = answer;
+      renderQuiz(chapterId);
+
+      try {
+        state.attempts += 1;
+        state.currentResult = await gradeShortQuizAnswer(chapterId, question, answer);
+      } catch (error) {
+        state.currentResult = {
+          correct: false,
+          feedback:
+            error instanceof Error
+              ? error.message
+              : "I could not grade that answer just now. Try again in a moment.",
+          isError: true,
+        };
+      } finally {
+        state.isGrading = false;
+        renderQuiz(chapterId);
+      }
+    });
+  });
+}
+
+function initializeQuiz(chapterId) {
+  const bank = QUIZ_BANK[chapterId] || [];
+  const selected = selectQuizQuestions(bank);
+  quizStates.set(chapterId, {
+    chapterId,
+    totalTarget: selected.length,
+    queue: selected,
+    attempts: 0,
+    mastered: 0,
+    currentResult: null,
+    lastShortAnswer: "",
+    isGrading: false,
+    completed: selected.length === 0,
+  });
+  renderQuiz(chapterId);
+}
+
+function selectQuizQuestions(bank) {
+  const mcQuestions = shuffleArray(bank.filter((question) => question.type === "mc")).slice(0, 3);
+  const shortQuestions = shuffleArray(bank.filter((question) => question.type === "short")).slice(0, 2);
+  const selected = [...mcQuestions, ...shortQuestions];
+  const leftovers = shuffleArray(bank.filter((question) => !selected.some((picked) => picked.id === question.id)));
+
+  while (selected.length < Math.min(quizSessionLength, bank.length) && leftovers.length) {
+    selected.push(leftovers.pop());
+  }
+
+  return shuffleArray(selected).map((question) => ({ ...question }));
+}
+
+function renderQuiz(chapterId) {
+  const root = document.querySelector(`[data-quiz-root="${chapterId}"]`);
+  const state = quizStates.get(chapterId);
+  if (!root || !state) return;
+
+  const current = state.queue[0];
+  const chapterLabel = chapterId.replace("chapter-", "Chapter ");
+
+  if (state.completed || !current) {
+    root.innerHTML = `
+      <div class="quiz-toolbar">
+        <div>
+          <p class="quiz-kicker">${escapeHtml(chapterLabel)} quiz</p>
+          <h4 class="quiz-title">Finished this round</h4>
+        </div>
+        <button class="quiz-restart" type="button" data-quiz-restart>Restart</button>
+      </div>
+      <div class="quiz-summary">
+        <p><strong>${state.mastered}/${state.totalTarget}</strong> questions mastered.</p>
+        <p>Restart to get a fresh mix from this chapter.</p>
+      </div>
+    `;
+    return;
+  }
+
+  root.innerHTML = `
+    <div class="quiz-toolbar">
+      <div>
+        <p class="quiz-kicker">${escapeHtml(chapterLabel)} quiz</p>
+        <h4 class="quiz-title">Quick check</h4>
+      </div>
+      <button class="quiz-restart" type="button" data-quiz-restart>Restart</button>
+    </div>
+    <div class="quiz-progress">
+      <span>Mastered ${state.mastered}/${state.totalTarget}</span>
+      <span>${escapeHtml(current.type === "mc" ? "Multiple choice" : "Short response")}</span>
+    </div>
+    <div class="quiz-card">
+      <p class="quiz-prompt">${escapeHtml(current.prompt)}</p>
+      ${renderQuizQuestion(chapterId, current, state)}
+    </div>
+  `;
+}
+
+function renderQuizQuestion(chapterId, question, state) {
+  const feedbackMarkup = state.currentResult
+    ? `
+      <div class="quiz-feedback ${state.currentResult.correct ? "is-correct" : "is-incorrect"}">
+        <strong>${state.currentResult.correct ? "Correct" : "Not quite"}</strong>
+        <p>${escapeHtml(state.currentResult.feedback || "")}</p>
+      </div>
+      <button class="quiz-next" type="button" data-quiz-next>
+        ${state.currentResult.correct ? "Next question" : "Try it again later"}
+      </button>
+    `
+    : "";
+
+  if (question.type === "mc") {
+    return `
+      <div class="quiz-choices">
+        ${question.choices
+          .map((choice, index) => {
+            const isSelected = state.currentResult?.selectedIndex === index;
+            const isCorrect = state.currentResult && index === question.answer;
+            const statusClass = state.currentResult
+              ? isCorrect
+                ? "is-correct"
+                : isSelected
+                  ? "is-incorrect"
+                  : "is-muted"
+              : "";
+
+            return `
+              <button
+                class="quiz-choice ${statusClass}"
+                type="button"
+                data-quiz-choice="${index}"
+                ${state.currentResult ? "disabled" : ""}
+              >
+                ${escapeHtml(choice)}
+              </button>
+            `;
+          })
+          .join("")}
+      </div>
+      ${feedbackMarkup}
+    `;
+  }
+
+  return `
+    <form class="quiz-short-form" data-quiz-form>
+      <textarea
+        class="quiz-short-input"
+        name="quiz-answer"
+        rows="3"
+        placeholder="Type a very short answer"
+        ${state.currentResult ? "disabled" : ""}
+      >${escapeHtml(state.lastShortAnswer || "")}</textarea>
+      <button class="quiz-submit" type="submit" ${state.isGrading || state.currentResult ? "disabled" : ""}>
+        ${state.isGrading ? "Checking..." : "Check answer"}
+      </button>
+    </form>
+    ${feedbackMarkup}
+  `;
+}
+
+function advanceQuizQuestion(chapterId) {
+  const state = quizStates.get(chapterId);
+  if (!state?.queue?.length || !state.currentResult) return;
+
+  const current = state.queue.shift();
+  if (state.currentResult.correct) {
+    state.mastered += 1;
+  } else if (current) {
+    state.queue.push({ ...current });
+  }
+
+  state.currentResult = null;
+  state.lastShortAnswer = "";
+  state.completed = state.queue.length === 0;
+  renderQuiz(chapterId);
+}
+
+async function gradeShortQuizAnswer(chapterId, question, answer) {
+  saveSettings();
+  const { provider, model, apiKey } = getActiveProviderConfig();
+  if (!apiKey) {
+    throw new Error("Open the gear menu and add an API key for the selected provider first.");
+  }
+
+  const content = await callChatModel({
+    provider,
+    model,
+    apiKey,
+    temperature: 0,
+    messages: [
+      {
+        role: "system",
+        content:
+          "You grade short physics quiz answers. Return strict JSON only in the form {\"correct\":true|false,\"feedback\":\"...\"}. Be lenient about wording, but only mark correct if the physics idea matches.",
+      },
+      {
+        role: "user",
+        content: `
+Chapter: ${chapterId}
+Question: ${question.prompt}
+Expected answer: ${question.expected}
+Grading rubric: ${question.rubric}
+Student answer: ${answer}
+        `.trim(),
+      },
+    ],
+  });
+
+  const parsed = parseJsonResponse(content);
+  return {
+    correct: Boolean(parsed?.correct),
+    feedback:
+      parsed?.feedback ||
+      (parsed?.correct
+        ? "That matches the key idea from this chapter."
+        : `Look for this idea: ${question.expected}`),
+  };
+}
+
+function parseJsonResponse(content) {
+  try {
+    return JSON.parse(content);
+  } catch {
+    const match = content.match(/\{[\s\S]*\}/);
+    if (!match) return null;
+    try {
+      return JSON.parse(match[0]);
+    } catch {
+      return null;
+    }
+  }
+}
+
+function shuffleArray(items) {
+  const array = [...items];
+  for (let index = array.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [array[index], array[swapIndex]] = [array[swapIndex], array[index]];
+  }
+  return array;
 }
 
 function addMessage(role, text, extraClass = "") {
