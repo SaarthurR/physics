@@ -107,6 +107,7 @@ let lastStudyTopicQuery = "";
 let chatSettingsState = null;
 let studyLaterItems = [];
 let studyLaterSession = null;
+let lastOpenedSectionId = "";
 
 renderFormulaStrip();
 renderOutline();
@@ -416,6 +417,9 @@ function wireChatEvents() {
 
   autoCompactToggle.addEventListener("change", () => {
     localStorage.setItem(autoCompactKey, JSON.stringify({ enabled: autoCompactToggle.checked }));
+    if (autoCompactToggle.checked) {
+      compactToMostRecentSection();
+    }
   });
 
   studyConceptsButton.addEventListener("click", () => {
@@ -696,12 +700,14 @@ function openSection(section) {
   const panel = section.querySelector(".doc-section-panel");
   if (!trigger || !panel) return;
   if (section.classList.contains("is-open")) {
+    lastOpenedSectionId = section.id;
     syncOpenPanelHeight(panel);
     return;
   }
 
   trigger.setAttribute("aria-expanded", "true");
   section.classList.add("is-open");
+  lastOpenedSectionId = section.id;
   syncOpenPanelHeight(panel);
 }
 
@@ -716,6 +722,19 @@ function closeSection(section) {
   panel.style.maxHeight = `${panel.scrollHeight}px`;
   requestAnimationFrame(() => {
     panel.style.maxHeight = "0px";
+  });
+}
+
+function compactToMostRecentSection() {
+  const openSections = [...document.querySelectorAll(".doc-section.is-open")];
+  if (openSections.length <= 1) return;
+
+  const keepOpen =
+    (lastOpenedSectionId && document.getElementById(lastOpenedSectionId)) || openSections[openSections.length - 1];
+  openSections.forEach((section) => {
+    if (section !== keepOpen) {
+      closeSection(section);
+    }
   });
 }
 
@@ -1337,10 +1356,11 @@ function highlightBestSnippet(section, query) {
 
   if (!best) return null;
 
+  void best.offsetWidth;
   best.classList.add("doc-snippet-highlight");
   window.setTimeout(() => {
     best.classList.remove("doc-snippet-highlight");
-  }, 3200);
+  }, 2000);
 
   return best;
 }

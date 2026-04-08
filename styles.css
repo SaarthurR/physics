@@ -534,9 +534,27 @@ textarea:focus-visible {
 }
 
 .doc-snippet-highlight {
-  background: rgba(95, 129, 195, 0.14);
+  background: rgba(95, 129, 195, 0.12);
   border-radius: 12px;
-  box-shadow: 0 0 0 6px rgba(95, 129, 195, 0.08);
+  box-shadow: 0 0 0 0 rgba(95, 129, 195, 0);
+  animation: snippet-flash 2s ease-out;
+}
+
+@keyframes snippet-flash {
+  0% {
+    background: rgba(95, 129, 195, 0.22);
+    box-shadow: 0 0 0 0 rgba(95, 129, 195, 0.24);
+  }
+
+  20% {
+    background: rgba(95, 129, 195, 0.18);
+    box-shadow: 0 0 0 8px rgba(95, 129, 195, 0.12);
+  }
+
+  100% {
+    background: rgba(95, 129, 195, 0.06);
+    box-shadow: 0 0 0 0 rgba(95, 129, 195, 0);
+  }
 }
 
 .doc-section-body ul,
