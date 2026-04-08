@@ -60,6 +60,10 @@ A sound wave exists in 3D space because it travels outward in all directions, no
             <p>The medium moves perpendicular (at 90 degrees) to the direction the wave travels.</p>
             <p><strong>Example:</strong> A rope wave. You shake one end up-and-down. The disturbance travels horizontally. The rope moves vertically. Those two directions are perpendicular - that's transverse.</p>
             <p><strong>Also:</strong> Water waves (the surface moves up/down, wave moves outward).</p>
+            <figure class="concept-figure">
+              <img src="./assets/figures/chapter1-transverse-wave-example.png" alt="Transverse wave displacement graph from DL1" />
+              <figcaption>DL1 includes a transverse-wave rope example, which pairs well with this section's discussion of perpendicular motion.</figcaption>
+            </figure>
             <h4>Longitudinal Waves</h4>
             <p>The medium moves parallel to (in the same direction as) the wave travel.</p>
             <p><strong>Example:</strong> Sound. Air molecules are squeezed together (compressions) and spread apart (rarefactions) in the same direction the sound is moving. Push a slinky from one end - the coils compress and expand along the slinky's length.</p>
@@ -262,6 +266,10 @@ Tricky: Two y(t) Graphs at Different Positions. If the farther position graph is
             <h4>y(x) - Snapshot in Time</h4>
             <p>Like a photograph of the wave. t is fixed. x varies. The spatial period = wavelength λ.</p>
             <p>Read λ from the x-axis: distance between identical points.</p>
+            <figure class="concept-figure">
+              <img src="./assets/figures/chapter3-wave-snapshot.png" alt="Snapshot graph of displacement versus position" />
+              <figcaption>This worksheet graph is a clean y(x) snapshot: it shows the wave's shape across space at one instant.</figcaption>
+            </figure>
             <h4>y(t) - Time History at One Point</h4>
             <p>Like a recording of one point on the wave. x is fixed. t varies. The temporal period = T.</p>
             <p>Read T from the t-axis: time between identical points.</p>
@@ -287,6 +295,10 @@ Tricky: Two y(t) Graphs at Different Positions. If the farther position graph is
           html: `
             <p>If you have y(t) at x = 1.0 m AND y(t) at x = 1.1 m, you can determine direction. The wave at x = 1.1 m looks like the x = 1.0 m wave shifted in time. If the x = 1.1 m graph is shifted to the right (later in time), the wave is moving in the +x direction (to the right).</p>
             <p>This is the key: the phase you observe at the farther position was emitted earlier from the source, so it arrives later.</p>
+            <figure class="concept-figure">
+              <img src="./assets/figures/chapter3-position-time-comparison.png" alt="Two position or time graphs used to compare phase at different points" />
+              <figcaption>The DL graph pair is exactly the kind of comparison you use to infer the wave's direction from timing.</figcaption>
+            </figure>
           `,
         },
       ],
@@ -315,6 +327,10 @@ Two 70 dB speakers together produce 76 dB.
             <h4>Wavefronts</h4>
             <p>Lines (2D) or surfaces (3D) connecting all points with the same phase.</p>
             <p>Solid lines = crests. Dashed lines = troughs. Distance between adjacent solid lines = λ.</p>
+            <figure class="concept-figure concept-figure-small">
+              <img src="./assets/figures/chapter4-wavefronts.png" alt="Concentric wavefront circles from the worksheet" />
+              <figcaption>The higher-dimensional wave worksheet shows the circular wavefront picture used in this section.</figcaption>
+            </figure>
             <h4>Rays</h4>
             <p>Arrows pointing in the direction of wave travel.</p>
             <p>Rays are always perpendicular to wavefronts.</p>
@@ -427,6 +443,16 @@ Worked example: v_s = 50 m/s, f_s = 50 Hz, sound speed v = 350 m/s. Forward wave
           title: "Worked Example - Ambulance Problem (FNT 2)",
           html: `
             <p><strong>Setup:</strong> ambulance at v_s = 50 m/s, siren f_s = 50 Hz, sound speed v = 350 m/s. Silas is behind, Eppie is ahead.</p>
+            <div class="concept-gallery">
+              <figure class="concept-figure">
+                <img src="./assets/figures/chapter5-doppler-setup.png" alt="Ambulance halfway between Silas and Eppie at t equals 0 seconds" />
+                <figcaption>Figure 1 from the PDF sets up the original ambulance position.</figcaption>
+              </figure>
+              <figure class="concept-figure">
+                <img src="./assets/figures/chapter5-doppler-motion.png" alt="Ambulance shifted forward after a short time interval" />
+                <figcaption>Figure 2 shows the source after moving forward, which is what squeezes the forward wavelength.</figcaption>
+              </figure>
+            </div>
             <p>At t = 0: siren emits a crest. At t = 0.02 s: ambulance has moved x = v × t = 50 × 0.02 = 1 m forward.</p>
             <p>The siren completes f × t = 50 × 0.02 = 1 full cycle. So at t = 0.02 s, the siren is back to emitting a crest.</p>
             <p>The t = 0 crest has traveled: 350 × 0.02 = 7 m in all directions. So the t = 0 forward crest is 7 m ahead, while the new t = 0.02 s crest is at the ambulance (1 m ahead of start).</p>
@@ -507,6 +533,10 @@ Pond problem: Bob 3 m from An and 4 m from Carla gives path difference 1 m and c
           title: "The Phase Chart Method",
           html: `
             <p>This is the systematic tool for interference problems. Build a chart like this:</p>
+            <figure class="concept-figure">
+              <img src="./assets/figures/chapter6-speaker-paths.png" alt="Two speakers with two different path lengths to the observer" />
+              <figcaption>The two-speaker setup from DL3 is the physical picture behind the path-difference terms in the phase chart.</figcaption>
+            </figure>
             <table class="data-table">
               <thead>
                 <tr>
@@ -543,6 +573,16 @@ Pond problem: Bob 3 m from An and 4 m from Carla gives path difference 1 m and c
             </table>
             <p>Key insight: the time term cancels in the difference (both waves exist at the same time at the same point). What remains: path length difference and phase constant difference.</p>
             <div class="formula-inline">ΔΦ = -2π(Δx)/λ + Δφ₀</div>
+            <div class="concept-gallery">
+              <figure class="concept-figure">
+                <img src="./assets/figures/chapter6-wave-pair-a.png" alt="One pair of interference comparison waves from DL3" />
+                <figcaption>One worksheet case showing how the two waves can line up differently at x₁ and x₂.</figcaption>
+              </figure>
+              <figure class="concept-figure">
+                <img src="./assets/figures/chapter6-wave-pair-b.png" alt="Another pair of interference comparison waves from DL3" />
+                <figcaption>A second case that changes the phase relationship and therefore the interference result.</figcaption>
+              </figure>
+            </div>
           `,
         },
         {
@@ -563,6 +603,10 @@ Pond problem: Bob 3 m from An and 4 m from Carla gives path difference 1 m and c
           title: "Superposition in 2D - The Pond Problem",
           html: `
             <p>An and Carla bob in a pond. Bob is 3 m from An and 4 m from Carla. An and Carla start in phase. For constructive interference at Bob:</p>
+            <figure class="concept-figure concept-figure-small">
+              <img src="./assets/figures/chapter6-pond-problem.png" alt="Pond problem diagram with An, Bob, and Carla distances" />
+              <figcaption>The DL3 pond diagram gives the exact 2 m, 3 m, and 4 m distances used in this example.</figcaption>
+            </figure>
             <div class="formula-inline">Δx = |distance to An - distance to Carla| = |3 - 4| = 1 m = nλ</div>
             <p>So λ = 1 m (or 0.5 m, 0.33 m, etc. for n = 1, 2, 3...)</p>
             <p>v = 3 m/s, f = v/λ = 3/1 = 3 Hz (or 6 Hz, 9 Hz, ...)</p>

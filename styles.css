@@ -670,6 +670,41 @@ textarea:focus-visible {
   color: var(--ink);
 }
 
+.concept-figure {
+  display: grid;
+  gap: 10px;
+  margin: 18px 0;
+  padding: 14px;
+  border: 1px solid rgba(95, 129, 195, 0.12);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.concept-figure img {
+  width: 100%;
+  display: block;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.concept-figure-small img {
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.concept-figure figcaption {
+  color: var(--muted);
+  line-height: 1.7;
+  font-size: 0.94rem;
+}
+
+.concept-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
 .data-table {
   width: 100%;
   margin-top: 14px;
@@ -1082,6 +1117,10 @@ textarea:focus-visible {
 
   .doc-paper {
     padding: 22px 18px;
+  }
+
+  .concept-gallery {
+    grid-template-columns: 1fr;
   }
 
   .doc-section {
