@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Physics 7C Waves Study Guide</title>
+    <meta
+      name="description"
+      content="A minimalist chapter-based waves study guide with an integrated AI tutor."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Physics 7C &middot; Unit 8</p>
+          <h1>Waves: Complete Study Guide</h1>
+          <p class="hero-lede">
+            PW-Style, rebuilt as a calm study space. Open each chapter like a study
+            drawer, review formulas without the clutter, and use the built-in AI tutor
+            when you want the guide explained in plain, intuitive language.
+          </p>
+          <div class="hero-actions">
+            <a class="primary-link" href="#chapters">Start with Chapter 1</a>
+            <button class="secondary-link" id="open-chat-hero" type="button">
+              Ask the AI tutor
+            </button>
+          </div>
+        </div>
+
+        <aside class="hero-panel">
+          <p class="panel-label">Study mode</p>
+          <ul class="hero-points">
+            <li>7 chapter dropdowns plus a final recap</li>
+            <li>Minimal light-mode layout with editorial typography</li>
+            <li>Groq or OpenRouter chat support inside the page</li>
+          </ul>
+          <div class="formula-strip" id="formula-strip"></div>
+        </aside>
+      </header>
+
+      <nav class="chapter-nav" aria-label="Chapter navigation">
+        <div class="chapter-nav-inner" id="chapter-nav"></div>
+      </nav>
+
+      <main class="content">
+        <section class="section-intro">
+          <p class="section-label">Curriculum</p>
+          <div class="section-heading">
+            <h2>Study by chapter, not by wall of text.</h2>
+            <p>
+              Each chapter opens into focused blocks: the hook, the concept, the formula,
+              the trap, and the worked example.
+            </p>
+          </div>
+        </section>
+
+        <section class="chapters" id="chapters" aria-live="polite"></section>
+
+        <section class="recap-section" id="recap"></section>
+      </main>
+    </div>
+
+    <button
+      class="chat-bubble"
+      id="chat-bubble"
+      type="button"
+      aria-expanded="false"
+      aria-controls="chat-shell"
+    >
+      <span class="chat-bubble-label">AI Tutor</span>
+      <span class="chat-bubble-ping" aria-hidden="true"></span>
+    </button>
+
+    <aside class="chat-shell" id="chat-shell" aria-hidden="true">
+      <div class="chat-header">
+        <div>
+          <p class="chat-kicker">Bottom-right tutor</p>
+          <h2>Ask about anything on the site.</h2>
+        </div>
+        <button class="chat-close" id="chat-close" type="button" aria-label="Close chat">
+          &times;
+        </button>
+      </div>
+
+      <div class="chat-settings">
+        <div class="settings-grid">
+          <label>
+            Provider
+            <select id="provider-select">
+              <option value="groq">Groq</option>
+              <option value="openrouter">OpenRouter</option>
+            </select>
+          </label>
+          <label>
+            Model
+            <input
+              id="model-input"
+              type="text"
+              placeholder="llama-3.3-70b-versatile"
+              autocomplete="off"
+            />
+          </label>
+        </div>
+        <label>
+          API key
+          <input
+            id="api-key-input"
+            type="password"
+            placeholder="Stored locally in this browser"
+            autocomplete="off"
+          />
+        </label>
+        <p class="settings-note">
+          Your key is stored only in <code>localStorage</code> on this device.
+        </p>
+      </div>
+
+      <div class="chat-messages" id="chat-messages">
+        <article class="message message-assistant">
+          <p>
+            I can explain chapters, compare formulas, walk through examples, or quiz you.
+            Ask naturally, and I will pull from the study guide first.
+          </p>
+        </article>
+      </div>
+
+      <div class="quick-prompts" id="quick-prompts"></div>
+
+      <form class="chat-form" id="chat-form">
+        <label class="sr-only" for="chat-input">Ask the tutor a question</label>
+        <textarea
+          id="chat-input"
+          rows="3"
+          placeholder="Why does the minus sign mean a wave moves to the right?"
+        ></textarea>
+        <button class="chat-send" type="submit">Send</button>
+      </form>
+    </aside>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
