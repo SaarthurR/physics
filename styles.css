@@ -241,10 +241,14 @@ textarea:focus-visible {
 
 .workspace {
   display: grid;
-  grid-template-columns: 320px minmax(0, 1fr);
+  grid-template-columns: var(--sidebar-width, 320px) minmax(0, 1fr);
   gap: 22px;
   margin-top: 24px;
   align-items: start;
+}
+
+.workspace.sidebar-collapsed {
+  --sidebar-width: 88px;
 }
 
 .doc-sidebar {
@@ -259,6 +263,14 @@ textarea:focus-visible {
   box-shadow: var(--shadow);
   max-height: calc(100vh - 32px);
   overflow: auto;
+  transition:
+    width 180ms ease,
+    padding 180ms ease;
+}
+
+.doc-sidebar.is-collapsed {
+  width: 88px;
+  padding: 18px 10px;
 }
 
 .sidebar-head {
@@ -268,28 +280,23 @@ textarea:focus-visible {
   margin-bottom: 18px;
 }
 
-.sidebar-plus {
+.sidebar-collapse {
   width: 34px;
   height: 34px;
   border: 0;
   border-radius: 999px;
-  background: rgba(95, 129, 195, 0.1);
+  background: rgba(95, 129, 195, 0.14);
   color: var(--accent-deep);
   font-size: 1.3rem;
 }
 
-.doc-tab {
-  width: 100%;
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  border: 0;
-  border-radius: 999px;
-  background: rgba(95, 129, 195, 0.22);
-  color: var(--accent-deep);
-  font-weight: 700;
-  margin-bottom: 16px;
+.doc-sidebar.is-collapsed .sidebar-label,
+.doc-sidebar.is-collapsed .outline-nav {
+  display: none;
+}
+
+.doc-sidebar.is-collapsed .sidebar-head {
+  justify-content: center;
 }
 
 .doc-tab-icon {
@@ -410,43 +417,88 @@ textarea:focus-visible {
 }
 
 .doc-section {
-  padding: 24px;
+  overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 24px;
   background: var(--paper-soft);
 }
 
-.doc-section h4 {
-  margin: 0 0 14px;
+.doc-section-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 22px 24px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+}
+
+.doc-section-title {
   font-family: "Fraunces", serif;
   font-size: 1.45rem;
   font-weight: 500;
 }
 
-.doc-section p,
-.doc-section li,
-.doc-section td,
-.doc-section th {
+.doc-section-chevron {
+  color: var(--accent-deep);
+  font-size: 1.5rem;
+  transition: transform 180ms ease;
+}
+
+.doc-section.is-open .doc-section-chevron {
+  transform: rotate(45deg);
+}
+
+.doc-section-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 220ms ease;
+}
+
+.doc-section-body {
+  padding: 0 24px 24px;
+}
+
+.doc-section-body p,
+.doc-section-body li,
+.doc-section-body td,
+.doc-section-body th {
   color: var(--muted);
   line-height: 1.84;
 }
 
-.doc-section p:last-child {
+.doc-section-body p:last-child {
   margin-bottom: 0;
 }
 
-.doc-section ul,
-.doc-section ol {
+.doc-snippet-highlight {
+  background: rgba(95, 129, 195, 0.14);
+  border-radius: 12px;
+  box-shadow: 0 0 0 6px rgba(95, 129, 195, 0.08);
+}
+
+.doc-section-body ul,
+.doc-section-body ol {
   margin: 12px 0 0;
   padding-left: 20px;
 }
 
-.doc-section h4 + h4,
-.doc-section p + h4,
-.doc-section ul + h4,
-.doc-section table + h4,
-.doc-section .formula-inline + h4,
-.doc-section .formula-box + h4 {
+.doc-section-body h4 {
+  margin: 0 0 12px;
+  font-family: "Fraunces", serif;
+  font-size: 1.14rem;
+  font-weight: 500;
+}
+
+.doc-section-body h4 + h4,
+.doc-section-body p + h4,
+.doc-section-body ul + h4,
+.doc-section-body table + h4,
+.doc-section-body .formula-inline + h4,
+.doc-section-body .formula-box + h4 {
   margin-top: 18px;
 }
 
@@ -514,6 +566,33 @@ textarea:focus-visible {
   color: #fff;
   background: linear-gradient(135deg, var(--accent), var(--accent-deep));
   box-shadow: 0 18px 50px rgba(59, 90, 153, 0.24);
+}
+
+.selection-action {
+  position: fixed;
+  z-index: 80;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(59, 90, 153, 0.2);
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.92);
+  transition:
+    opacity 140ms ease,
+    transform 140ms ease;
+}
+
+.selection-action.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
 }
 
 .chat-bubble-ping {
@@ -623,6 +702,7 @@ textarea:focus-visible {
   gap: 12px;
   overflow: auto;
   align-content: start;
+  min-height: 0;
 }
 
 .message {
@@ -654,35 +734,72 @@ textarea:focus-visible {
   color: #7d1d1d;
 }
 
-.quick-prompts {
-  display: flex;
+.chat-form {
+  display: block;
+}
+
+.chat-composer {
+  display: grid;
   gap: 10px;
-  overflow: auto;
-  scrollbar-width: none;
+  position: relative;
+  padding: 12px 64px 12px 12px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.76);
 }
 
-.quick-prompts::-webkit-scrollbar {
-  display: none;
-}
-
-.quick-prompt {
-  flex: 0 0 auto;
+.chat-mode-switch {
+  display: inline-flex;
+  width: fit-content;
+  padding: 4px;
   border: 1px solid var(--line);
   border-radius: 999px;
-  padding: 10px 12px;
-  background: rgba(255, 255, 255, 0.66);
-  color: var(--muted);
+  background: rgba(255, 255, 255, 0.7);
 }
 
-.chat-form {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 10px;
+.mode-option {
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.mode-option.is-active {
+  background: rgba(95, 129, 195, 0.18);
+  color: var(--accent-deep);
+  font-weight: 700;
 }
 
 .chat-form textarea {
   min-height: 90px;
+  height: 90px;
+  max-height: 160px;
   resize: none;
+  padding: 12px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.96);
+}
+
+.chat-send {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 999px;
+  box-shadow: 0 12px 22px rgba(59, 90, 153, 0.18);
+}
+
+.chat-send svg {
+  width: 18px;
+  height: 18px;
 }
 
 .resize-handle {

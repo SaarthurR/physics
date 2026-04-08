@@ -1,4 +1,4 @@
-import { FORMULA_STRIP, QUICK_PROMPTS, STUDY_GUIDE } from "./content.js";
+import { FORMULA_STRIP, STUDY_GUIDE } from "./content.js";
 
 const HARDCODED_GROQ_KEY =
   "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";
@@ -9,10 +9,14 @@ const defaultModels = {
 };
 
 const formulaStrip = document.querySelector("#formula-strip");
+const workspace = document.querySelector("#workspace");
+const docSidebar = document.querySelector("#doc-sidebar");
+const sidebarCollapse = document.querySelector("#sidebar-collapse");
 const outlineNav = document.querySelector("#outline-nav");
 const documentRoot = document.querySelector("#document-root");
 
 const chatBubble = document.querySelector("#chat-bubble");
+const selectionAction = document.querySelector("#selection-action");
 const chatShell = document.querySelector("#chat-shell");
 const chatClose = document.querySelector("#chat-close");
 const openChatHero = document.querySelector("#open-chat-hero");
@@ -25,22 +29,30 @@ const chatInput = document.querySelector("#chat-input");
 const providerSelect = document.querySelector("#provider-select");
 const modelInput = document.querySelector("#model-input");
 const apiKeyInput = document.querySelector("#api-key-input");
-const quickPromptsRoot = document.querySelector("#quick-prompts");
+const modeButtons = [...document.querySelectorAll("[data-mode]")];
 const resizeHandles = [...document.querySelectorAll("[data-resize]")];
+const chatTextareaMaxHeight = 160;
 
 const settingsKey = "waves-study-chat-settings";
 const chatLayoutKey = "waves-study-chat-layout";
+const sidebarStateKey = "waves-study-sidebar-collapsed";
+const responseModeKey = "waves-study-response-mode";
 const chatState = { messages: [] };
+let pendingShowDocQuery = null;
+let selectedDocumentText = "";
 
 renderFormulaStrip();
 renderOutline();
 renderDocument();
-renderQuickPrompts();
 loadSettings();
 applySavedChatLayout();
+loadSidebarState();
+loadResponseMode();
+wireSectionAccordions();
 wireScrollSpy();
 wireChatEvents();
 wireChatDragAndResize();
+wireSelectionAssist();
 
 function renderFormulaStrip() {
   formulaStrip.innerHTML = FORMULA_STRIP.map(
@@ -109,6 +121,22 @@ function renderOutline() {
   `;
 
   outlineNav.innerHTML = `<ul class="outline-list">${chapterLinks}${recapLinks}</ul>`;
+
+  outlineNav.querySelectorAll("[data-outline-link]").forEach((link) => {
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      const targetId = link.getAttribute("data-outline-link");
+      const target = document.getElementById(targetId);
+      if (!target) return;
+
+      if (target.classList.contains("doc-section")) {
+        openExclusiveSection(target, true);
+      } else {
+        centerTarget(target);
+      }
+    });
+  });
 }
 
 function renderDocument() {
@@ -124,10 +152,22 @@ function renderDocument() {
             ${chapter.sections
               .map(
                 (section) => `
-                  <section class="doc-section" id="${section.id}">
-                    <h4>${escapeHtml(section.title)}</h4>
-                    ${section.html}
-                  </section>
+                  <article class="doc-section" id="${section.id}">
+                    <button
+                      class="doc-section-trigger"
+                      type="button"
+                      aria-expanded="false"
+                      aria-controls="${section.id}-panel"
+                    >
+                      <span class="doc-section-title">${escapeHtml(section.title)}</span>
+                      <span class="doc-section-chevron" aria-hidden="true">+</span>
+                    </button>
+                    <div class="doc-section-panel" id="${section.id}-panel">
+                      <div class="doc-section-body">
+                        ${section.html}
+                      </div>
+                    </div>
+                  </article>
                 `,
               )
               .join("")}
@@ -147,10 +187,22 @@ function renderDocument() {
         ${STUDY_GUIDE.recap.sections
           .map(
             (section) => `
-              <section class="doc-section" id="${section.id}">
-                <h4>${escapeHtml(section.title)}</h4>
-                ${section.html}
-              </section>
+              <article class="doc-section" id="${section.id}">
+                <button
+                  class="doc-section-trigger"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls="${section.id}-panel"
+                >
+                  <span class="doc-section-title">${escapeHtml(section.title)}</span>
+                  <span class="doc-section-chevron" aria-hidden="true">+</span>
+                </button>
+                <div class="doc-section-panel" id="${section.id}-panel">
+                  <div class="doc-section-body">
+                    ${section.html}
+                  </div>
+                </div>
+              </article>
             `,
           )
           .join("")}
@@ -161,20 +213,19 @@ function renderDocument() {
   documentRoot.innerHTML = chapterMarkup + recapMarkup;
 }
 
-function renderQuickPrompts() {
-  quickPromptsRoot.innerHTML = QUICK_PROMPTS.map(
-    (prompt) => `
-      <button class="quick-prompt" type="button" data-prompt="${escapeAttribute(prompt)}">
-        ${escapeHtml(prompt)}
-      </button>
-    `,
-  ).join("");
+function wireSectionAccordions() {
+  document.querySelectorAll(".doc-section").forEach((section) => {
+    const trigger = section.querySelector(".doc-section-trigger");
+    if (!trigger) return;
 
-  quickPromptsRoot.querySelectorAll(".quick-prompt").forEach((button) => {
-    button.addEventListener("click", () => {
-      chatInput.value = button.getAttribute("data-prompt") || "";
-      openChat();
-      chatInput.focus();
+    trigger.addEventListener("click", () => {
+      const isOpen = trigger.getAttribute("aria-expanded") === "true";
+      if (isOpen) {
+        closeSection(section);
+        return;
+      }
+
+      openExclusiveSection(section, false);
     });
   });
 }
@@ -211,6 +262,15 @@ function wireScrollSpy() {
 }
 
 function wireChatEvents() {
+  sidebarCollapse.addEventListener("click", () => {
+    const nextCollapsed = !docSidebar.classList.contains("is-collapsed");
+    docSidebar.classList.toggle("is-collapsed", nextCollapsed);
+    workspace.classList.toggle("sidebar-collapsed", nextCollapsed);
+    sidebarCollapse.setAttribute("aria-expanded", String(!nextCollapsed));
+    sidebarCollapse.textContent = nextCollapsed ? "›" : "‹";
+    localStorage.setItem(sidebarStateKey, JSON.stringify({ collapsed: nextCollapsed }));
+  });
+
   chatBubble.addEventListener("click", openChat);
   openChatHero.addEventListener("click", openChat);
   chatClose.addEventListener("click", closeChat);
@@ -229,6 +289,21 @@ function wireChatEvents() {
   modelInput.addEventListener("input", saveSettings);
   apiKeyInput.addEventListener("input", saveSettings);
 
+  modeButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const mode = button.getAttribute("data-mode");
+      setResponseMode(mode);
+    });
+  });
+
+  chatInput.addEventListener("input", autoResizeChatInput);
+  chatInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      chatForm.requestSubmit();
+    }
+  });
+
   chatForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
@@ -241,9 +316,24 @@ function wireChatEvents() {
       return;
     }
 
+    if (isAffirmative(question) && pendingShowDocQuery) {
+      const navigated = showInDocument(pendingShowDocQuery);
+      addMessage(
+        "assistant",
+        navigated
+          ? "I opened the most relevant part of the document and highlighted the best matching passage."
+          : "I tried to find the closest place in the document, but I could not match it confidently.",
+      );
+      pendingShowDocQuery = null;
+      chatInput.value = "";
+      autoResizeChatInput();
+      return;
+    }
+
     addMessage("user", question);
     chatState.messages.push({ role: "user", content: question });
     chatInput.value = "";
+    autoResizeChatInput();
 
     const loadingId = addMessage("assistant", "Thinking through the guide...");
 
@@ -251,6 +341,19 @@ function wireChatEvents() {
       const answer = await requestTutorAnswer(question);
       updateMessage(loadingId, answer, "message-assistant");
       chatState.messages.push({ role: "assistant", content: answer });
+
+      if (isExplicitShowRequest(question)) {
+        showInDocument(question);
+        pendingShowDocQuery = null;
+      } else if (shouldOfferShowInDocument(question)) {
+        pendingShowDocQuery = question;
+        addMessage(
+          "assistant",
+          "If you want, say `yes` and I will open the most relevant part of the document and highlight it for you.",
+        );
+      } else {
+        pendingShowDocQuery = null;
+      }
     } catch (error) {
       updateMessage(
         loadingId,
@@ -274,6 +377,265 @@ function loadSettings() {
   providerSelect.value = provider;
   modelInput.value = saved?.model || defaultModels[provider];
   apiKeyInput.value = saved?.apiKey || HARDCODED_GROQ_KEY;
+  autoResizeChatInput();
+}
+
+function loadSidebarState() {
+  const saved = safeJsonParse(localStorage.getItem(sidebarStateKey));
+  const collapsed = Boolean(saved?.collapsed);
+  docSidebar.classList.toggle("is-collapsed", collapsed);
+  workspace.classList.toggle("sidebar-collapsed", collapsed);
+  sidebarCollapse.setAttribute("aria-expanded", String(!collapsed));
+  sidebarCollapse.textContent = collapsed ? "›" : "‹";
+}
+
+function loadResponseMode() {
+  const saved = safeJsonParse(localStorage.getItem(responseModeKey));
+  setResponseMode(saved?.mode || "concise");
+}
+
+function setResponseMode(mode) {
+  const resolvedMode = mode === "explained" ? "explained" : "concise";
+  modeButtons.forEach((button) => {
+    button.classList.toggle("is-active", button.getAttribute("data-mode") === resolvedMode);
+  });
+  localStorage.setItem(responseModeKey, JSON.stringify({ mode: resolvedMode }));
+}
+
+function getResponseMode() {
+  const active = modeButtons.find((button) => button.classList.contains("is-active"));
+  return active?.getAttribute("data-mode") || "concise";
+}
+
+function openExclusiveSection(targetSection, shouldCenter) {
+  document.querySelectorAll(".doc-section").forEach((section) => {
+    if (section === targetSection) {
+      openSection(section);
+    } else {
+      closeSection(section);
+    }
+  });
+
+  if (shouldCenter) {
+    requestAnimationFrame(() => {
+      centerTarget(targetSection);
+    });
+  }
+}
+
+function openSection(section) {
+  const trigger = section.querySelector(".doc-section-trigger");
+  const panel = section.querySelector(".doc-section-panel");
+  if (!trigger || !panel) return;
+
+  trigger.setAttribute("aria-expanded", "true");
+  section.classList.add("is-open");
+  panel.style.maxHeight = `${panel.scrollHeight}px`;
+}
+
+function closeSection(section) {
+  const trigger = section.querySelector(".doc-section-trigger");
+  const panel = section.querySelector(".doc-section-panel");
+  if (!trigger || !panel) return;
+
+  trigger.setAttribute("aria-expanded", "false");
+  section.classList.remove("is-open");
+  panel.style.maxHeight = `${panel.scrollHeight}px`;
+  requestAnimationFrame(() => {
+    panel.style.maxHeight = "0px";
+  });
+}
+
+function centerTarget(target) {
+  target.scrollIntoView({
+    behavior: "smooth",
+    block: "center",
+    inline: "nearest",
+  });
+}
+
+function autoResizeChatInput() {
+  chatInput.style.height = "auto";
+  const nextHeight = Math.min(chatInput.scrollHeight, chatTextareaMaxHeight);
+  chatInput.style.height = `${nextHeight}px`;
+  chatInput.style.overflowY = chatInput.scrollHeight > chatTextareaMaxHeight ? "auto" : "hidden";
+}
+
+function wireSelectionAssist() {
+  const refreshSelectionAction = () => {
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0 || selection.isCollapsed) {
+      hideSelectionAction();
+      return;
+    }
+
+    const text = selection.toString().trim();
+    if (!text || text.length < 3) {
+      hideSelectionAction();
+      return;
+    }
+
+    const range = selection.getRangeAt(0);
+    const commonAncestor =
+      range.commonAncestorContainer.nodeType === Node.TEXT_NODE
+        ? range.commonAncestorContainer.parentElement
+        : range.commonAncestorContainer;
+
+    if (!commonAncestor || !documentRoot.contains(commonAncestor)) {
+      hideSelectionAction();
+      return;
+    }
+
+    const rect = range.getBoundingClientRect();
+    if (!rect.width && !rect.height) {
+      hideSelectionAction();
+      return;
+    }
+
+    selectedDocumentText = text;
+    selectionAction.style.left = `${Math.min(window.innerWidth - 44, rect.right + 8)}px`;
+    selectionAction.style.top = `${Math.max(12, rect.top - 18)}px`;
+    selectionAction.classList.add("is-visible");
+  };
+
+  document.addEventListener("selectionchange", () => {
+    window.requestAnimationFrame(refreshSelectionAction);
+  });
+
+  window.addEventListener("scroll", hideSelectionAction, true);
+  window.addEventListener("resize", hideSelectionAction);
+
+  selectionAction.addEventListener("click", () => {
+    if (!selectedDocumentText) return;
+
+    openChat();
+    chatInput.value = `Can you explain this passage?\n\n"${selectedDocumentText}"`;
+    autoResizeChatInput();
+    chatInput.focus();
+    hideSelectionAction();
+  });
+}
+
+function hideSelectionAction() {
+  selectionAction.classList.remove("is-visible");
+}
+
+function showInDocument(query) {
+  const match = findBestSectionForQuery(query);
+  if (!match?.section) return false;
+
+  openExclusiveSection(match.section, false);
+  requestAnimationFrame(() => {
+    const highlightTarget = highlightBestSnippet(match.section, query) || match.section;
+    centerTarget(highlightTarget);
+  });
+
+  return true;
+}
+
+function findBestSectionForQuery(query) {
+  const records = getSectionRecords();
+  const normalizedQuery = normalize(query);
+  const tokens = [...tokenSet(normalizedQuery)].filter((token) => token.length > 2);
+
+  const ranked = records
+    .map((record) => {
+      const haystack = normalize(`${record.chapterTitle} ${record.sectionTitle} ${record.text}`);
+      let score = 0;
+
+      tokens.forEach((token) => {
+        if (normalize(record.sectionTitle).includes(token)) score += 5;
+        if (normalize(record.chapterTitle).includes(token)) score += 3;
+        if (haystack.includes(token)) score += 2;
+      });
+
+      if (haystack.includes(normalizedQuery) && normalizedQuery.length > 8) score += 8;
+      return { ...record, score };
+    })
+    .sort((a, b) => b.score - a.score);
+
+  const best = ranked[0];
+  if (!best || best.score < 3) return null;
+  return best;
+}
+
+function getSectionRecords() {
+  const chapterRecords = STUDY_GUIDE.chapters.flatMap((chapter) =>
+    chapter.sections.map((section) => ({
+      section: document.getElementById(section.id),
+      sectionTitle: section.title,
+      chapterTitle: chapter.title,
+      text: stripHtml(section.html),
+    })),
+  );
+
+  const recapRecords = STUDY_GUIDE.recap.sections.map((section) => ({
+    section: document.getElementById(section.id),
+    sectionTitle: section.title,
+    chapterTitle: STUDY_GUIDE.recap.title,
+    text: stripHtml(section.html),
+  }));
+
+  return [...chapterRecords, ...recapRecords].filter((record) => record.section);
+}
+
+function highlightBestSnippet(section, query) {
+  document.querySelectorAll(".doc-snippet-highlight").forEach((element) => {
+    element.classList.remove("doc-snippet-highlight");
+  });
+
+  const normalizedQuery = normalize(query);
+  const tokens = [...tokenSet(normalizedQuery)].filter((token) => token.length > 2);
+  const candidates = [
+    ...section.querySelectorAll(
+      ".doc-section-body p, .doc-section-body li, .doc-section-body h4, .doc-section-body .formula-inline, .doc-section-body .formula-box, .doc-section-body td",
+    ),
+  ];
+
+  let best = null;
+  let bestScore = 0;
+
+  candidates.forEach((candidate) => {
+    const text = normalize(candidate.textContent || "");
+    let score = 0;
+
+    if (text.includes(normalizedQuery) && normalizedQuery.length > 8) score += 10;
+    tokens.forEach((token) => {
+      if (text.includes(token)) score += 2;
+    });
+
+    if (score > bestScore) {
+      best = candidate;
+      bestScore = score;
+    }
+  });
+
+  if (!best) return null;
+
+  best.classList.add("doc-snippet-highlight");
+  window.setTimeout(() => {
+    best.classList.remove("doc-snippet-highlight");
+  }, 3200);
+
+  return best;
+}
+
+function isExplicitShowRequest(question) {
+  return /(show me in the document|show me where|where does the document say|where does it say|take me to the document)/i.test(question);
+}
+
+function shouldOfferShowInDocument(question) {
+  return /^how\b/i.test(question.trim()) || /\bhow do i\b/i.test(question) || /\bhow do you\b/i.test(question);
+}
+
+function isAffirmative(question) {
+  return /^(yes|yeah|yep|sure|ok|okay|please do|show me)$/i.test(question.trim());
+}
+
+function stripHtml(html) {
+  const temp = document.createElement("div");
+  temp.innerHTML = html;
+  return temp.textContent || temp.innerText || "";
 }
 
 function saveSettings() {
@@ -294,12 +656,15 @@ async function requestTutorAnswer(question) {
   const model = modelInput.value.trim() || defaultModels[provider];
   const apiKey = apiKeyInput.value.trim() || HARDCODED_GROQ_KEY;
   const context = buildContext(question);
+  const responseMode = getResponseMode();
 
   const systemPrompt = `
 You are a warm physics tutor embedded inside a waves study website.
 Teach in clear English with a concept-first style.
 Prioritize the supplied study-guide context.
-Do not over-condense if the user asks for a full explanation.
+Response mode: ${responseMode}.
+If response mode is concise, answer directly and briefly, with minimal extra explanation.
+If response mode is explained, go a little deeper, teach the concept clearly, and walk through reasoning when helpful.
 When useful:
 - explain intuitively before formula
 - point out common mistakes

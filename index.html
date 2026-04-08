@@ -45,17 +45,20 @@
         </aside>
       </header>
 
-      <section class="workspace">
-        <aside class="doc-sidebar">
+      <section class="workspace" id="workspace">
+        <aside class="doc-sidebar" id="doc-sidebar">
           <div class="sidebar-head">
             <p class="sidebar-label">Document tabs</p>
-            <button class="sidebar-plus" type="button" aria-label="Current study tab">+</button>
+            <button
+              class="sidebar-collapse"
+              id="sidebar-collapse"
+              type="button"
+              aria-expanded="true"
+              aria-label="Collapse document tabs"
+            >
+              ‹
+            </button>
           </div>
-
-          <button class="doc-tab is-active" type="button">
-            <span class="doc-tab-icon">▤</span>
-            <span>Tab 1</span>
-          </button>
 
           <nav class="outline-nav" id="outline-nav" aria-label="Study guide outline"></nav>
         </aside>
@@ -86,6 +89,15 @@
     >
       <span class="chat-bubble-label">AI Tutor</span>
       <span class="chat-bubble-ping" aria-hidden="true"></span>
+    </button>
+
+    <button
+      class="selection-action"
+      id="selection-action"
+      type="button"
+      aria-label="Ask the tutor about selected text"
+    >
+      ?
     </button>
 
     <aside class="chat-shell" id="chat-shell" aria-hidden="true">
@@ -156,16 +168,31 @@
         </article>
       </div>
 
-      <div class="quick-prompts" id="quick-prompts"></div>
-
       <form class="chat-form" id="chat-form">
         <label class="sr-only" for="chat-input">Ask the tutor a question</label>
-        <textarea
-          id="chat-input"
-          rows="3"
-          placeholder="Why does the minus sign mean a wave moves to the right?"
-        ></textarea>
-        <button class="chat-send" type="submit">Send</button>
+        <div class="chat-composer">
+          <div class="chat-mode-switch" role="group" aria-label="Response depth">
+            <button class="mode-option is-active" id="mode-concise" type="button" data-mode="concise">
+              Concise
+            </button>
+            <button class="mode-option" id="mode-explained" type="button" data-mode="explained">
+              Explained
+            </button>
+          </div>
+          <textarea
+            id="chat-input"
+            rows="3"
+            placeholder="Why does the minus sign mean a wave moves to the right?"
+          ></textarea>
+          <button class="chat-send" type="submit" aria-label="Send message">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path
+                d="M3 20L21 12L3 4V11L15 12L3 13V20Z"
+                fill="currentColor"
+              />
+            </svg>
+          </button>
+        </div>
       </form>
     </aside>
 
