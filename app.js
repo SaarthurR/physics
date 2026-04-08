@@ -616,7 +616,7 @@ function openSection(section) {
 
   trigger.setAttribute("aria-expanded", "true");
   section.classList.add("is-open");
-  panel.style.maxHeight = `${panel.scrollHeight}px`;
+  syncOpenPanelHeight(panel);
 }
 
 function closeSection(section) {
@@ -1158,6 +1158,9 @@ function renderQuiz(chapterId) {
         <p>Restart to get a fresh mix from this chapter.</p>
       </div>
     `;
+    requestAnimationFrame(() => {
+      syncOpenPanelHeight(root.closest(".doc-section-panel"));
+    });
     return;
   }
 
@@ -1178,6 +1181,9 @@ function renderQuiz(chapterId) {
       ${renderQuizQuestion(chapterId, current, state)}
     </div>
   `;
+  requestAnimationFrame(() => {
+    syncOpenPanelHeight(root.closest(".doc-section-panel"));
+  });
 }
 
 function renderQuizQuestion(chapterId, question, state) {
@@ -1257,6 +1263,13 @@ function advanceQuizQuestion(chapterId) {
   state.lastShortAnswer = "";
   state.completed = state.queue.length === 0;
   renderQuiz(chapterId);
+}
+
+function syncOpenPanelHeight(panel) {
+  if (!panel || !panel.closest(".doc-section.is-open")) return;
+  panel.style.maxHeight = "none";
+  const nextHeight = panel.scrollHeight;
+  panel.style.maxHeight = `${nextHeight}px`;
 }
 
 async function gradeShortQuizAnswer(chapterId, question, answer) {
