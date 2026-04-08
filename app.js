@@ -99,6 +99,7 @@ loadSidebarState();
 loadResponseMode();
 wireSectionAccordions();
 wireQuizSections();
+wireResponsivePanels();
 wireScrollSpy();
 wireChatEvents();
 wireChatDragAndResize();
@@ -308,6 +309,27 @@ function wireSectionAccordions() {
 
       openExclusiveSection(section, false);
     });
+  });
+}
+
+function wireResponsivePanels() {
+  document.querySelectorAll(".doc-section-panel").forEach((panel) => {
+    const body = panel.querySelector(".doc-section-body");
+    if (!body) return;
+
+    body.querySelectorAll("img").forEach((image) => {
+      if (image.complete) return;
+      image.addEventListener("load", () => {
+        syncOpenPanelHeight(panel);
+      });
+    });
+
+    if (typeof ResizeObserver === "undefined") return;
+
+    const observer = new ResizeObserver(() => {
+      syncOpenPanelHeight(panel);
+    });
+    observer.observe(body);
   });
 }
 
