@@ -487,20 +487,51 @@ function wireChatEvents() {
     const documentQuery = resolveDocumentNavigationQuery(question);
     if (documentQuery) {
       const navigated = showInDocument(documentQuery);
-      const response = navigated
-        ? [
-            "1. Opened the best matching section in the study guide.",
-            "2. Expanded that section, closed the previous one, and highlighted the most relevant line.",
-            "3. If you want, I can also explain that exact part step by step.",
-          ].join("\n")
-        : [
-            "1. I tried to open the best matching place in the document.",
-            "2. I could not match that request confidently enough to jump there.",
-            "3. Try naming the concept or formula one more time and I will take you to it.",
-          ].join("\n");
+      if (!shouldAnswerAlongsideNavigation(question)) {
+        const response = navigated
+          ? [
+              "1. Opened the best matching section in the study guide.",
+              "2. Expanded that section, closed the previous one, and highlighted the most relevant line.",
+              "3. If you want, I can also explain that exact part step by step.",
+            ].join("\n")
+          : [
+              "1. I tried to open the best matching place in the document.",
+              "2. I could not match that request confidently enough to jump there.",
+              "3. Try naming the concept or formula one more time and I will take you to it.",
+            ].join("\n");
 
-      addMessage("assistant", response, navigated ? "" : "message-error");
-      chatState.messages.push({ role: "assistant", content: response });
+        addMessage("assistant", response, navigated ? "" : "message-error");
+        chatState.messages.push({ role: "assistant", content: response });
+        pendingShowDocQuery = null;
+        return;
+      }
+
+      const loadingId = addMessage(
+        "assistant",
+        navigated
+          ? "Opening the matching section and putting together the explanation..."
+          : "I could not confidently open the document section, but I can still explain the concept...",
+      );
+
+      try {
+        const answer = await requestTutorAnswer(question);
+        const response = [
+          navigated
+            ? "1. Opened the best matching section in the study guide."
+            : "1. I could not confidently open the matching section in the document.",
+          "2. Explanation:",
+          answer,
+        ].join("\n");
+        updateMessage(loadingId, response, "message-assistant");
+        chatState.messages.push({ role: "assistant", content: response });
+      } catch (error) {
+        updateMessage(
+          loadingId,
+          error instanceof Error ? error.message : "Something went wrong while calling the model.",
+          "message-assistant message-error",
+        );
+      }
+
       pendingShowDocQuery = null;
       return;
     }
@@ -2180,6 +2211,12 @@ function resolveDocumentNavigationQuery(question) {
 
 function isGenericDocumentPrompt(question) {
   return Boolean(resolveDocumentNavigationQuery(question)) || isAffirmative(question);
+}
+
+function shouldAnswerAlongsideNavigation(question) {
+  return /\b(explain|difference|compare|what is|what are|why|how|walk me through|teach me|help me understand)\b/i.test(
+    question,
+  );
 }
 
 function normalize(value) {
