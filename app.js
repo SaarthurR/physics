@@ -15,9 +15,13 @@ const sidebarCollapse = document.querySelector("#sidebar-collapse");
 const outlineNav = document.querySelector("#outline-nav");
 const documentRoot = document.querySelector("#document-root");
 const autoCompactToggle = document.querySelector("#auto-compact-toggle");
+const studyLaterRoot = document.querySelector("#study-later-root");
+const studyConceptsButton = document.querySelector("#study-concepts-button");
+const studyConceptsCount = document.querySelector("#study-concepts-count");
 
 const chatBubble = document.querySelector("#chat-bubble");
 const selectionAction = document.querySelector("#selection-action");
+const selectionStudyAction = document.querySelector("#selection-study-action");
 const chatShell = document.querySelector("#chat-shell");
 const chatClose = document.querySelector("#chat-close");
 const openChatHero = document.querySelector("#open-chat-hero");
@@ -92,17 +96,23 @@ const chatLayoutKey = "waves-study-chat-layout";
 const sidebarStateKey = "waves-study-sidebar-collapsed";
 const responseModeKey = "waves-study-response-mode";
 const autoCompactKey = "waves-study-auto-compact";
+const studyLaterKey = "waves-study-later-items";
 const chatState = { messages: [] };
 const quizStates = new Map();
 const quizSessionLength = 5;
 let pendingShowDocQuery = null;
 let selectedDocumentText = "";
+let selectedDocumentSource = null;
 let lastStudyTopicQuery = "";
 let chatSettingsState = null;
+let studyLaterItems = [];
+let studyLaterSession = null;
 
 renderFormulaStrip();
 renderOutline();
+loadStudyLaterItems();
 renderDocument();
+renderStudyLaterSection();
 loadSettings();
 applySavedChatLayout();
 loadSidebarState();
@@ -110,6 +120,7 @@ loadResponseMode();
 loadAutoCompactState();
 wireSectionAccordions();
 wireQuizSections();
+wireStudyLaterSection();
 wireResponsivePanels();
 wireScrollSpy();
 wireChatEvents();
@@ -308,18 +319,24 @@ function renderQuizSection(chapter) {
 
 function wireSectionAccordions() {
   document.querySelectorAll(".doc-section").forEach((section) => {
-    const trigger = section.querySelector(".doc-section-trigger");
-    if (!trigger) return;
+    bindSectionAccordion(section);
+  });
+}
 
-    trigger.addEventListener("click", () => {
-      const isOpen = trigger.getAttribute("aria-expanded") === "true";
-      if (isOpen) {
-        closeSection(section);
-        return;
-      }
+function bindSectionAccordion(section) {
+  if (!section || section.dataset.accordionBound === "true") return;
+  const trigger = section.querySelector(".doc-section-trigger");
+  if (!trigger) return;
 
-      revealSection(section, false);
-    });
+  section.dataset.accordionBound = "true";
+  trigger.addEventListener("click", () => {
+    const isOpen = trigger.getAttribute("aria-expanded") === "true";
+    if (isOpen) {
+      closeSection(section);
+      return;
+    }
+
+    revealSection(section, false);
   });
 }
 
@@ -399,6 +416,12 @@ function wireChatEvents() {
 
   autoCompactToggle.addEventListener("change", () => {
     localStorage.setItem(autoCompactKey, JSON.stringify({ enabled: autoCompactToggle.checked }));
+  });
+
+  studyConceptsButton.addEventListener("click", () => {
+    const target = document.getElementById("study-concepts-section");
+    if (!target) return;
+    revealSection(target, true);
   });
 
   providerSelect.addEventListener("change", () => {
@@ -707,6 +730,373 @@ function autoResizeChatInput() {
   chatInput.style.overflowY = chatInput.scrollHeight > chatTextareaMaxHeight ? "auto" : "hidden";
 }
 
+function loadStudyLaterItems() {
+  const saved = safeJsonParse(localStorage.getItem(studyLaterKey));
+  studyLaterItems = Array.isArray(saved?.items) ? saved.items : [];
+  updateStudyConceptsCount();
+}
+
+function saveStudyLaterItems() {
+  localStorage.setItem(studyLaterKey, JSON.stringify({ items: studyLaterItems }));
+  updateStudyConceptsCount();
+}
+
+function updateStudyConceptsCount() {
+  studyConceptsCount.textContent = String(studyLaterItems.length);
+}
+
+function renderStudyLaterSection() {
+  const wasOpen = document.getElementById("study-concepts-section")?.classList.contains("is-open");
+  studyLaterRoot.innerHTML = `
+    <section class="doc-chapter study-chapter" id="study-concepts-anchor">
+      <div class="doc-chapter-head">
+        <p class="chapter-eyebrow">Study Later</p>
+        <h3>Study concepts</h3>
+      </div>
+      <div class="doc-section-stack">
+        <article class="doc-section" id="study-concepts-section">
+          <button
+            class="doc-section-trigger"
+            type="button"
+            aria-expanded="false"
+            aria-controls="study-concepts-panel"
+          >
+            <span class="doc-section-title">Highlights to revisit with AI</span>
+            <span class="doc-section-chevron" aria-hidden="true">+</span>
+          </button>
+          <div class="doc-section-panel" id="study-concepts-panel">
+            <div class="doc-section-body">
+              ${renderStudyLaterBody()}
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  `;
+  updateStudyConceptsCount();
+  const section = document.getElementById("study-concepts-section");
+  bindSectionAccordion(section);
+  if (wasOpen || studyLaterSession) {
+    openSection(section);
+  }
+}
+
+function renderStudyLaterBody() {
+  if (!studyLaterItems.length) {
+    return `
+      <div class="study-empty">
+        <p><strong>No saved concepts yet.</strong></p>
+        <p>Highlight a line in the document and use the new <strong>+</strong> action to save it for a separate AI study round.</p>
+      </div>
+    `;
+  }
+
+  const session = studyLaterSession;
+  const current = session?.current || null;
+  const listMarkup = `
+    <div class="study-concepts-list">
+      ${studyLaterItems
+        .map(
+          (item) => `
+            <article class="study-concept-item">
+              <div>
+                <p class="study-concept-source">${escapeHtml(item.sectionTitle || "Saved concept")}</p>
+                <p class="study-concept-text">${escapeHtml(item.text)}</p>
+              </div>
+              <button
+                class="study-remove"
+                type="button"
+                data-study-remove="${escapeAttribute(item.id)}"
+                aria-label="Remove saved concept"
+              >
+                ×
+              </button>
+            </article>
+          `,
+        )
+        .join("")}
+    </div>
+  `;
+
+  if (!session) {
+    return `
+      <div class="study-toolbar">
+        <div>
+          <p class="quiz-kicker">Saved highlights</p>
+          <h4 class="quiz-title">Build a personal study round</h4>
+        </div>
+        <button class="quiz-restart" type="button" data-study-start>Study concepts</button>
+      </div>
+      <p class="study-note">These highlights stay separate from the chapter quizzes and let the AI focus only on the exact ideas you marked.</p>
+      ${listMarkup}
+    `;
+  }
+
+  const progressMarkup = `
+    <div class="quiz-progress">
+      <span>Mastered ${session.mastered}/${session.totalTarget}</span>
+      <span>${session.queue.length ? "AI study round" : "Round complete"}</span>
+    </div>
+  `;
+
+  if (session.completed || !current) {
+    return `
+      <div class="study-toolbar">
+        <div>
+          <p class="quiz-kicker">Study concepts</p>
+          <h4 class="quiz-title">Finished this round</h4>
+        </div>
+        <div class="study-toolbar-actions">
+          <button class="quiz-restart" type="button" data-study-start>Restart</button>
+          <button class="quiz-restart" type="button" data-study-clear>Clear all</button>
+        </div>
+      </div>
+      ${progressMarkup}
+      <div class="quiz-summary">
+        <p><strong>${session.mastered}/${session.totalTarget}</strong> saved concepts answered confidently.</p>
+        <p>Restart for another AI-led pass through your highlights.</p>
+      </div>
+      ${listMarkup}
+    `;
+  }
+
+  const feedbackMarkup = current.currentResult
+    ? `
+      <div class="quiz-feedback ${current.currentResult.correct ? "is-correct" : "is-incorrect"}">
+        <strong>${current.currentResult.correct ? "Nice" : "Keep going"}</strong>
+        <p>${escapeHtml(current.currentResult.feedback || "")}</p>
+      </div>
+      <button class="quiz-next" type="button" data-study-next>
+        ${current.currentResult.correct ? "Next concept" : "See it again later"}
+      </button>
+    `
+    : "";
+
+  return `
+    <div class="study-toolbar">
+      <div>
+        <p class="quiz-kicker">Study concepts</p>
+        <h4 class="quiz-title">Quiz me on my saved highlights</h4>
+      </div>
+      <div class="study-toolbar-actions">
+        <button class="quiz-restart" type="button" data-study-start>Restart</button>
+        <button class="quiz-restart" type="button" data-study-clear>Clear all</button>
+      </div>
+    </div>
+    ${progressMarkup}
+    <div class="study-card">
+      <p class="study-card-source">${escapeHtml(current.item.sectionTitle || "Saved concept")}</p>
+      ${
+        current.isLoading
+          ? '<p class="study-note">Building a question from your highlight...</p>'
+          : `<p class="quiz-prompt">${escapeHtml(current.card?.question || "What key idea should you remember from this highlight?")}</p>
+             <p class="study-card-context">Saved text: ${escapeHtml(current.item.text)}</p>
+             <form class="quiz-short-form" data-study-form>
+               <textarea
+                 class="quiz-short-input"
+                 name="study-answer"
+                 rows="3"
+                 placeholder="Type a short answer"
+                 ${current.isGrading || current.currentResult ? "disabled" : ""}
+               >${escapeHtml(current.lastAnswer || "")}</textarea>
+               <button class="quiz-submit" type="submit" ${current.isGrading || current.currentResult ? "disabled" : ""}>
+                 ${current.isGrading ? "Checking..." : "Check answer"}
+               </button>
+             </form>
+             ${feedbackMarkup}`
+      }
+    </div>
+    ${listMarkup}
+  `;
+}
+
+function wireStudyLaterSection() {
+  studyLaterRoot.addEventListener("click", async (event) => {
+    const removeButton = event.target.closest("[data-study-remove]");
+    if (removeButton) {
+      removeStudyLaterItem(removeButton.getAttribute("data-study-remove"));
+      return;
+    }
+
+    const startButton = event.target.closest("[data-study-start]");
+    if (startButton) {
+      await initializeStudyLaterSession();
+      return;
+    }
+
+    const nextButton = event.target.closest("[data-study-next]");
+    if (nextButton) {
+      await advanceStudyLaterSession();
+      return;
+    }
+
+    const clearButton = event.target.closest("[data-study-clear]");
+    if (clearButton) {
+      clearStudyLaterItems();
+    }
+  });
+
+  studyLaterRoot.addEventListener("submit", async (event) => {
+    const form = event.target.closest("[data-study-form]");
+    if (!form) return;
+    event.preventDefault();
+    await submitStudyLaterAnswer(form);
+  });
+}
+
+function getStudyLaterSelectionMeta(node) {
+  const section = node?.closest?.(".doc-section");
+  if (!section) return null;
+  return {
+    sectionId: section.id,
+    sectionTitle: section.querySelector(".doc-section-title")?.textContent?.trim() || "Saved concept",
+  };
+}
+
+function addStudyLaterItem(text, meta) {
+  const trimmed = text.trim();
+  if (!trimmed) return false;
+
+  const exists = studyLaterItems.some((item) => normalize(item.text) === normalize(trimmed));
+  if (exists) return false;
+
+  studyLaterItems.unshift({
+    id: `study-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    text: trimmed,
+    sectionId: meta?.sectionId || "",
+    sectionTitle: meta?.sectionTitle || "Saved concept",
+    createdAt: Date.now(),
+  });
+
+  saveStudyLaterItems();
+  renderStudyLaterSection();
+  syncOpenPanelHeight(document.getElementById("study-concepts-panel"));
+  return true;
+}
+
+function removeStudyLaterItem(id) {
+  studyLaterItems = studyLaterItems.filter((item) => item.id !== id);
+  if (studyLaterSession?.queue?.some((item) => item.id === id) || studyLaterSession?.current?.item?.id === id) {
+    studyLaterSession = null;
+  }
+  saveStudyLaterItems();
+  renderStudyLaterSection();
+}
+
+function clearStudyLaterItems() {
+  studyLaterItems = [];
+  studyLaterSession = null;
+  saveStudyLaterItems();
+  renderStudyLaterSection();
+}
+
+async function initializeStudyLaterSession() {
+  if (!studyLaterItems.length) return;
+
+  studyLaterSession = {
+    queue: shuffleArray(studyLaterItems).map((item) => ({ ...item })),
+    current: null,
+    mastered: 0,
+    totalTarget: studyLaterItems.length,
+    completed: false,
+  };
+  renderStudyLaterSection();
+  revealSection(document.getElementById("study-concepts-section"), true);
+  await prepareCurrentStudyLaterCard();
+}
+
+async function prepareCurrentStudyLaterCard() {
+  if (!studyLaterSession) return;
+
+  if (!studyLaterSession.queue.length) {
+    studyLaterSession.current = null;
+    studyLaterSession.completed = true;
+    renderStudyLaterSection();
+    return;
+  }
+
+  const item = studyLaterSession.queue[0];
+  studyLaterSession.current = {
+    item,
+    card: null,
+    isLoading: true,
+    isGrading: false,
+    currentResult: null,
+    lastAnswer: "",
+  };
+  renderStudyLaterSection();
+  syncOpenPanelHeight(document.getElementById("study-concepts-panel"));
+
+  try {
+    const card = await generateStudyLaterCard(item);
+    if (!studyLaterSession?.current || studyLaterSession.current.item.id !== item.id) return;
+    studyLaterSession.current.card = card;
+  } catch (error) {
+    if (!studyLaterSession?.current || studyLaterSession.current.item.id !== item.id) return;
+    studyLaterSession.current.card = {
+      question: "What key idea from this saved highlight should you remember?",
+      expected: item.text,
+      rubric: "The answer should capture the main physics idea in the saved text.",
+    };
+    studyLaterSession.current.currentResult = {
+      correct: false,
+      feedback: error instanceof Error ? error.message : "I could not build the question just now.",
+    };
+  } finally {
+    if (studyLaterSession?.current && studyLaterSession.current.item.id === item.id) {
+      studyLaterSession.current.isLoading = false;
+      renderStudyLaterSection();
+      syncOpenPanelHeight(document.getElementById("study-concepts-panel"));
+    }
+  }
+}
+
+async function submitStudyLaterAnswer(form) {
+  const current = studyLaterSession?.current;
+  if (!studyLaterSession || !current || current.isLoading || current.isGrading || current.currentResult) return;
+
+  const formData = new FormData(form);
+  const answer = String(formData.get("study-answer") || "").trim();
+  if (!answer) return;
+
+  current.isGrading = true;
+  current.lastAnswer = answer;
+  renderStudyLaterSection();
+  syncOpenPanelHeight(document.getElementById("study-concepts-panel"));
+
+  try {
+    current.currentResult = await gradeStudyLaterAnswer(current.item, current.card, answer);
+  } catch (error) {
+    current.currentResult = {
+      correct: false,
+      feedback:
+        error instanceof Error
+          ? error.message
+          : "I could not grade that answer just now. Try again in a moment.",
+    };
+  } finally {
+    current.isGrading = false;
+    renderStudyLaterSection();
+    syncOpenPanelHeight(document.getElementById("study-concepts-panel"));
+  }
+}
+
+async function advanceStudyLaterSession() {
+  if (!studyLaterSession?.current?.currentResult) return;
+
+  const currentItem = studyLaterSession.queue.shift();
+  if (studyLaterSession.current.currentResult.correct) {
+    studyLaterSession.mastered += 1;
+  } else if (currentItem) {
+    studyLaterSession.queue.push({ ...currentItem });
+  }
+
+  studyLaterSession.current = null;
+  studyLaterSession.completed = studyLaterSession.queue.length === 0;
+  renderStudyLaterSection();
+  await prepareCurrentStudyLaterCard();
+}
+
 function wireSelectionAssist() {
   const refreshSelectionAction = () => {
     const selection = window.getSelection();
@@ -739,9 +1129,16 @@ function wireSelectionAssist() {
     }
 
     selectedDocumentText = text;
-    selectionAction.style.left = `${Math.min(window.innerWidth - 44, rect.right + 8)}px`;
-    selectionAction.style.top = `${Math.max(12, rect.top - 18)}px`;
+    selectedDocumentSource = getStudyLaterSelectionMeta(commonAncestor);
+    const top = Math.max(12, rect.top - 18);
+    const askLeft = Math.min(window.innerWidth - 78, rect.right + 8);
+    const studyLeft = Math.min(window.innerWidth - 44, askLeft + 34);
+    selectionAction.style.left = `${askLeft}px`;
+    selectionAction.style.top = `${top}px`;
+    selectionStudyAction.style.left = `${studyLeft}px`;
+    selectionStudyAction.style.top = `${top}px`;
     selectionAction.classList.add("is-visible");
+    selectionStudyAction.classList.add("is-visible");
   };
 
   document.addEventListener("selectionchange", () => {
@@ -760,10 +1157,22 @@ function wireSelectionAssist() {
     chatInput.focus();
     hideSelectionAction();
   });
+
+  selectionStudyAction.addEventListener("click", () => {
+    if (!selectedDocumentText) return;
+
+    addStudyLaterItem(selectedDocumentText, selectedDocumentSource);
+    const target = document.getElementById("study-concepts-section");
+    if (target) {
+      revealSection(target, false);
+    }
+    hideSelectionAction();
+  });
 }
 
 function hideSelectionAction() {
   selectionAction.classList.remove("is-visible");
+  selectionStudyAction.classList.remove("is-visible");
 }
 
 function showInDocument(query) {
@@ -1380,6 +1789,99 @@ Student answer: ${answer}
       (parsed?.correct
         ? "That matches the key idea from this chapter."
         : `Look for this idea: ${question.expected}`),
+  };
+}
+
+async function generateStudyLaterCard(item) {
+  saveSettings();
+  const { provider, model, apiKey } = getActiveProviderConfig();
+  if (!apiKey) {
+    throw new Error("Open the gear menu and add an API key for the selected provider first.");
+  }
+
+  const content = await callChatModel({
+    provider,
+    model,
+    apiKey,
+    temperature: 0.4,
+    messages: [
+      {
+        role: "system",
+        content:
+          "You create short study questions from highlighted physics notes. Return strict JSON only in the form {\"question\":\"...\",\"expected\":\"...\",\"rubric\":\"...\"}. Ask a concise free-response question that checks understanding, not memorized wording.",
+      },
+      {
+        role: "user",
+        content: `
+Section: ${item.sectionTitle}
+Saved highlight:
+${item.text}
+        `.trim(),
+      },
+    ],
+  });
+
+  const parsed = parseJsonResponse(content);
+  if (!parsed?.question) {
+    throw new Error("I could not turn that highlight into a study question.");
+  }
+
+  return {
+    question: parsed.question,
+    expected: parsed.expected || item.text,
+    rubric: parsed.rubric || "The answer should capture the main physics idea in the saved highlight.",
+  };
+}
+
+async function gradeStudyLaterAnswer(item, card, answer) {
+  saveSettings();
+  const { provider, model, apiKey } = getActiveProviderConfig();
+  if (!apiKey) {
+    throw new Error("Open the gear menu and add an API key for the selected provider first.");
+  }
+
+  const content = await callChatModel({
+    provider,
+    model,
+    apiKey,
+    temperature: 0,
+    messages: [
+      {
+        role: "system",
+        content:
+          "You grade short physics study answers. Return strict JSON only in the form {\"correct\":true|false,\"feedback\":\"...\"}. Be encouraging, concise, and judge the idea rather than exact wording.",
+      },
+      {
+        role: "user",
+        content: `
+Section: ${item.sectionTitle}
+Saved highlight:
+${item.text}
+
+Question:
+${card?.question || "What key idea from this saved highlight should you remember?"}
+
+Expected idea:
+${card?.expected || item.text}
+
+Rubric:
+${card?.rubric || "The answer should capture the main physics idea in the saved highlight."}
+
+Student answer:
+${answer}
+        `.trim(),
+      },
+    ],
+  });
+
+  const parsed = parseJsonResponse(content);
+  return {
+    correct: Boolean(parsed?.correct),
+    feedback:
+      parsed?.feedback ||
+      (parsed?.correct
+        ? "That captures the saved concept well."
+        : `Aim for the main idea here: ${card?.expected || item.text}`),
   };
 }
 

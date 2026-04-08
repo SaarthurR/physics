@@ -71,10 +71,16 @@
                   <p class="section-label">Curriculum</p>
                   <h2>Read it like a real study document.</h2>
                 </div>
-                <label class="compact-toggle" for="auto-compact-toggle">
-                  <input id="auto-compact-toggle" type="checkbox" checked />
-                  <span>Auto compact</span>
-                </label>
+                <div class="doc-head-controls">
+                  <button class="study-concepts-button" id="study-concepts-button" type="button">
+                    Study concepts
+                    <span class="study-concepts-count" id="study-concepts-count">0</span>
+                  </button>
+                  <label class="compact-toggle" for="auto-compact-toggle">
+                    <input id="auto-compact-toggle" type="checkbox" checked />
+                    <span>Auto compact</span>
+                  </label>
+                </div>
               </div>
               <p>
                 Every chapter is expanded in full, and each subsection is linkable from
@@ -82,6 +88,7 @@
               </p>
             </header>
 
+            <section id="study-later-root"></section>
             <section id="document-root"></section>
           </article>
         </main>
@@ -106,6 +113,15 @@
       aria-label="Ask the tutor about selected text"
     >
       ?
+    </button>
+
+    <button
+      class="selection-action selection-action-secondary"
+      id="selection-study-action"
+      type="button"
+      aria-label="Save selected text to study later"
+    >
+      +
     </button>
 
     <aside class="chat-shell" id="chat-shell" aria-hidden="true">
