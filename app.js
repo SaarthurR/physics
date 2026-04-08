@@ -14,6 +14,7 @@ const docSidebar = document.querySelector("#doc-sidebar");
 const sidebarCollapse = document.querySelector("#sidebar-collapse");
 const outlineNav = document.querySelector("#outline-nav");
 const documentRoot = document.querySelector("#document-root");
+const autoCompactToggle = document.querySelector("#auto-compact-toggle");
 
 const chatBubble = document.querySelector("#chat-bubble");
 const selectionAction = document.querySelector("#selection-action");
@@ -72,6 +73,14 @@ const sectionHintMap = {
   "chapter-4-decibels": ["decibels", "log scale", "db", "sound level"],
   "chapter-5-moving-source": ["doppler formula", "moving source", "approaching source", "receding source"],
   "chapter-5-full-formula": ["moving observer", "full doppler formula", "observer moving"],
+  "chapter-5-worked-example": [
+    "ambulance problem",
+    "worked example ambulance",
+    "silas and eppie",
+    "silas",
+    "eppie",
+    "ambulance",
+  ],
   "chapter-6-superposition": ["superposition"],
   "chapter-6-phase-chart": ["phase chart", "phase difference", "delta phi"],
   "chapter-6-conditions": ["constructive interference", "destructive interference", "interference conditions"],
@@ -82,6 +91,7 @@ const settingsKey = "waves-study-chat-settings";
 const chatLayoutKey = "waves-study-chat-layout";
 const sidebarStateKey = "waves-study-sidebar-collapsed";
 const responseModeKey = "waves-study-response-mode";
+const autoCompactKey = "waves-study-auto-compact";
 const chatState = { messages: [] };
 const quizStates = new Map();
 const quizSessionLength = 5;
@@ -97,6 +107,7 @@ loadSettings();
 applySavedChatLayout();
 loadSidebarState();
 loadResponseMode();
+loadAutoCompactState();
 wireSectionAccordions();
 wireQuizSections();
 wireResponsivePanels();
@@ -191,7 +202,7 @@ function renderOutline() {
       if (!target) return;
 
       if (target.classList.contains("doc-section")) {
-        openExclusiveSection(target, true);
+        revealSection(target, true);
       } else {
         centerTarget(target);
       }
@@ -307,7 +318,7 @@ function wireSectionAccordions() {
         return;
       }
 
-      openExclusiveSection(section, false);
+      revealSection(section, false);
     });
   });
 }
@@ -384,6 +395,10 @@ function wireChatEvents() {
 
   chatSettingsToggle.addEventListener("click", () => {
     chatSettings.classList.toggle("is-hidden");
+  });
+
+  autoCompactToggle.addEventListener("change", () => {
+    localStorage.setItem(autoCompactKey, JSON.stringify({ enabled: autoCompactToggle.checked }));
   });
 
   providerSelect.addEventListener("change", () => {
@@ -602,6 +617,11 @@ function loadResponseMode() {
   setResponseMode(saved?.mode || "concise");
 }
 
+function loadAutoCompactState() {
+  const saved = safeJsonParse(localStorage.getItem(autoCompactKey));
+  autoCompactToggle.checked = saved?.enabled !== false;
+}
+
 function setResponseMode(mode) {
   const resolvedMode = mode === "explained" ? "explained" : "concise";
   modeButtons.forEach((button) => {
@@ -613,6 +633,24 @@ function setResponseMode(mode) {
 function getResponseMode() {
   const active = modeButtons.find((button) => button.classList.contains("is-active"));
   return active?.getAttribute("data-mode") || "concise";
+}
+
+function getAutoCompactState() {
+  return autoCompactToggle.checked;
+}
+
+function revealSection(targetSection, shouldCenter, forceExclusive = false) {
+  if (forceExclusive || getAutoCompactState()) {
+    openExclusiveSection(targetSection, shouldCenter);
+    return;
+  }
+
+  openSection(targetSection);
+  if (shouldCenter) {
+    requestAnimationFrame(() => {
+      centerTarget(targetSection);
+    });
+  }
 }
 
 function openExclusiveSection(targetSection, shouldCenter) {
@@ -732,7 +770,7 @@ function showInDocument(query) {
   const match = findBestSectionForQuery(query);
   if (!match?.section) return false;
 
-  openExclusiveSection(match.section, false);
+  revealSection(match.section, false);
   requestAnimationFrame(() => {
     const highlightTarget = highlightBestSnippet(match.section, query) || match.section;
     centerTarget(highlightTarget);
@@ -752,6 +790,7 @@ function findBestSectionForQuery(query) {
   const wantsWaveSpeed =
     /\bvelocity\b/.test(normalizedQuery) ||
     (/\b(wave speed|speed)\b/.test(normalizedQuery) && /\bwave\b/.test(normalizedQuery));
+  const wantsAmbulance = /\bambulance\b|\bsilas\b|\beppie\b/.test(normalizedQuery);
   const wantsDoppler = /\bdoppler\b/.test(normalizedQuery);
   const wantsDirection = /\b(minus sign|plus sign|direction|right moving|left moving)\b/.test(normalizedQuery);
   const wantsInterference =
@@ -803,6 +842,12 @@ function findBestSectionForQuery(query) {
       if (wantsDoppler) {
         if (record.id === "chapter-5-moving-source") score += 14;
         if (record.id === "chapter-5-full-formula") score += 12;
+      }
+
+      if (wantsAmbulance) {
+        if (record.id === "chapter-5-worked-example") score += 26;
+        if (record.id === "chapter-5-hook") score += 8;
+        if (record.id === "chapter-5-moving-source") score += 10;
       }
 
       if (wantsDirection && record.id === "chapter-2-direction") score += 18;
@@ -888,8 +933,10 @@ function highlightBestSnippet(section, query) {
 }
 
 function isExplicitShowRequest(question) {
-  return /(?:show me in the document|show me where|where does the document say|where does it say|take me to the document|open the section|open that section|open it|take me there|go to that part|show that part)/i.test(
-    question,
+  return (
+    /(?:show me in the document|show me where|where does the document say|where does it say|take me to the document|open the section|open that section|open it|take me there|go to that part|show that part)/i.test(
+      question,
+    ) || /^(?:open|show|go to|take me to)\b/i.test(question.trim())
   );
 }
 
