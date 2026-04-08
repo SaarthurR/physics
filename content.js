@@ -1,12 +1,12 @@
 export const FORMULA_STRIP = [
-  { label: "Wave speed", value: "v = lambda f = lambda / T" },
+  { label: "Wave speed", value: "v = λf = λ / T" },
   {
     label: "Doppler",
-    value: "f_obs = (v / (v +/- v_s)) x f_s",
+    value: "f_obs = (v / (v ± v_s)) × f_s",
   },
   {
     label: "Interference",
-    value: "Delta Phi = -2pi Delta x / lambda + Delta phi_0",
+    value: "ΔΦ = -2πΔx / λ + Δφ₀",
   },
 ];
 
@@ -119,7 +119,7 @@ At x = 5 m and t = 2 s, phase is about 5.76 rad and displacement is about -0.25 
           id: "chapter-2-equation",
           title: "The Equation",
           html: `
-            <div class="formula-box">y(x, t) - y_0 = A sin( 2pi t/T +/- 2pi x/lambda + phi_0 ) = A sin(Phi)</div>
+            <div class="formula-box">y(x, t) - y₀ = A sin(2πt/T ± 2πx/λ + φ₀) = A sin(Φ)</div>
           `,
         },
         {
@@ -141,33 +141,33 @@ At x = 5 m and t = 2 s, phase is about 5.76 rad and displacement is about -0.25 
             <div class="formula-inline">f = 1/T &nbsp;&nbsp;&nbsp; Units: Hz (Hertz = cycles per second)</div>
             <p>Period and frequency are opposites. High frequency = short period. Low frequency = long period. A 440 Hz musical note (concert A) has a period of about 0.0023 seconds - tiny!</p>
 
-            <h4>lambda - Wavelength</h4>
+            <h4>λ - Wavelength</h4>
             <p>The spatial analogue of period. The distance the wave travels in one full cycle. It's the distance between two consecutive crests (or troughs, or any equivalent points).</p>
             <p><strong>Medium or source?</strong> Both. It depends on wave speed (medium) AND frequency (source). See the relationship below.</p>
 
             <h4>v - Wave Speed</h4>
             <p>How fast the disturbance moves through the medium. NOT the same as how fast the medium's particles move.</p>
-            <div class="formula-inline">v = lambda / T = lambda f</div>
-            <p><strong>Medium-dependent:</strong> Change the tension on a string -> change the wave speed. The source doesn't control this.</p>
-            <p><strong>Key insight:</strong> Same source, different medium -> same frequency, different speed -> different wavelength.</p>
+            <div class="formula-inline">v = λ / T = λf</div>
+            <p><strong>Medium-dependent:</strong> Change the tension on a string → change the wave speed. The source doesn't control this.</p>
+            <p><strong>Key insight:</strong> Same source, different medium → same frequency, different speed → different wavelength.</p>
 
-            <h4>Phi - Total Phase</h4>
+            <h4>Φ - Total Phase</h4>
             <p>The argument of the sine function. It tells you exactly where in the oscillation cycle the wave is at any given (x, t). Units: radians.</p>
-            <div class="formula-inline">Phi = 2pi t/T +/- 2pi x/lambda + phi_0</div>
-            <p>If Phi increases by 2pi, you complete one full cycle and return to the same state. That's it.</p>
+            <div class="formula-inline">Φ = 2πt/T ± 2πx/λ + φ₀</div>
+            <p>If Φ increases by 2π, you complete one full cycle and return to the same state. That's it.</p>
 
-            <h4>phi_0 - Fixed Phase Constant</h4>
+            <h4>φ₀ - Fixed Phase Constant</h4>
             <p>The "starting phase" - where the wave is in its cycle at t = 0, x = 0. A source-dependent property set by initial conditions.</p>
           `,
         },
         {
           id: "chapter-2-direction",
-          title: "The +/- Sign - Wave Direction",
+          title: "The ± Sign - Wave Direction",
           html: `
             <h4>DIRECTION RULE:</h4>
             <ul>
-              <li>Minus sign (-2pi x/lambda) -> wave moves in the +x direction (to the right)</li>
-              <li>Plus sign (+2pi x/lambda) -> wave moves in the -x direction (to the left)</li>
+              <li>Minus sign (-2πx/λ) → wave moves in the +x direction (to the right)</li>
+              <li>Plus sign (+2πx/λ) → wave moves in the -x direction (to the left)</li>
             </ul>
             <p>This trips almost everyone up. The minus sign means right-moving. Yes, it seems backwards. Think of it this way: a right-moving wave at position x arrives at x+dx slightly later in time - the phase must decrease with increasing x at a fixed time, hence the minus.</p>
           `,
@@ -201,9 +201,9 @@ At x = 5 m and t = 2 s, phase is about 5.76 rad and displacement is about -0.25 
                   <td>Tension, density, elasticity of medium</td>
                 </tr>
                 <tr>
-                  <td>Wavelength lambda</td>
+                  <td>Wavelength λ</td>
                   <td>Both</td>
-                  <td>lambda = v/f - depends on both speed AND frequency</td>
+                  <td>λ = v/f - depends on both speed AND frequency</td>
                 </tr>
                 <tr>
                   <td>Amplitude A</td>
@@ -211,7 +211,7 @@ At x = 5 m and t = 2 s, phase is about 5.76 rad and displacement is about -0.25 
                   <td>How energetically you disturb the medium</td>
                 </tr>
                 <tr>
-                  <td>Phase constant phi_0</td>
+                  <td>Phase constant φ₀</td>
                   <td>Source</td>
                   <td>Initial conditions when wave is created</td>
                 </tr>
@@ -227,17 +227,17 @@ At x = 5 m and t = 2 s, phase is about 5.76 rad and displacement is about -0.25 
             <h4>Step 1 - What do we know?</h4>
             <ul>
               <li>Period T = 6 s (one crest every 6 seconds)</li>
-              <li>Wavelength lambda = 20 m (spacing between crests)</li>
-              <li>The peak is 0.5 m above the buoy -> boat is 0.5 m above equilibrium, buoy is at equilibrium -> Amplitude A = 0.5 m</li>
+              <li>Wavelength λ = 20 m (spacing between crests)</li>
+              <li>The peak is 0.5 m above the buoy → boat is 0.5 m above equilibrium, buoy is at equilibrium → Amplitude A = 0.5 m</li>
             </ul>
             <h4>Step 2 - Wave speed:</h4>
-            <div class="formula-inline">v = lambda / T = 20 m / 6 s ~= 3.33 m/s</div>
+            <div class="formula-inline">v = λ / T = 20 m / 6 s ≈ 3.33 m/s</div>
             <h4>Step 3 - Build the equation.</h4>
-            <p>Wave moves LEFT (positive x direction convention here means we use + sign). Boat at x = 0. At t = 0, boat is at crest -> y(0,0) = A, so sin(phi_0) = 1 -> phi_0 = pi/2:</p>
-            <div class="formula-box">y(x, t) = 0.5 sin( 2pi t/6 + 2pi x/20 + pi/2 ) meters</div>
+            <p>Wave moves LEFT (positive x direction convention here means we use + sign). Boat at x = 0. At t = 0, boat is at crest → y(0,0) = A, so sin(φ₀) = 1 → φ₀ = π/2:</p>
+            <div class="formula-box">y(x, t) = 0.5 sin(2πt/6 + 2πx/20 + π/2) meters</div>
             <h4>Step 4 - Find displacement at x = 5 m, t = 2 s:</h4>
-            <div class="formula-inline">Phi = 2pi(2)/6 + 2pi(5)/20 + pi/2 = 2pi/3 + pi/2 + pi/2 = 2pi/3 + pi ~= 5.76 rad</div>
-            <div class="formula-inline">y = 0.5 x sin(5.76) ~= 0.5 x (-0.50) ~= -0.25 m</div>
+            <div class="formula-inline">Φ = 2π(2)/6 + 2π(5)/20 + π/2 = 2π/3 + π/2 + π/2 = 2π/3 + π ≈ 5.76 rad</div>
+            <div class="formula-inline">y = 0.5 × sin(5.76) ≈ 0.5 × (-0.50) ≈ -0.25 m</div>
           `,
         },
       ],
@@ -260,8 +260,8 @@ Tricky: Two y(t) Graphs at Different Positions. If the farther position graph is
           title: "Two Types of Wave Graphs",
           html: `
             <h4>y(x) - Snapshot in Time</h4>
-            <p>Like a photograph of the wave. t is fixed. x varies. The spatial period = wavelength lambda.</p>
-            <p>Read lambda from the x-axis: distance between identical points.</p>
+            <p>Like a photograph of the wave. t is fixed. x varies. The spatial period = wavelength λ.</p>
+            <p>Read λ from the x-axis: distance between identical points.</p>
             <h4>y(t) - Time History at One Point</h4>
             <p>Like a recording of one point on the wave. x is fixed. t varies. The temporal period = T.</p>
             <p>Read T from the t-axis: time between identical points.</p>
@@ -275,9 +275,9 @@ Tricky: Two y(t) Graphs at Different Positions. If the farther position graph is
             <ol>
               <li>Read A (amplitude) from either graph - peak height.</li>
               <li>Read T from the y(t) graph (time between crests).</li>
-              <li>Read lambda from the y(x) graph (distance between crests).</li>
+              <li>Read λ from the y(x) graph (distance between crests).</li>
               <li>Determine direction from context (given or inferred from two y(t) graphs at different positions).</li>
-              <li>Determine phi_0 by plugging in a known (x, t, y) point and solving.</li>
+              <li>Determine φ₀ by plugging in a known (x, t, y) point and solving.</li>
             </ol>
           `,
         },
@@ -314,7 +314,7 @@ Two 70 dB speakers together produce 76 dB.
             <p>When a wave travels in more than one dimension, we use two tools to visualize it:</p>
             <h4>Wavefronts</h4>
             <p>Lines (2D) or surfaces (3D) connecting all points with the same phase.</p>
-            <p>Solid lines = crests. Dashed lines = troughs. Distance between adjacent solid lines = lambda.</p>
+            <p>Solid lines = crests. Dashed lines = troughs. Distance between adjacent solid lines = λ.</p>
             <h4>Rays</h4>
             <p>Arrows pointing in the direction of wave travel.</p>
             <p>Rays are always perpendicular to wavefronts.</p>
@@ -329,12 +329,12 @@ Two 70 dB speakers together produce 76 dB.
             <div class="formula-inline">I = P / Area</div>
             <p>If no energy is lost (no dissipation), the total power crossing each wavefront stays constant. But the area of the wavefront grows.</p>
             <h4>2D Waves (circles)</h4>
-            <p>Area = circumference = 2pi r</p>
-            <div class="formula-inline">I proportional to 1/r</div>
+            <p>Area = circumference = 2πr</p>
+            <div class="formula-inline">I ∝ 1/r</div>
             <h4>3D Waves (spheres)</h4>
-            <p>Area = 4pi r^2</p>
-            <div class="formula-inline">I proportional to 1/r^2 (inverse square law)</div>
-            <p>Since I proportional to A^2, amplitude in 2D falls as A proportional to 1/sqrt(r), and in 3D as A proportional to 1/r.</p>
+            <p>Area = 4πr²</p>
+            <div class="formula-inline">I ∝ 1/r² (inverse square law)</div>
+            <p>Since I ∝ A², amplitude in 2D falls as A ∝ 1/√r, and in 3D as A ∝ 1/r.</p>
             <p>Our ears detect intensity, not power. That's why the same speaker sounds quieter from far away - the intensity at your ear decreased, even though total power output of the speaker didn't change.</p>
           `,
         },
@@ -343,11 +343,11 @@ Two 70 dB speakers together produce 76 dB.
           title: "Decibels - Why Sound Uses a Log Scale",
           html: `
             <p>If you double the number of speakers, the sound gets louder - but you don't hear it as twice as loud. Human hearing compresses big differences into smaller perceived changes. This is why we use a logarithmic scale.</p>
-            <div class="formula-box">D - D_0 = 10 x log_10( I / I_0 )</div>
+            <div class="formula-box">D - D₀ = 10 × log₁₀(I / I₀)</div>
             <h4>Key facts to memorize:</h4>
             <ul>
-              <li>+10 dB = 10x more intense, but sounds only 2x louder</li>
-              <li>+3 dB ~= 2x more intense (since log_10(2) ~= 0.3)</li>
+              <li>+10 dB = 10× more intense, but sounds only 2× louder</li>
+              <li>+3 dB ≈ 2× more intense (since log₁₀(2) ≈ 0.3)</li>
             </ul>
           `,
         },
@@ -356,8 +356,8 @@ Two 70 dB speakers together produce 76 dB.
           title: "Worked: Two Speakers Each at 70 dB",
           html: `
             <p>Two identical speakers playing simultaneously. Each alone = 70 dB. What is the combined level?</p>
-            <p>Combined amplitude = 2A (amplitudes add). Combined intensity: since I proportional to A^2, ratio I/I_0 = (2A)^2/A^2 = 4.</p>
-            <div class="formula-inline">D - 70 = 10 x log_10(4) = 10 x 0.602 ~= 6 dB</div>
+            <p>Combined amplitude = 2A (amplitudes add). Combined intensity: since I ∝ A², ratio I/I₀ = (2A)²/A² = 4.</p>
+            <div class="formula-inline">D - 70 = 10 × log₁₀(4) = 10 × 0.602 ≈ 6 dB</div>
             <div class="formula-inline">Combined = 76 dB</div>
             <p>76 dB is NOT twice as loud as 70 dB. To sound twice as loud, you need 80 dB (+10 dB). So two speakers sounding together doesn't even come close to sounding twice as loud as one.</p>
           `,
@@ -393,18 +393,18 @@ Worked example: v_s = 50 m/s, f_s = 50 Hz, sound speed v = 350 m/s. Forward wave
           html: `
             <p>Imagine the ambulance emitting crests at regular intervals. When the ambulance moves toward you, each successive crest is emitted from a position slightly closer to you than the last. So the crests are squeezed together - shorter wavelength - which means higher frequency for you.</p>
             <p>When the ambulance moves away, each crest is emitted from farther away. The crests are stretched out - longer wavelength - lower frequency.</p>
-            <div class="formula-inline">lambda_forward &lt; lambda_stationary &lt; lambda_backward</div>
+            <div class="formula-inline">λ_forward &lt; λ_stationary &lt; λ_backward</div>
           `,
         },
         {
           id: "chapter-5-moving-source",
           title: "The Formula - Moving Source",
           html: `
-            <div class="formula-box">f_observed = (v / (v +/- v_source)) x f_source</div>
+            <div class="formula-box">f_observed = (v / (v ± v_source)) × f_source</div>
             <h4>Sign convention - get this right:</h4>
             <ul>
-              <li>Source moving TOWARD observer -> use MINUS in denominator -> smaller denominator -> f_observed is HIGHER</li>
-              <li>Source moving AWAY from observer -> use PLUS in denominator -> larger denominator -> f_observed is LOWER</li>
+              <li>Source moving TOWARD observer → use MINUS in denominator → smaller denominator → f_observed is HIGHER</li>
+              <li>Source moving AWAY from observer → use PLUS in denominator → larger denominator → f_observed is LOWER</li>
             </ul>
             <p>Sanity check: if source is stationary (v_source = 0), you get f_observed = f_source. Correct!</p>
           `,
@@ -413,11 +413,11 @@ Worked example: v_s = 50 m/s, f_s = 50 Hz, sound speed v = 350 m/s. Forward wave
           id: "chapter-5-full-formula",
           title: "The Full Formula - Moving Observer Too",
           html: `
-            <div class="formula-box">f_observed = ((v +/- v_observer) / (v +/- v_source)) x f_source</div>
+            <div class="formula-box">f_observed = ((v ± v_observer) / (v ± v_source)) × f_source</div>
             <p><strong>For the observer:</strong></p>
             <ul>
-              <li>Observer moving TOWARD source -> use PLUS in numerator (higher f)</li>
-              <li>Observer moving AWAY from source -> use MINUS in numerator (lower f)</li>
+              <li>Observer moving TOWARD source → use PLUS in numerator (higher f)</li>
+              <li>Observer moving AWAY from source → use MINUS in numerator (lower f)</li>
             </ul>
             <p>Is it symmetric? NO. A source moving toward a stationary observer gives a different frequency than a stationary source with an observer moving toward it at the same speed. The formulas are NOT the same - test a number and you'll see.</p>
           `,
@@ -427,14 +427,14 @@ Worked example: v_s = 50 m/s, f_s = 50 Hz, sound speed v = 350 m/s. Forward wave
           title: "Worked Example - Ambulance Problem (FNT 2)",
           html: `
             <p><strong>Setup:</strong> ambulance at v_s = 50 m/s, siren f_s = 50 Hz, sound speed v = 350 m/s. Silas is behind, Eppie is ahead.</p>
-            <p>At t = 0: siren emits a crest. At t = 0.02 s: ambulance has moved x = v x t = 50 x 0.02 = 1 m forward.</p>
-            <p>The siren completes f x t = 50 x 0.02 = 1 full cycle. So at t = 0.02 s, the siren is back to emitting a crest.</p>
-            <p>The t = 0 crest has traveled: 350 x 0.02 = 7 m in all directions. So the t = 0 forward crest is 7 m ahead, while the new t = 0.02 s crest is at the ambulance (1 m ahead of start).</p>
+            <p>At t = 0: siren emits a crest. At t = 0.02 s: ambulance has moved x = v × t = 50 × 0.02 = 1 m forward.</p>
+            <p>The siren completes f × t = 50 × 0.02 = 1 full cycle. So at t = 0.02 s, the siren is back to emitting a crest.</p>
+            <p>The t = 0 crest has traveled: 350 × 0.02 = 7 m in all directions. So the t = 0 forward crest is 7 m ahead, while the new t = 0.02 s crest is at the ambulance (1 m ahead of start).</p>
             <p>Wavelength toward Eppie: 7 - 1 = 6 m. Wavelength toward Silas: 7 + 1 = 8 m.</p>
-            <div class="formula-inline">f_Eppie = v / lambda_forward = 350 / 6 ~= 58.3 Hz (higher - ambulance coming toward her)</div>
-            <div class="formula-inline">f_Silas = v / lambda_backward = 350 / 8 = 43.75 Hz (lower - ambulance going away)</div>
+            <div class="formula-inline">f_Eppie = v / λ_forward = 350 / 6 ≈ 58.3 Hz (higher - ambulance coming toward her)</div>
+            <div class="formula-inline">f_Silas = v / λ_backward = 350 / 8 = 43.75 Hz (lower - ambulance going away)</div>
             <p>Verify with the formula:</p>
-            <div class="formula-inline">f_Eppie = (350 / (350 - 50)) x 50 = (350/300) x 50 ~= 58.3 Hz</div>
+            <div class="formula-inline">f_Eppie = (350 / (350 - 50)) × 50 = (350/300) × 50 ≈ 58.3 Hz</div>
           `,
         },
       ],
@@ -478,19 +478,19 @@ Pond problem: Bob 3 m from An and 4 m from Carla gives path difference 1 m and c
               <thead>
                 <tr>
                   <th>Type</th>
-                  <th>Phase Difference Delta Phi</th>
+                  <th>Phase Difference ΔΦ</th>
                   <th>Result</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td>Constructive</td>
-                  <td>Delta Phi = 0, 2pi, 4pi, ... (n x 2pi)</td>
+                  <td>ΔΦ = 0, 2π, 4π, ... (n × 2π)</td>
                   <td>Max amplitude (2A). Crests align.</td>
                 </tr>
                 <tr>
                   <td>Destructive</td>
-                  <td>Delta Phi = pi, 3pi, 5pi, ... ((2n+1) x pi)</td>
+                  <td>ΔΦ = π, 3π, 5π, ... ((2n+1) × π)</td>
                   <td>Zero amplitude. Complete cancellation.</td>
                 </tr>
                 <tr>
@@ -511,50 +511,50 @@ Pond problem: Bob 3 m from An and 4 m from Carla gives path difference 1 m and c
               <thead>
                 <tr>
                   <th></th>
-                  <th>2pi t / T (time term)</th>
-                  <th>-2pi x / lambda (pos term)</th>
-                  <th>phi_0</th>
-                  <th>Total Phase Phi</th>
+                  <th>2πt / T (time term)</th>
+                  <th>-2πx / λ (pos term)</th>
+                  <th>φ₀</th>
+                  <th>Total Phase Φ</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td>Wave 1</td>
                   <td>same for both</td>
-                  <td>-2pi x_1 / lambda</td>
-                  <td>phi_1</td>
-                  <td>Phi_1</td>
+                  <td>-2πx₁ / λ</td>
+                  <td>φ₁</td>
+                  <td>Φ₁</td>
                 </tr>
                 <tr>
                   <td>Wave 2</td>
                   <td>same for both</td>
-                  <td>-2pi x_2 / lambda</td>
-                  <td>phi_2</td>
-                  <td>Phi_2</td>
+                  <td>-2πx₂ / λ</td>
+                  <td>φ₂</td>
+                  <td>Φ₂</td>
                 </tr>
                 <tr>
                   <td>Difference</td>
                   <td>0 (cancels out)</td>
-                  <td>-2pi Delta x / lambda</td>
-                  <td>Delta phi_0</td>
-                  <td>Delta Phi = C / D / P?</td>
+                  <td>-2πΔx / λ</td>
+                  <td>Δφ₀</td>
+                  <td>ΔΦ = C / D / P?</td>
                 </tr>
               </tbody>
             </table>
             <p>Key insight: the time term cancels in the difference (both waves exist at the same time at the same point). What remains: path length difference and phase constant difference.</p>
-            <div class="formula-inline">Delta Phi = -2pi(Delta x)/lambda + Delta phi_0</div>
+            <div class="formula-inline">ΔΦ = -2π(Δx)/λ + Δφ₀</div>
           `,
         },
         {
           id: "chapter-6-conditions",
           title: "Conditions for Constructive and Destructive",
           html: `
-            <p><strong>Constructive</strong> (Delta Phi = n x 2pi): Delta x = n lambda - (Delta phi_0 x lambda)/(2pi)</p>
-            <p><strong>Destructive</strong> (Delta Phi = (2n+1) x pi): Delta x = (n + 1/2)lambda - (Delta phi_0 x lambda)/(2pi)</p>
-            <p><strong>Special case:</strong> same phase constants (Delta phi_0 = 0):</p>
+            <p><strong>Constructive</strong> (ΔΦ = n × 2π): Δx = nλ - (Δφ₀ × λ)/(2π)</p>
+            <p><strong>Destructive</strong> (ΔΦ = (2n+1) × π): Δx = (n + 1/2)λ - (Δφ₀ × λ)/(2π)</p>
+            <p><strong>Special case:</strong> same phase constants (Δφ₀ = 0):</p>
             <ul>
-              <li>Constructive: Delta x = n lambda (path difference is a whole number of wavelengths)</li>
-              <li>Destructive: Delta x = (n + 1/2)lambda (path difference is a half-integer wavelength)</li>
+              <li>Constructive: Δx = nλ (path difference is a whole number of wavelengths)</li>
+              <li>Destructive: Δx = (n + 1/2)λ (path difference is a half-integer wavelength)</li>
             </ul>
           `,
         },
@@ -563,9 +563,9 @@ Pond problem: Bob 3 m from An and 4 m from Carla gives path difference 1 m and c
           title: "Superposition in 2D - The Pond Problem",
           html: `
             <p>An and Carla bob in a pond. Bob is 3 m from An and 4 m from Carla. An and Carla start in phase. For constructive interference at Bob:</p>
-            <div class="formula-inline">Delta x = |distance to An - distance to Carla| = |3 - 4| = 1 m = n lambda</div>
-            <p>So lambda = 1 m (or 0.5 m, 0.33 m, etc. for n = 1, 2, 3...)</p>
-            <p>v = 3 m/s, f = v/lambda = 3/1 = 3 Hz (or 6 Hz, 9 Hz, ...)</p>
+            <div class="formula-inline">Δx = |distance to An - distance to Carla| = |3 - 4| = 1 m = nλ</div>
+            <p>So λ = 1 m (or 0.5 m, 0.33 m, etc. for n = 1, 2, 3...)</p>
+            <p>v = 3 m/s, f = v/λ = 3/1 = 3 Hz (or 6 Hz, 9 Hz, ...)</p>
           `,
         },
       ],
@@ -602,59 +602,59 @@ Constructive Delta Phi = 2npi. Destructive Delta Phi = (2n+1)pi.
               </thead>
               <tbody>
                 <tr>
-                  <td>v = lambda f = lambda/T</td>
-                  <td>Wave speed = wavelength x frequency</td>
+                  <td>v = λf = λ/T</td>
+                  <td>Wave speed = wavelength × frequency</td>
                   <td>v depends on medium; f on source</td>
                 </tr>
                 <tr>
                   <td>f = 1/T</td>
                   <td>Frequency is inverse of period</td>
-                  <td>Units of f are Hz (s^-1)</td>
+                  <td>Units of f are Hz (s⁻¹)</td>
                 </tr>
                 <tr>
-                  <td>y(x,t) = A sin(2pi t/T +/- 2pi x/lambda + phi_0)</td>
+                  <td>y(x,t) = A sin(2πt/T ± 2πx/λ + φ₀)</td>
                   <td>Full wave equation</td>
                   <td>Minus = right-moving; Plus = left</td>
                 </tr>
                 <tr>
-                  <td>I proportional to A^2</td>
+                  <td>I ∝ A²</td>
                   <td>Intensity proportional to amplitude squared</td>
-                  <td>Double A -> 4x intensity</td>
+                  <td>Double A → 4× intensity</td>
                 </tr>
                 <tr>
-                  <td>I proportional to 1/r^2 (3D), 1/r (2D)</td>
+                  <td>I ∝ 1/r² (3D), 1/r (2D)</td>
                   <td>Inverse square/linear law</td>
                   <td>No dissipation assumed</td>
                 </tr>
                 <tr>
-                  <td>D - D_0 = 10 log_10(I/I_0)</td>
+                  <td>D - D₀ = 10 log₁₀(I/I₀)</td>
                   <td>Decibel definition</td>
-                  <td>+10 dB = 10x intensity</td>
+                  <td>+10 dB = 10× intensity</td>
                 </tr>
                 <tr>
-                  <td>f_obs = v/(v +/- v_s) x f_s</td>
+                  <td>f_obs = v/(v ± v_s) × f_s</td>
                   <td>Doppler, moving source</td>
                   <td>Minus = source toward observer</td>
                 </tr>
                 <tr>
-                  <td>f_obs = (v +/- v_o)/(v +/- v_s) x f_s</td>
+                  <td>f_obs = (v ± v_o)/(v ± v_s) × f_s</td>
                   <td>Doppler, source + observer moving</td>
                   <td>Observer toward: plus in numerator</td>
                 </tr>
                 <tr>
-                  <td>Delta Phi = -2pi Delta x/lambda + Delta phi_0</td>
+                  <td>ΔΦ = -2πΔx/λ + Δφ₀</td>
                   <td>Phase difference from two sources</td>
                   <td>Key to all interference problems</td>
                 </tr>
                 <tr>
-                  <td>Constructive: Delta Phi = 2npi</td>
+                  <td>Constructive: ΔΦ = 2nπ</td>
                   <td>In-phase condition</td>
-                  <td>n = 0, +/-1, +/-2, ...</td>
+                  <td>n = 0, ±1, ±2, ...</td>
                 </tr>
                 <tr>
-                  <td>Destructive: Delta Phi = (2n+1)pi</td>
+                  <td>Destructive: ΔΦ = (2n+1)π</td>
                   <td>Anti-phase condition</td>
-                  <td>n = 0, +/-1, +/-2, ...</td>
+                  <td>n = 0, ±1, ±2, ...</td>
                 </tr>
               </tbody>
             </table>
@@ -688,13 +688,13 @@ This was a lot and waves is genuinely one of the trickier units because it mixes
           <ol class="long-list">
             <li>A wave is energy traveling through a medium - the medium itself doesn't travel.</li>
             <li>Transverse = medium moves perpendicular to travel (rope). Longitudinal = parallel (sound).</li>
-            <li>The wave equation y = A sin(2pi t/T +/- 2pi x/lambda + phi_0) encodes everything about a 1-D wave.</li>
-            <li>Speed v = lambda f. Speed is medium-dependent. Frequency is source-dependent. Wavelength depends on both.</li>
-            <li>In 3D, intensity falls as 1/r^2 (inverse square law). Amplitude falls as 1/r.</li>
-            <li>Decibels are logarithmic. +10 dB = 10x more intense but only sounds 2x louder.</li>
+            <li>The wave equation y = A sin(2πt/T ± 2πx/λ + φ₀) encodes everything about a 1-D wave.</li>
+            <li>Speed v = λf. Speed is medium-dependent. Frequency is source-dependent. Wavelength depends on both.</li>
+            <li>In 3D, intensity falls as 1/r² (inverse square law). Amplitude falls as 1/r.</li>
+            <li>Decibels are logarithmic. +10 dB = 10× more intense but only sounds 2× louder.</li>
             <li>Doppler effect: moving source compresses or stretches wavelengths, shifting observed frequency.</li>
-            <li>f_obs = v/(v -/+ v_s) x f_s. Minus when approaching, plus when receding.</li>
-            <li>Superposition: wave displacements add algebraically. Constructive (Delta Phi = 2npi) or destructive (Delta Phi = odd x pi).</li>
+            <li>f_obs = v/(v ∓ v_s) × f_s. Minus when approaching, plus when receding.</li>
+            <li>Superposition: wave displacements add algebraically. Constructive (ΔΦ = 2nπ) or destructive (ΔΦ = odd × π).</li>
             <li>The phase chart is your best friend for interference - build it systematically every time.</li>
           </ol>
         `,

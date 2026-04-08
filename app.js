@@ -1156,7 +1156,31 @@ function isGenericDocumentPrompt(question) {
 }
 
 function normalize(value) {
-  return value.toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
+  return value
+    .toLowerCase()
+    .replaceAll("λ", " lambda ")
+    .replaceAll("δ", " delta ")
+    .replaceAll("Δ", " delta ")
+    .replaceAll("φ", " phi ")
+    .replaceAll("Φ", " phi ")
+    .replaceAll("π", " pi ")
+    .replaceAll("±", " plusminus ")
+    .replaceAll("∓", " minusplus ")
+    .replaceAll("×", " x ")
+    .replaceAll("∝", " proportional ")
+    .replaceAll("√", " sqrt ")
+    .replaceAll("≈", " approx ")
+    .replaceAll("₀", "0")
+    .replaceAll("₁", "1")
+    .replaceAll("₂", "2")
+    .replaceAll("₃", "3")
+    .replaceAll("⁰", "0")
+    .replaceAll("¹", "1")
+    .replaceAll("²", "2")
+    .replaceAll("³", "3")
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function extractSemanticQuery(value) {
@@ -1195,9 +1219,27 @@ function expandQueryTokens(value) {
     expanded.add("lambda");
   }
 
+  if (tokens.has("lambda")) {
+    expanded.add("wavelength");
+  }
+
   if (tokens.has("frequency")) {
     expanded.add("period");
     expanded.add("hz");
+  }
+
+  if (tokens.has("delta")) {
+    expanded.add("difference");
+    expanded.add("change");
+  }
+
+  if (tokens.has("phi")) {
+    expanded.add("phase");
+    expanded.add("phase constant");
+  }
+
+  if (tokens.has("pi")) {
+    expanded.add("radians");
   }
 
   if (tokens.has("doppler")) {
