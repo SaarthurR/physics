@@ -52,6 +52,28 @@ const chatMinWidth = 320;
 const chatMinHeight = 380;
 const chatCondensedWidth = 320;
 const chatCondensedHeight = 520;
+const unitQuizConfigs = [
+  {
+    id: "unit-dl-quiz",
+    wrapperId: "unit-quizzes",
+    sectionTitle: "Entire Unit Quiz - DL1 to DL5",
+    kicker: "Whole guide quiz",
+    cardTitle: "DL1 to DL5 comprehensive check",
+    completeTitle: "Finished the DL-only round",
+    summaryText: "Restart to get a fresh pass through the full DL1-DL5 guide.",
+    chapterIds: STUDY_GUIDE.chapters.filter((chapter) => chapter.id !== "chapter-13").map((chapter) => chapter.id),
+  },
+  {
+    id: "unit-complete-quiz",
+    wrapperId: "unit-quizzes",
+    sectionTitle: "Entire Unit Quiz - DLs + 8.1-8.6",
+    kicker: "Whole unit quiz",
+    cardTitle: "Complete unit mastery check",
+    completeTitle: "Finished the full-unit round",
+    summaryText: "Restart to quiz the entire unit again, including the textbook supplement.",
+    chapterIds: STUDY_GUIDE.chapters.map((chapter) => chapter.id),
+  },
+];
 
 const sectionHintMap = {
   "chapter-1-core": [
@@ -304,7 +326,32 @@ function renderOutline() {
     </li>
   `;
 
-  outlineNav.innerHTML = `<ul class="outline-list">${chapterLinks}${recapLinks}</ul>`;
+  const unitQuizLinks = `
+    <li class="outline-item">
+      <a class="outline-link outline-link-chapter" href="#unit-quizzes" data-outline-link="unit-quizzes">
+        Full Unit Quizzes
+      </a>
+      <ul class="outline-sublist">
+        ${unitQuizConfigs
+          .map(
+            (quiz) => `
+              <li>
+                <a
+                  class="outline-link outline-link-section outline-link-quiz"
+                  href="#${quiz.id}"
+                  data-outline-link="${quiz.id}"
+                >
+                  ${escapeHtml(quiz.sectionTitle)}
+                </a>
+              </li>
+            `,
+          )
+          .join("")}
+      </ul>
+    </li>
+  `;
+
+  outlineNav.innerHTML = `<ul class="outline-list">${chapterLinks}${recapLinks}${unitQuizLinks}</ul>`;
 
   outlineNav.querySelectorAll("[data-outline-link]").forEach((link) => {
     link.addEventListener("click", (event) => {
@@ -395,7 +442,42 @@ function renderDocument() {
     </section>
   `;
 
-  documentRoot.innerHTML = chapterMarkup + recapMarkup;
+  documentRoot.innerHTML = chapterMarkup + recapMarkup + renderUnitQuizSections();
+}
+
+function renderUnitQuizSections() {
+  return `
+    <section class="doc-chapter unit-quiz-chapter" id="unit-quizzes">
+      <div class="doc-chapter-head">
+        <p class="chapter-eyebrow">Whole Unit</p>
+        <h3>Comprehensive Quizzes</h3>
+      </div>
+      <div class="doc-section-stack">
+        ${unitQuizConfigs
+          .map(
+            (quiz) => `
+              <article class="doc-section doc-quiz-section" id="${quiz.id}">
+                <button
+                  class="doc-section-trigger"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls="${quiz.id}-panel"
+                >
+                  <span class="doc-section-title">${escapeHtml(quiz.sectionTitle)}</span>
+                  <span class="doc-section-chevron" aria-hidden="true">+</span>
+                </button>
+                <div class="doc-section-panel" id="${quiz.id}-panel">
+                  <div class="doc-section-body">
+                    <div class="quiz-shell" data-quiz-root="${quiz.id}"></div>
+                  </div>
+                </div>
+              </article>
+            `,
+          )
+          .join("")}
+      </div>
+    </section>
+  `;
 }
 
 function renderSectionBody(section) {
@@ -547,6 +629,8 @@ function wireScrollSpy() {
     ]),
     STUDY_GUIDE.recap.id,
     ...STUDY_GUIDE.recap.sections.map((section) => section.id),
+    "unit-quizzes",
+    ...unitQuizConfigs.map((quiz) => quiz.id),
   ]
     .map((id) => document.getElementById(id))
     .filter(Boolean);
@@ -2399,7 +2483,7 @@ function wireQuizSections() {
 }
 
 function initializeQuiz(chapterId) {
-  const bank = QUIZ_BANK[chapterId] || [];
+  const bank = getQuizBank(chapterId);
   const selected = selectQuizQuestions(chapterId, bank);
   quizStates.set(chapterId, {
     chapterId,
@@ -2415,8 +2499,34 @@ function initializeQuiz(chapterId) {
   renderQuiz(chapterId);
 }
 
+function getUnitQuizConfig(quizId) {
+  return unitQuizConfigs.find((quiz) => quiz.id === quizId) || null;
+}
+
+function getQuizBank(quizId) {
+  if (QUIZ_BANK[quizId]) {
+    return QUIZ_BANK[quizId].map((question) => ({ ...question, sourceChapterId: quizId }));
+  }
+
+  const unitQuiz = getUnitQuizConfig(quizId);
+  if (!unitQuiz) return [];
+
+  return unitQuiz.chapterIds.flatMap((chapterId) =>
+    (QUIZ_BANK[chapterId] || []).map((question) => ({
+      ...question,
+      sourceChapterId: chapterId,
+    })),
+  );
+}
+
 function selectQuizQuestions(chapterId, bank) {
   const targetCount = getQuizTargetCount(chapterId, bank);
+  const unitQuiz = getUnitQuizConfig(chapterId);
+
+  if (unitQuiz) {
+    return selectUnitQuizQuestions(unitQuiz, bank, targetCount);
+  }
+
   const mcQuestions = shuffleArray(bank.filter((question) => question.type === "mc"));
   const shortQuestions = shuffleArray(bank.filter((question) => question.type === "short"));
   const selected = [];
@@ -2440,8 +2550,52 @@ function selectQuizQuestions(chapterId, bank) {
   return shuffleArray(selected).map((question) => ({ ...question }));
 }
 
+function selectUnitQuizQuestions(unitQuiz, bank, targetCount) {
+  const selected = [];
+  const selectedIds = new Set();
+  const chapterPools = new Map();
+
+  unitQuiz.chapterIds.forEach((chapterId) => {
+    chapterPools.set(
+      chapterId,
+      shuffleArray(bank.filter((question) => question.sourceChapterId === chapterId)),
+    );
+  });
+
+  unitQuiz.chapterIds.forEach((chapterId) => {
+    if (selected.length >= targetCount) return;
+    const pool = chapterPools.get(chapterId) || [];
+    const preferred =
+      pool.find((question) => question.type === "mc" && !selectedIds.has(question.id)) ||
+      pool.find((question) => !selectedIds.has(question.id));
+
+    if (!preferred) return;
+    selected.push(preferred);
+    selectedIds.add(preferred.id);
+  });
+
+  const leftovers = shuffleArray(bank.filter((question) => !selectedIds.has(question.id)));
+  while (selected.length < targetCount && leftovers.length) {
+    const next = leftovers.pop();
+    if (!next) break;
+    selected.push(next);
+  }
+
+  return shuffleArray(selected).map((question) => ({ ...question }));
+}
+
 function getQuizTargetCount(chapterId, bank) {
   if (!bank.length) return 0;
+
+  const unitQuiz = getUnitQuizConfig(chapterId);
+  if (unitQuiz) {
+    const sectionTotal = unitQuiz.chapterIds.reduce((sum, id) => {
+      const chapter = STUDY_GUIDE.chapters.find((entry) => entry.id === id);
+      return sum + (chapter?.sections.length || 0);
+    }, 0);
+    const target = unitQuiz.chapterIds.length + Math.ceil(sectionTotal / 5);
+    return clamp(target, Math.min(unitQuiz.chapterIds.length, bank.length), Math.min(bank.length, 24));
+  }
 
   const chapter = STUDY_GUIDE.chapters.find((entry) => entry.id === chapterId);
   if (!chapter) {
@@ -2461,20 +2615,20 @@ function renderQuiz(chapterId) {
   if (!root || !state) return;
 
   const current = state.queue[0];
-  const chapterLabel = chapterId.replace("chapter-", "Chapter ");
+  const quizMeta = getQuizDisplayMeta(chapterId);
 
   if (state.completed || !current) {
     root.innerHTML = `
       <div class="quiz-toolbar">
         <div>
-          <p class="quiz-kicker">${escapeHtml(chapterLabel)} quiz</p>
-          <h4 class="quiz-title">Finished this round</h4>
+          <p class="quiz-kicker">${escapeHtml(quizMeta.kicker)}</p>
+          <h4 class="quiz-title">${escapeHtml(quizMeta.completeTitle)}</h4>
         </div>
         <button class="quiz-restart" type="button" data-quiz-restart>Restart</button>
       </div>
       <div class="quiz-summary">
         <p><strong>${state.mastered}/${state.totalTarget}</strong> questions mastered.</p>
-        <p>Restart to get a fresh mix from this chapter.</p>
+        <p>${escapeHtml(quizMeta.summaryText)}</p>
       </div>
     `;
     requestAnimationFrame(() => {
@@ -2486,8 +2640,8 @@ function renderQuiz(chapterId) {
   root.innerHTML = `
     <div class="quiz-toolbar">
       <div>
-        <p class="quiz-kicker">${escapeHtml(chapterLabel)} quiz</p>
-        <h4 class="quiz-title">Quick check</h4>
+        <p class="quiz-kicker">${escapeHtml(quizMeta.kicker)}</p>
+        <h4 class="quiz-title">${escapeHtml(quizMeta.cardTitle)}</h4>
       </div>
       <button class="quiz-restart" type="button" data-quiz-restart>Restart</button>
     </div>
@@ -2503,6 +2657,26 @@ function renderQuiz(chapterId) {
   requestAnimationFrame(() => {
     syncOpenPanelHeight(root.closest(".doc-section-panel"));
   });
+}
+
+function getQuizDisplayMeta(quizId) {
+  const unitQuiz = getUnitQuizConfig(quizId);
+  if (unitQuiz) {
+    return {
+      kicker: unitQuiz.kicker,
+      cardTitle: unitQuiz.cardTitle,
+      completeTitle: unitQuiz.completeTitle,
+      summaryText: unitQuiz.summaryText,
+    };
+  }
+
+  const chapterLabel = quizId.replace("chapter-", "Chapter ");
+  return {
+    kicker: `${chapterLabel} quiz`,
+    cardTitle: "Quick check",
+    completeTitle: "Finished this round",
+    summaryText: "Restart to get a fresh mix from this chapter.",
+  };
 }
 
 function renderQuizQuestion(chapterId, question, state) {
