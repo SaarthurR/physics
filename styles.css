@@ -417,12 +417,19 @@ textarea:focus-visible {
 }
 
 .compact-toggle {
+  position: fixed;
+  top: max(18px, calc(env(safe-area-inset-top, 0px) + 12px));
+  right: max(18px, calc(env(safe-area-inset-right, 0px) + 12px));
+  z-index: 66;
   display: inline-flex;
   align-items: center;
   gap: 10px;
   padding: 10px 14px;
+  border: 1px solid rgba(95, 129, 195, 0.16);
   border-radius: 999px;
-  background: rgba(95, 129, 195, 0.08);
+  background: rgba(255, 252, 247, 0.92);
+  box-shadow: 0 14px 34px rgba(36, 50, 58, 0.12);
+  backdrop-filter: blur(10px);
   color: var(--accent-deep);
   font-size: 0.92rem;
   font-weight: 600;
@@ -1461,6 +1468,12 @@ textarea:focus-visible {
 
   .doc-head-controls {
     justify-content: flex-start;
+  }
+
+  .compact-toggle {
+    top: max(12px, calc(env(safe-area-inset-top, 0px) + 8px));
+    right: max(12px, calc(env(safe-area-inset-right, 0px) + 8px));
+    padding: 9px 12px;
   }
 
   .doc-paper {
