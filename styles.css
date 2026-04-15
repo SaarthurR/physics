@@ -807,13 +807,27 @@ textarea:focus-visible {
   gap: 10px;
 }
 
-.chat-bubble {
+.floating-actions-rail {
   position: fixed;
   right: 22px;
   bottom: 22px;
   z-index: 60;
+  display: grid;
+  gap: 14px;
+  justify-items: end;
+}
+
+.chat-bubble,
+.study-concepts-fab,
+.notes-fab {
+  position: relative;
+  right: auto;
+  bottom: auto;
   display: inline-flex;
   align-items: center;
+}
+
+.chat-bubble {
   gap: 12px;
   padding: 15px 18px;
   border: 0;
@@ -824,14 +838,8 @@ textarea:focus-visible {
 }
 
 .study-concepts-fab {
-  position: fixed;
-  right: 150px;
-  bottom: 22px;
-  z-index: 60;
   width: 62px;
   height: 62px;
-  display: inline-flex;
-  align-items: center;
   justify-content: center;
   border: 0;
   border-radius: 999px;
@@ -841,14 +849,8 @@ textarea:focus-visible {
 }
 
 .notes-fab {
-  position: fixed;
-  right: 228px;
-  bottom: 22px;
-  z-index: 60;
   width: 62px;
   height: 62px;
-  display: inline-flex;
-  align-items: center;
   justify-content: center;
   border: 0;
   border-radius: 999px;
@@ -906,7 +908,11 @@ textarea:focus-visible {
 .selection-action-highlight {
   background: linear-gradient(135deg, #f2d56b, #d7a43b);
   color: #5d4306;
-  font-weight: 800;
+}
+
+.selection-action-highlight svg {
+  width: 16px;
+  height: 16px;
 }
 
 .selection-action[data-tooltip]::after {
@@ -1123,10 +1129,54 @@ textarea:focus-visible {
   border-radius: 0.35em;
   background: rgba(242, 213, 107, 0.58);
   box-shadow: 0 0 0 1px rgba(215, 164, 59, 0.18) inset;
+  cursor: pointer;
+  transition:
+    background-color 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.doc-persistent-highlight:hover {
+  background: rgba(242, 213, 107, 0.8);
+  box-shadow: 0 0 0 1px rgba(215, 164, 59, 0.28) inset;
 }
 
 .doc-persistent-highlight.is-focused {
   animation: persistent-highlight-flash 1.8s ease-out;
+}
+
+.example-study-mode {
+  display: grid;
+  gap: 14px;
+}
+
+.example-study-head {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.example-steps-toggle {
+  border: 1px solid rgba(95, 129, 195, 0.16);
+  border-radius: 999px;
+  padding: 9px 12px;
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--accent-deep);
+  font-weight: 700;
+}
+
+.example-problem {
+  padding: 14px 16px;
+  border: 1px solid rgba(95, 129, 195, 0.12);
+  border-radius: 18px;
+  background: rgba(95, 129, 195, 0.06);
+}
+
+.example-solution {
+  display: grid;
+  gap: 14px;
+}
+
+.example-study-mode.is-solution-hidden .example-solution {
+  display: none;
 }
 
 @keyframes persistent-highlight-flash {
@@ -1696,12 +1746,9 @@ textarea:focus-visible {
     display: none;
   }
 
-  .study-concepts-fab {
-    right: 120px;
-  }
-
-  .notes-fab {
-    right: 198px;
+  .floating-actions-rail {
+    right: 16px;
+    bottom: 16px;
   }
 
   .study-concept-item {

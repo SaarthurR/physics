@@ -217,6 +217,7 @@ loadSidebarState();
 loadResponseMode();
 loadAutoCompactState();
 wireSectionAccordions();
+wireExampleSolutionToggles();
 wireQuizSections();
 wireStudyLaterSection();
 wireResponsivePanels();
@@ -347,7 +348,7 @@ function renderDocument() {
                     </button>
                     <div class="doc-section-panel" id="${section.id}-panel">
                       <div class="doc-section-body">
-                        ${section.html}
+                        ${renderSectionBody(section)}
                       </div>
                     </div>
                   </article>
@@ -383,7 +384,7 @@ function renderDocument() {
                 </button>
                 <div class="doc-section-panel" id="${section.id}-panel">
                   <div class="doc-section-body">
-                    ${section.html}
+                    ${renderSectionBody(section)}
                   </div>
                 </div>
               </article>
@@ -395,6 +396,57 @@ function renderDocument() {
   `;
 
   documentRoot.innerHTML = chapterMarkup + recapMarkup;
+}
+
+function renderSectionBody(section) {
+  if (!sectionNeedsSolutionToggle(section)) {
+    return section.html;
+  }
+
+  return buildStudyExampleMarkup(section.html);
+}
+
+function sectionNeedsSolutionToggle(section) {
+  return /\bworked example\b|\bproblem\b/i.test(section.title);
+}
+
+function buildStudyExampleMarkup(html) {
+  const temp = document.createElement("div");
+  temp.innerHTML = html.trim();
+  const nodes = [...temp.children];
+
+  if (nodes.length <= 1) {
+    return html;
+  }
+
+  const introNode = nodes.shift();
+  const introMarkup = introNode?.outerHTML || "";
+  const solutionMarkup = nodes.map((node) => node.outerHTML).join("");
+
+  if (!solutionMarkup.trim()) {
+    return html;
+  }
+
+  return `
+    <div class="example-study-mode">
+      <div class="example-study-head">
+        <button
+          class="example-steps-toggle"
+          type="button"
+          data-example-toggle
+          aria-expanded="true"
+        >
+          Hide steps
+        </button>
+      </div>
+      <div class="example-problem">
+        ${introMarkup}
+      </div>
+      <div class="example-solution" data-example-solution>
+        ${solutionMarkup}
+      </div>
+    </div>
+  `;
 }
 
 function renderQuizSection(chapter) {
@@ -438,6 +490,30 @@ function bindSectionAccordion(section) {
     }
 
     revealSection(section, false);
+  });
+}
+
+function wireExampleSolutionToggles() {
+  documentRoot.addEventListener("click", (event) => {
+    const toggle = event.target.closest("[data-example-toggle]");
+    if (toggle) {
+      const shell = toggle.closest(".example-study-mode");
+      const solution = shell?.querySelector("[data-example-solution]");
+      if (!shell || !solution) return;
+
+      const isHidden = shell.classList.toggle("is-solution-hidden");
+      toggle.textContent = isHidden ? "Show steps" : "Hide steps";
+      toggle.setAttribute("aria-expanded", String(!isHidden));
+      requestAnimationFrame(() => {
+        syncOpenPanelHeight(toggle.closest(".doc-section-panel"));
+      });
+      return;
+    }
+
+    const highlight = event.target.closest(".doc-persistent-highlight");
+    if (highlight?.dataset.highlightId) {
+      removePersistentHighlight(highlight.dataset.highlightId);
+    }
   });
 }
 
@@ -1655,16 +1731,14 @@ function wireSelectionAssist() {
       ...getSelectionOffsetsInRoot(startBody, range),
       text,
     };
-    const top = Math.max(12, rect.top - 18);
-    const highlightLeft = Math.min(window.innerWidth - 112, rect.right + 8);
-    const askLeft = Math.min(window.innerWidth - 78, highlightLeft + 34);
-    const studyLeft = Math.min(window.innerWidth - 44, askLeft + 34);
-    selectionHighlightAction.style.left = `${highlightLeft}px`;
-    selectionHighlightAction.style.top = `${top}px`;
-    selectionAction.style.left = `${askLeft}px`;
-    selectionAction.style.top = `${top}px`;
-    selectionStudyAction.style.left = `${studyLeft}px`;
-    selectionStudyAction.style.top = `${top}px`;
+    const baseLeft = Math.max(12, window.innerWidth - 48);
+    const baseTop = clamp(rect.top + rect.height / 2 - 48, 16, window.innerHeight - 120);
+    selectionHighlightAction.style.left = `${baseLeft}px`;
+    selectionHighlightAction.style.top = `${baseTop}px`;
+    selectionAction.style.left = `${baseLeft}px`;
+    selectionAction.style.top = `${baseTop + 36}px`;
+    selectionStudyAction.style.left = `${baseLeft}px`;
+    selectionStudyAction.style.top = `${baseTop + 72}px`;
     selectionHighlightAction.classList.add("is-visible");
     selectionAction.classList.add("is-visible");
     selectionStudyAction.classList.add("is-visible");
