@@ -276,6 +276,7 @@ y(x) snapshot in time like a photograph of the wave. t fixed. x varies. Spatial 
 y(t) time history at one point. x fixed. t varies. Temporal period is T.
 How to Go From Graphs to Wave Equation: read amplitude, period, wavelength, determine direction, determine phase constant.
 Tricky: Two y(t) Graphs at Different Positions. If the farther position graph is shifted later in time, the wave is moving in positive x direction.
+The sign of the position itself does not determine direction. What matters is whether the same feature reaches the larger-x point later or earlier.
       `.trim(),
       sections: [
         {
@@ -312,8 +313,10 @@ Tricky: Two y(t) Graphs at Different Positions. If the farther position graph is
           id: "chapter-3-tricky",
           title: "Tricky: Two y(t) Graphs at Different Positions",
           html: `
-            <p>If you have y(t) at x = 1.0 m AND y(t) at x = 1.1 m, you can determine direction. The wave at x = 1.1 m looks like the x = 1.0 m wave shifted in time. If the x = 1.1 m graph is shifted to the right (later in time), the wave is moving in the +x direction (to the right).</p>
-            <p>This is the key: the phase you observe at the farther position was emitted earlier from the source, so it arrives later.</p>
+            <p>If you have y(t) at x = 1.0 m and y(t) at x = 1.1 m, you can determine direction by comparing when the <em>same feature</em> arrives at the two points. The fact that x = 1.1 m is positive does <strong>not</strong> mean the wave moves left. It only means that point is farther to the right on the x-axis.</p>
+            <p>If the x = 1.1 m graph is shifted to the right in time, that means the crest or trough reaches the farther-right point <em>later</em>. So the disturbance is traveling from x = 1.0 m toward x = 1.1 m: the wave is moving in the +x direction (to the right).</p>
+            <p>If the x = 1.1 m graph were shifted to the left instead, the farther-right point would experience the same feature earlier, which would mean the wave is moving in the -x direction (to the left).</p>
+            <p>You can see the same thing from the right-moving equation y = A sin(ωt - kx + φ₀). At a larger x, you need a larger t to keep the same phase, so the time graph at the farther point is delayed.</p>
             <figure class="concept-figure">
               <img src="./assets/figures/chapter3-position-time-comparison.png" alt="Two position or time graphs used to compare phase at different points" />
               <figcaption>The DL graph pair is exactly the kind of comparison you use to infer the wave's direction from timing.</figcaption>
@@ -1700,10 +1703,11 @@ export const QUIZ_BANK = {
     {
       id: "c3-mc-3",
       type: "mc",
-      prompt: "If the farther-position graph is shifted later in time, the wave is moving:",
+      prompt: "If the graph at the larger x-value is shifted later in time, the wave is moving:",
       choices: ["In the +x direction", "In the -x direction", "Straight up", "In a circle"],
       answer: 0,
-      explanation: "If the farther point sees the same phase later, the wave is traveling to the right, or +x.",
+      explanation:
+        "The larger-x point is farther to the right. If it sees the same crest or trough later, the disturbance is arriving there after it passed the smaller-x point, so the wave is traveling in the +x direction.",
     },
     {
       id: "c3-mc-4",
