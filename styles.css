@@ -1192,6 +1192,17 @@ textarea:focus-visible {
   gap: 8px;
 }
 
+.message-text .katex-display {
+  margin: 0.9rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 2px;
+}
+
+.message-text .katex {
+  font-size: 1.02em;
+}
+
 .message-sources {
   display: grid;
   gap: 8px;

@@ -212,6 +212,7 @@ wireChatEvents();
 wireStudyConceptsShell();
 wireChatDragAndResize();
 wireSelectionAssist();
+renderMathInNode(messagesRoot);
 
 function renderFormulaStrip() {
   formulaStrip.innerHTML = FORMULA_STRIP.map(
@@ -2285,6 +2286,7 @@ function addMessage(role, text, extraClass = "", options = {}) {
   element.dataset.messageId = messageId;
   element.innerHTML = renderMessageMarkup(text, options);
   messagesRoot.appendChild(element);
+  renderMathInNode(element);
   messagesRoot.scrollTop = messagesRoot.scrollHeight;
   return messageId;
 }
@@ -2297,6 +2299,7 @@ function updateMessage(messageId, text, className, options = {}) {
 
   message.className = `message ${className}`;
   message.innerHTML = renderMessageMarkup(text, options);
+  renderMathInNode(message);
   messagesRoot.scrollTop = messagesRoot.scrollHeight;
 }
 
@@ -2358,6 +2361,21 @@ function formatMessage(text) {
   return escapeHtml(text)
     .replace(/\n{2,}/g, "</p><p>")
     .replace(/\n/g, "<br />");
+}
+
+function renderMathInNode(node) {
+  if (!node || typeof window.renderMathInElement !== "function") return;
+
+  window.renderMathInElement(node, {
+    delimiters: [
+      { left: "$$", right: "$$", display: true },
+      { left: "\\[", right: "\\]", display: true },
+      { left: "\\(", right: "\\)", display: false },
+      { left: "$", right: "$", display: false },
+    ],
+    throwOnError: false,
+    strict: "ignore",
+  });
 }
 
 function openChat() {
