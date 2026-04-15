@@ -190,7 +190,7 @@
             <input
               id="model-input"
               type="text"
-              placeholder="llama-3.3-70b-versatile"
+              placeholder="openai/gpt-oss-120b"
               autocomplete="off"
             />
           </label>
@@ -204,9 +204,20 @@
             autocomplete="off"
           />
         </label>
+        <div class="settings-toggles">
+          <label class="settings-toggle" for="web-lookup-toggle">
+            <input id="web-lookup-toggle" type="checkbox" checked />
+            <span>Enable live web lookup</span>
+          </label>
+          <label class="settings-toggle" for="image-search-toggle">
+            <input id="image-search-toggle" type="checkbox" checked />
+            <span>Enable internet images</span>
+          </label>
+        </div>
         <p class="settings-note">
-          Settings live only in this browser unless you choose to commit them. This hardcoded
-          key should be rotated before any public deploy.
+          Groq can use live browser search with the GPT-OSS model, and the tutor can also pull
+          related web images into the chat. Settings live only in this browser unless you choose
+          to commit them. This hardcoded key should be rotated before any public deploy.
         </p>
       </section>
 
@@ -214,7 +225,8 @@
         <article class="message message-assistant">
           <p>
             I can explain full chapters, compare formulas, walk through worked examples,
-            and quiz you using the site content first.
+            quiz you using the site content first, and pull in live web context or related
+            images when you ask for them.
           </p>
         </article>
       </div>

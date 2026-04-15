@@ -4,7 +4,7 @@ const HARDCODED_GROQ_KEY =
   "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";
 
 const defaultModels = {
-  groq: "llama-3.3-70b-versatile",
+  groq: "openai/gpt-oss-120b",
   openrouter: "meta-llama/llama-3.3-70b-instruct",
 };
 
@@ -36,6 +36,8 @@ const chatInput = document.querySelector("#chat-input");
 const providerSelect = document.querySelector("#provider-select");
 const modelInput = document.querySelector("#model-input");
 const apiKeyInput = document.querySelector("#api-key-input");
+const webLookupToggle = document.querySelector("#web-lookup-toggle");
+const imageSearchToggle = document.querySelector("#image-search-toggle");
 const modeButtons = [...document.querySelectorAll("[data-mode]")];
 const resizeHandles = [...document.querySelectorAll("[data-resize]")];
 const chatTextareaMaxHeight = 160;
@@ -123,10 +125,54 @@ const sectionHintMap = {
     "double slit formulas",
     "all formulas dl 5",
   ],
-  "chapter-13-8-1": ["polarization", "pulse wave", "harmonic wave", "restoring force"],
-  "chapter-13-8-2": ["omega and k", "compact notation", "where wave equation comes from", "hooke's law"],
-  "chapter-13-8-5": ["cos delta phi over 2", "algebra under the phase chart", "trig identity interference"],
-  "chapter-13-8-6": ["trig identity beats", "sum to product", "beats proof"],
+  "chapter-13-8-1": [
+    "introduction to waves",
+    "polarization",
+    "pulse wave",
+    "harmonic wave",
+    "restoring force",
+    "medium and restoring force",
+  ],
+  "chapter-13-8-2": [
+    "wave representation",
+    "snapshot graph",
+    "time graph",
+    "total phase",
+    "phi zero",
+    "fixed phase constant",
+    "where wave equation comes from",
+  ],
+  "chapter-13-8-3": [
+    "multi dimensional waves",
+    "wavefronts and rays",
+    "pressure wave",
+    "sound pressure",
+    "intensity spreading",
+  ],
+  "chapter-13-8-4": [
+    "doppler effect textbook supplement",
+    "moving observer",
+    "combined doppler formula",
+    "observer motion formula",
+  ],
+  "chapter-13-8-5": [
+    "superposition and interference textbook",
+    "path length difference",
+    "phase constant difference",
+    "delta x",
+    "delta phi zero",
+    "cos delta phi over 2",
+    "algebra under the phase chart",
+    "trig identity interference",
+  ],
+  "chapter-13-8-6": [
+    "beats",
+    "trig identity beats",
+    "sum to product",
+    "beats proof",
+    "carrier frequency",
+    "beat envelope",
+  ],
 };
 
 const settingsKey = "waves-study-chat-settings";
@@ -474,6 +520,8 @@ function wireChatEvents() {
 
   modelInput.addEventListener("input", saveSettings);
   apiKeyInput.addEventListener("input", saveSettings);
+  webLookupToggle.addEventListener("change", saveSettings);
+  imageSearchToggle.addEventListener("change", saveSettings);
 
   modeButtons.forEach((button) => {
     button.addEventListener("click", () => {
@@ -557,9 +605,12 @@ function wireChatEvents() {
             ? "1. Opened the best matching section in the study guide."
             : "1. I could not confidently open the matching section in the document.",
           "2. Explanation:",
-          answer,
+          answer.text,
         ].join("\n");
-        updateMessage(loadingId, response, "message-assistant");
+        updateMessage(loadingId, response, "message-assistant", {
+          sources: answer.sources,
+          images: answer.images,
+        });
         chatState.messages.push({ role: "assistant", content: response });
       } catch (error) {
         updateMessage(
@@ -581,8 +632,11 @@ function wireChatEvents() {
 
     try {
       const answer = await requestTutorAnswer(question);
-      updateMessage(loadingId, answer, "message-assistant");
-      chatState.messages.push({ role: "assistant", content: answer });
+      updateMessage(loadingId, answer.text, "message-assistant", {
+        sources: answer.sources,
+        images: answer.images,
+      });
+      chatState.messages.push({ role: "assistant", content: answer.text });
 
       if (shouldOfferShowInDocument(question)) {
         pendingShowDocQuery = question;
@@ -617,6 +671,7 @@ function loadSettings() {
   chatSettingsState = normalizeChatSettings(saved);
   providerSelect.value = chatSettingsState.provider;
   applyProviderSettings(chatSettingsState.provider);
+  applyFeatureSettings();
   autoResizeChatInput();
 }
 
@@ -630,6 +685,10 @@ function normalizeChatSettings(saved) {
       model: defaultModels.openrouter,
       apiKey: "",
     },
+  };
+  const features = {
+    webLookup: saved?.features?.webLookup !== false,
+    imageSearch: saved?.features?.imageSearch !== false,
   };
 
   if (saved?.providers) {
@@ -652,7 +711,11 @@ function normalizeChatSettings(saved) {
     }
   }
 
-  if (!providers.groq.model || /gemma/i.test(providers.groq.model)) {
+  if (
+    !providers.groq.model ||
+    /gemma/i.test(providers.groq.model) ||
+    providers.groq.model === "llama-3.3-70b-versatile"
+  ) {
     providers.groq.model = defaultModels.groq;
   }
 
@@ -667,6 +730,7 @@ function normalizeChatSettings(saved) {
   return {
     provider: saved?.provider === "openrouter" ? "openrouter" : "groq",
     providers,
+    features,
   };
 }
 
@@ -678,6 +742,19 @@ function applyProviderSettings(provider) {
   modelInput.placeholder = defaultModels[provider];
   apiKeyInput.placeholder =
     provider === "groq" ? "Groq key stored here" : "Paste your OpenRouter key";
+}
+
+function applyFeatureSettings() {
+  const features = getFeatureSettings();
+  webLookupToggle.checked = features.webLookup;
+  imageSearchToggle.checked = features.imageSearch;
+}
+
+function getFeatureSettings() {
+  return {
+    webLookup: chatSettingsState?.features?.webLookup !== false,
+    imageSearch: chatSettingsState?.features?.imageSearch !== false,
+  };
 }
 
 function persistProviderInputs(provider) {
@@ -1469,6 +1546,10 @@ function saveSettings() {
   }
 
   persistProviderInputs(chatSettingsState.provider);
+  chatSettingsState.features = {
+    webLookup: webLookupToggle.checked,
+    imageSearch: imageSearchToggle.checked,
+  };
   localStorage.setItem(
     settingsKey,
     JSON.stringify(chatSettingsState),
@@ -1481,11 +1562,19 @@ async function requestTutorAnswer(question) {
   const { provider, model, apiKey } = getActiveProviderConfig();
   const context = buildContext(question);
   const responseMode = getResponseMode();
+  const features = getFeatureSettings();
+  const forceBrowserSearch = features.webLookup && shouldForceBrowserSearch(question);
+  const internetSupport = await fetchInternetSupport(question, {
+    includeWebNotes: features.webLookup && provider !== "groq",
+    includeImages: features.imageSearch && wantsInternetImages(question),
+  });
 
   const systemPrompt = `
 You are a warm physics tutor embedded inside a waves study website.
 Teach in clear English with a concept-first style.
 Prioritize the supplied study-guide context.
+If live web browsing or outside web notes are available, use them carefully and clearly prefer the study guide for on-site curriculum questions.
+If you rely on outside information, mention that briefly and do not invent sources.
 Response mode: ${responseMode}.
 Always structure your answer in a student-friendly way with short labeled sections.
 If response mode is concise, use:
@@ -1508,24 +1597,33 @@ ${question}
 
 Relevant study-guide context:
 ${context}
+
+${internetSupport.webContext ? `Live web notes:\n${internetSupport.webContext}` : ""}
 `.trim();
 
-  const content = await callChatModel({
+  const completion = await callChatModel({
     provider,
     model,
     apiKey,
     temperature: 0.4,
+    enableBrowserSearch: provider === "groq" && features.webLookup,
+    browserSearchRequired: provider === "groq" && forceBrowserSearch,
+    returnMeta: true,
     messages: [
       { role: "system", content: systemPrompt },
       ...chatState.messages.slice(-6),
       { role: "user", content: userPrompt },
     ],
   });
-  if (!content) {
+  if (!completion.content) {
     throw new Error("The model returned an empty response.");
   }
 
-  return content;
+  return {
+    text: completion.content,
+    sources: dedupeSources([...(completion.sources || []), ...(internetSupport.sources || [])]),
+    images: internetSupport.images || [],
+  };
 }
 
 function buildContext(question) {
@@ -1565,12 +1663,34 @@ function buildContext(question) {
     .join("\n\n");
 }
 
-async function callChatModel({ provider, model, apiKey, messages, temperature = 0.4 }) {
+async function callChatModel({
+  provider,
+  model,
+  apiKey,
+  messages,
+  temperature = 0.4,
+  enableBrowserSearch = false,
+  browserSearchRequired = false,
+  returnMeta = false,
+}) {
   const payload = {
     model,
     messages,
     temperature,
   };
+
+  if (provider === "groq") {
+    if (/^openai\/gpt-oss-/i.test(model)) {
+      payload.reasoning_effort = browserSearchRequired ? "low" : "medium";
+    }
+
+    if (enableBrowserSearch && /^openai\/gpt-oss-/i.test(model)) {
+      payload.tools = [{ type: "browser_search" }];
+      if (browserSearchRequired) {
+        payload.tool_choice = "required";
+      }
+    }
+  }
 
   const requestConfig =
     provider === "groq"
@@ -1607,7 +1727,157 @@ async function callChatModel({ provider, model, apiKey, messages, temperature = 
     throw new Error(message);
   }
 
-  return data?.choices?.[0]?.message?.content || "";
+  const content = data?.choices?.[0]?.message?.content || "";
+  if (!returnMeta) {
+    return content;
+  }
+
+  return {
+    content,
+    raw: data,
+    sources: extractGroqSources(data),
+  };
+}
+
+async function fetchInternetSupport(question, { includeWebNotes = false, includeImages = false } = {}) {
+  if (!includeWebNotes && !includeImages) {
+    return {
+      webContext: "",
+      sources: [],
+      images: [],
+    };
+  }
+
+  try {
+    const pages = await fetchWikipediaSummaries(buildInternetSearchQuery(question), includeImages ? 4 : 3);
+    const usablePages = pages.filter((page) => page?.extract);
+
+    return {
+      webContext: includeWebNotes
+        ? usablePages
+            .slice(0, 3)
+            .map(
+              (page) =>
+                `[${page.title}] ${page.extract}${page.timestamp ? ` (updated ${page.timestamp.slice(0, 10)})` : ""}`,
+            )
+            .join("\n")
+        : "",
+      sources: usablePages.slice(0, 3).map((page) => ({
+        title: page.title,
+        url: page.url,
+      })),
+      images: includeImages
+        ? usablePages
+            .filter((page) => page.imageUrl)
+            .slice(0, 3)
+            .map((page) => ({
+              title: page.title,
+              src: page.imageUrl,
+              href: page.url,
+              source: "Wikipedia",
+            }))
+        : [],
+    };
+  } catch {
+    return {
+      webContext: "",
+      sources: [],
+      images: [],
+    };
+  }
+}
+
+async function fetchWikipediaSummaries(query, limit = 3) {
+  const response = await fetch(
+    `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(
+      query,
+    )}&utf8=1&format=json&origin=*`,
+  );
+
+  if (!response.ok) {
+    throw new Error(`Wikipedia search failed with status ${response.status}.`);
+  }
+
+  const data = await response.json();
+  const titles = (data?.query?.search || [])
+    .map((result) => result?.title)
+    .filter(Boolean)
+    .slice(0, limit);
+
+  const summaries = await Promise.all(
+    titles.map(async (title) => {
+      const summaryResponse = await fetch(
+        `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title.replaceAll(" ", "_"))}`,
+      );
+      if (!summaryResponse.ok) return null;
+      const summary = await summaryResponse.json();
+      return {
+        title: summary?.title || title,
+        extract: summary?.extract || "",
+        url: summary?.content_urls?.desktop?.page || "",
+        imageUrl: summary?.originalimage?.source || summary?.thumbnail?.source || "",
+        timestamp: summary?.timestamp || "",
+      };
+    }),
+  );
+
+  return summaries.filter(Boolean);
+}
+
+function buildInternetSearchQuery(question) {
+  const semantic = extractSemanticQuery(question);
+  const normalized = semantic || normalize(question);
+  const rawTerms = normalized
+    .split(/\s+/)
+    .filter(Boolean)
+    .filter((token) => token.length > 2)
+    .slice(0, 8);
+  const base = rawTerms.join(" ").trim();
+  if (!base) return "physics waves";
+  if (/\b(physics|wave|waves|doppler|interference|diffraction|beat|beats)\b/.test(base)) {
+    return base;
+  }
+  return `${base} physics`;
+}
+
+function shouldForceBrowserSearch(question) {
+  return /\b(latest|current|today|recent|news|internet|online|web|browse|look up|lookup|search|sources?|citations?)\b/i.test(
+    question,
+  );
+}
+
+function wantsInternetImages(question) {
+  return /\b(image|images|picture|pictures|photo|photos|diagram|diagrams|visual|visuals|show me a picture|show me an image)\b/i.test(
+    question,
+  );
+}
+
+function extractGroqSources(data) {
+  const tools = data?.choices?.[0]?.message?.executed_tools;
+  if (!Array.isArray(tools)) return [];
+
+  return dedupeSources(
+    tools.flatMap((tool) => {
+      const searchResults = tool?.search_results?.results;
+      if (!Array.isArray(searchResults)) return [];
+      return searchResults
+        .map((result) => ({
+          title: result?.title || result?.url || "Source",
+          url: result?.url || "",
+        }))
+        .filter((result) => result.url);
+    }),
+  );
+}
+
+function dedupeSources(sources) {
+  const seen = new Set();
+  return sources.filter((source) => {
+    if (!source?.url) return false;
+    if (seen.has(source.url)) return false;
+    seen.add(source.url);
+    return true;
+  });
 }
 
 function wireQuizSections() {
@@ -2008,26 +2278,80 @@ function shuffleArray(items) {
   return array;
 }
 
-function addMessage(role, text, extraClass = "") {
+function addMessage(role, text, extraClass = "", options = {}) {
   const element = document.createElement("article");
   const messageId = `message-${Date.now()}-${Math.random().toString(36).slice(2)}`;
   element.className = `message message-${role}${extraClass ? ` ${extraClass}` : ""}`;
   element.dataset.messageId = messageId;
-  element.innerHTML = `<p>${formatMessage(text)}</p>`;
+  element.innerHTML = renderMessageMarkup(text, options);
   messagesRoot.appendChild(element);
   messagesRoot.scrollTop = messagesRoot.scrollHeight;
   return messageId;
 }
 
-function updateMessage(messageId, text, className) {
+function updateMessage(messageId, text, className, options = {}) {
   const message = [...messagesRoot.querySelectorAll(".message")].find(
     (item) => item.dataset.messageId === messageId,
   );
   if (!message) return;
 
   message.className = `message ${className}`;
-  message.innerHTML = `<p>${formatMessage(text)}</p>`;
+  message.innerHTML = renderMessageMarkup(text, options);
   messagesRoot.scrollTop = messagesRoot.scrollHeight;
+}
+
+function renderMessageMarkup(text, options = {}) {
+  const sourcesMarkup = (options.sources || []).length
+    ? `
+      <div class="message-sources">
+        <p class="message-meta-label">Sources</p>
+        <div class="message-source-list">
+          ${options.sources
+            .map(
+              (source) => `
+                <a
+                  class="message-source-link"
+                  href="${escapeAttribute(source.url)}"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  ${escapeHtml(source.title || source.url)}
+                </a>
+              `,
+            )
+            .join("")}
+        </div>
+      </div>
+    `
+    : "";
+
+  const imagesMarkup = (options.images || []).length
+    ? `
+      <div class="message-image-grid">
+        ${options.images
+          .map(
+            (image) => `
+              <a
+                class="message-image-card"
+                href="${escapeAttribute(image.href || image.src)}"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                <img src="${escapeAttribute(image.src)}" alt="${escapeAttribute(image.title || "Reference image")}" />
+                <span>${escapeHtml(image.title || image.source || "Reference image")}</span>
+              </a>
+            `,
+          )
+          .join("")}
+      </div>
+    `
+    : "";
+
+  return `
+    <div class="message-text"><p>${formatMessage(text)}</p></div>
+    ${sourcesMarkup}
+    ${imagesMarkup}
+  `;
 }
 
 function formatMessage(text) {
