@@ -30,11 +30,11 @@ export const STUDY_GUIDE = {
 Physics 7C Unit 8 Waves Complete Study Guide Chapter 1 What Is a Wave.
 The Hook Feel It Before You Name It.
 You are at a stadium. The crowd does a wave. The individuals do not travel. They just move up and down. But the disturbance travels all the way around the stadium.
-That is a wave in one sentence: a disturbance that moves through a medium, carrying energy, without actually transporting the medium itself.
+For the mechanical waves we start with, that is a wave in one sentence: a disturbance that moves through a medium, carrying energy, without actually transporting the medium itself.
 Think about it. When an ocean wave passes under a boat, the boat bobs up and down. But the water under the boat is not flowing to shore. The energy travels. The water stays roughly in place.
 Core Concept Transverse vs Longitudinal.
 Transverse Waves. The medium moves perpendicular at 90 degrees to the direction the wave travels. Example: a rope wave. You shake one end up and down. The disturbance travels horizontally. The rope moves vertically.
-Also water waves. The surface moves up and down while the wave moves outward.
+In the simple surface-wave picture used here, water waves are treated as transverse because the visible surface motion is mostly up and down while the disturbance moves outward.
 Longitudinal Waves. The medium moves parallel to the direction the wave travels.
 Example: sound. Air molecules are squeezed together in compressions and spread apart in rarefactions in the same direction the sound is moving. Push a slinky from one end and the coils compress and expand along the slinky length.
 Common confusion: longitudinal does not mean the medium travels with the wave. Air molecules oscillate back and forth around a fixed point.
@@ -49,7 +49,7 @@ A sound wave exists in 3D space because it travels outward in all directions, no
           title: "The Hook - Feel It Before You Name It",
           html: `
             <p>You're at a stadium. The crowd does a "wave" - people raise their arms section by section. The individuals don't travel; they just move up and down. But something - the disturbance - travels all the way around the stadium.</p>
-            <p>That's a wave in one sentence: a disturbance that moves through a medium, carrying energy, without actually transporting the medium itself.</p>
+            <p>For the mechanical waves we start with, that's a wave in one sentence: a disturbance that moves through a medium, carrying energy, without actually transporting the medium itself.</p>
             <p>Think about it - when an ocean wave passes under a boat, the boat bobs up and down. But the water under the boat isn't flowing to shore. The energy travels; the water stays roughly in place.</p>
           `,
         },
@@ -60,7 +60,7 @@ A sound wave exists in 3D space because it travels outward in all directions, no
             <h4>Transverse Waves</h4>
             <p>The medium moves perpendicular (at 90 degrees) to the direction the wave travels.</p>
             <p><strong>Example:</strong> A rope wave. You shake one end up-and-down. The disturbance travels horizontally. The rope moves vertically. Those two directions are perpendicular - that's transverse.</p>
-            <p><strong>Also:</strong> Water waves (the surface moves up/down, wave moves outward).</p>
+            <p><strong>Also:</strong> In the simple surface-wave model used in this class, water waves are treated as transverse because the surface moves up/down while the disturbance moves outward.</p>
             <figure class="concept-figure">
               <img src="./assets/figures/chapter1-transverse-wave-example.png" alt="Transverse wave displacement graph from DL1" />
               <figcaption>DL1 includes a transverse-wave rope example, which pairs well with this section's discussion of perpendicular motion.</figcaption>
@@ -98,15 +98,15 @@ Chapter 2 The Sinusoidal Wave Equation.
 The Hook Reading the Wave's ID Card. Every wave has a fingerprint - a set of numbers that describe exactly how it moves. The wave equation is how we write that fingerprint mathematically. Once you understand what each piece means, you can read a wave like reading a sentence.
 The Equation: y(x, t) - y0 = A sin(2pi t/T +/- 2pi x/lambda + phi0) = A sin(Phi).
 Decoding Each Symbol One at a Time.
-A amplitude maximum displacement from equilibrium. Source dependent.
+A amplitude maximum displacement from equilibrium. In the simple model it is mainly source-set.
 T period time for one complete oscillation. Source dependent.
 f frequency cycles per second. f = 1/T. Units Hz.
 lambda wavelength distance between consecutive crests or equivalent points.
 v wave speed. v = lambda/T = lambda f. Medium dependent. Same source in different medium means same frequency but different speed and wavelength.
 Phi total phase. Phi = 2pi t/T +/- 2pi x/lambda + phi0.
-phi0 fixed phase constant from initial conditions.
+phi0 fixed phase constant set by the initial conditions together with the chosen origin for x and t.
 Direction rule. Minus sign on x term means wave moves in plus x direction to the right. Plus sign means wave moves in minus x direction to the left.
-Source vs Medium table. Period source. Frequency source. Wave speed medium. Wavelength both. Amplitude source. Phase constant source.
+Source vs Medium table. Period and frequency are source-set. Wave speed is medium-set. Wavelength depends on both. Amplitude is mainly source-set in the simple model. Phase constant is fixed by initial conditions and the chosen origin.
 Worked Example Boat and Buoy Problem.
 Harbor boat problem asks what moves, the wave speed, the amplitude, whether the boat and buoy share the same height, the wave equation assuming the wave moves left, the buoy motion, and the displacement at x = 5 m and t = 2 s.
 Given T = 6 s, lambda = 20 m, A = 0.5 m, and boat at x = 0 on a crest when t = 0.
@@ -137,7 +137,7 @@ At x = 5 m and t = 2 s, y ≈ -0.25 m.
             <h4>A - Amplitude</h4>
             <p>The maximum displacement from equilibrium. How "tall" the wave is.</p>
             <p><strong>Real life:</strong> Turn up the volume on a speaker - you're increasing the amplitude of the sound wave. The wave gets "bigger" but not faster.</p>
-            <p><strong>Source or medium?</strong> Source-dependent. You control the amplitude by how hard you shake the source.</p>
+            <p><strong>Source or medium?</strong> In the simple model it is mainly source-set. You usually control it by how hard you shake the source, though real transmitted amplitude can also depend on the setup.</p>
 
             <h4>T - Period</h4>
             <p>Time for one complete oscillation (one full cycle). Units: seconds.</p>
@@ -165,7 +165,7 @@ At x = 5 m and t = 2 s, y ≈ -0.25 m.
             <p>If Φ increases by 2π, you complete one full cycle and return to the same state. That's it.</p>
 
             <h4>φ₀ - Fixed Phase Constant</h4>
-            <p>The "starting phase" - where the wave is in its cycle at t = 0, x = 0. A source-dependent property set by initial conditions.</p>
+            <p>The "starting phase" - where the wave is in its cycle at t = 0, x = 0. It is fixed by the initial conditions together with your chosen origin for position and time.</p>
           `,
         },
         {
@@ -215,13 +215,13 @@ At x = 5 m and t = 2 s, y ≈ -0.25 m.
                 </tr>
                 <tr>
                   <td>Amplitude A</td>
-                  <td>Source</td>
-                  <td>How energetically you disturb the medium</td>
+                  <td>Mainly source (simple model)</td>
+                  <td>Mostly set by how energetically you disturb the medium, though real transmitted amplitude can also depend on the setup</td>
                 </tr>
                 <tr>
                   <td>Phase constant φ₀</td>
-                  <td>Source</td>
-                  <td>Initial conditions when wave is created</td>
+                  <td>Initial conditions / coordinate choice</td>
+                  <td>Fixed once you choose where x = 0 and t = 0 and specify the wave's starting phase</td>
                 </tr>
               </tbody>
             </table>
@@ -393,8 +393,8 @@ Two 70 dB speakers together produce 76 dB.
           id: "chapter-4-two-speakers",
           title: "Worked: Two Speakers Each at 70 dB",
           html: `
-            <p>Two identical speakers playing simultaneously. Each alone = 70 dB. What is the combined level?</p>
-            <p>Combined amplitude = 2A (amplitudes add). Combined intensity: since I ∝ A², ratio I/I₀ = (2A)²/A² = 4.</p>
+            <p>Two identical speakers playing simultaneously. Each alone = 70 dB. Assuming the two waves arrive in phase at the listener so their amplitudes add, what is the combined level?</p>
+            <p>Combined amplitude = 2A. Then, since I ∝ A², the intensity ratio is I/I₀ = (2A)²/A² = 4.</p>
             <div class="formula-inline">D - 70 = 10 × log₁₀(4) = 10 × 0.602 ≈ 6 dB</div>
             <div class="formula-inline">Combined = 76 dB</div>
             <p>76 dB is NOT twice as loud as 70 dB. To sound twice as loud, you need 80 dB (+10 dB). So two speakers sounding together doesn't even come close to sounding twice as loud as one.</p>
@@ -412,7 +412,7 @@ The Hook That Classic Ambulance Sound.
 The observed frequency changes when source and observer are moving relative to each other.
 Toward observer squeezes wavelength and raises frequency. Away stretches wavelength and lowers frequency.
 Moving source formula: f_observed = (v / (v +/- v_source)) x f_source. Toward observer uses minus in denominator. Away uses plus.
-Full formula with moving observer: f_observed = ((v +/- v_observer) / (v +/- v_source)) x f_source.
+Full formula with moving observer: f_observed = ((v +/- v_observer) / (v ∓ v_source)) x f_source.
 Observer toward source uses plus in numerator. Away uses minus.
 Worked example: v_s = 50 m/s, f_s = 50 Hz, sound speed v = 350 m/s. Forward wavelength 6 m gives 58.3 Hz. Backward wavelength 8 m gives 43.75 Hz.
 The original setup also asks you to compare those wavelengths to the stationary value lambda = 7 m.
@@ -452,12 +452,13 @@ The original setup also asks you to compare those wavelengths to the stationary 
           id: "chapter-5-full-formula",
           title: "The Full Formula - Moving Observer Too",
           html: `
-            <div class="formula-box">f_observed = ((v ± v_observer) / (v ± v_source)) × f_source</div>
+            <div class="formula-box">f_observed = ((v ± v_observer) / (v ∓ v_source)) × f_source</div>
             <p><strong>For the observer:</strong></p>
             <ul>
               <li>Observer moving TOWARD source → use PLUS in numerator (higher f)</li>
               <li>Observer moving AWAY from source → use MINUS in numerator (lower f)</li>
             </ul>
+            <p><strong>For the source:</strong> use MINUS in the denominator when the source moves toward the observer, and PLUS when it moves away.</p>
             <p>Is it symmetric? NO. A source moving toward a stationary observer gives a different frequency than a stationary source with an observer moving toward it at the same speed. The formulas are NOT the same - test a number and you'll see.</p>
           `,
         },
@@ -546,6 +547,7 @@ If An and Carla are the sources and want constructive interference at Bob, the p
           id: "chapter-6-types",
           title: "Three Types of Interference",
           html: `
+            <p>The table below assumes the two waves have the same amplitude, which is why the extremes come out cleanly as 2A and 0.</p>
             <table class="data-table">
               <thead>
                 <tr>
@@ -558,17 +560,17 @@ If An and Carla are the sources and want constructive interference at Bob, the p
                 <tr>
                   <td>Constructive</td>
                   <td>ΔΦ = 0, 2π, 4π, ... (n × 2π)</td>
-                  <td>Max amplitude (2A). Crests align.</td>
+                  <td>Max amplitude (2A for equal amplitudes). Crests align.</td>
                 </tr>
                 <tr>
                   <td>Destructive</td>
                   <td>ΔΦ = π, 3π, 5π, ... ((2n+1) × π)</td>
-                  <td>Zero amplitude. Complete cancellation.</td>
+                  <td>Zero amplitude only for equal amplitudes. Otherwise you get the smallest possible result, not total cancellation.</td>
                 </tr>
                 <tr>
                   <td>Partial</td>
                   <td>Anything else</td>
-                  <td>Amplitude between 0 and 2A.</td>
+                  <td>For equal amplitudes, the result lies between 0 and 2A.</td>
                 </tr>
               </tbody>
             </table>
@@ -696,7 +698,7 @@ I proportional to A^2 intensity proportional to amplitude squared.
 I proportional to 1/r^2 in 3D and 1/r in 2D.
 D - D0 = 10 log10(I/I0) decibel definition.
 f_obs = v/(v +/- v_s) x f_s for moving source.
-f_obs = (v +/- v_o)/(v +/- v_s) x f_s for moving source and observer.
+f_obs = (v +/- v_o)/(v ∓ v_s) x f_s for moving source and observer.
 Delta Phi = -2pi Delta x/lambda + Delta phi0 phase difference.
 Constructive Delta Phi = 2npi. Destructive Delta Phi = (2n+1)pi.
       `.trim(),
@@ -750,9 +752,9 @@ Constructive Delta Phi = 2npi. Destructive Delta Phi = (2n+1)pi.
                   <td>Minus = source toward observer</td>
                 </tr>
                 <tr>
-                  <td>f_obs = (v ± v_o)/(v ± v_s) × f_s</td>
+                  <td>f_obs = (v ± v_o)/(v ∓ v_s) × f_s</td>
                   <td>Doppler, source + observer moving</td>
-                  <td>Observer toward: plus in numerator</td>
+                  <td>Observer toward: plus in numerator; source toward: minus in denominator</td>
                 </tr>
                 <tr>
                   <td>ΔΦ = -2πΔx/λ + Δφ₀</td>
@@ -940,7 +942,7 @@ Running toward the 258 Hz piper and away from the 262 Hz piper at about 2.62 m/s
             <p>After one beat period T<sub>b</sub>, they are back in phase again, so ΔΦ = 2π:</p>
             <div class="formula-inline">ΔΦ = 2πT<sub>b</sub>/T₁ - 2πT<sub>b</sub>/T₂ = 2π</div>
             <div class="formula-inline">T<sub>b</sub>(1/T₁ - 1/T₂) = 1</div>
-            <div class="formula-inline">T<sub>b</sub> = 1/(f₁ - f₂)</div>
+            <div class="formula-inline">T<sub>b</sub> = 1/|f₁ - f₂|</div>
             <div class="formula-box">f<sub>beat</sub> = |f₁ - f₂| &nbsp;&nbsp;&nbsp; f<sub>carrier</sub> = (f₁ + f₂) / 2</div>
           `,
         },
@@ -999,7 +1001,7 @@ Running toward the 258 Hz piper and away from the 262 Hz piper at about 2.62 m/s
       plainText: `
 Chapter 10 Diffraction and Young's Double Slit Experiment DL5.
 Huygens's principle says a small hole behaves like a new point source.
-Wavefront model shows wavelength phase and amplitude; ray model shows speed and direction.
+Wavefront model shows wavelength and phase relationships; ray model emphasizes direction of propagation.
 Young's experiment shows light is a wave because two slits produce alternating bright and dark stripes.
 Double-slit geometry gives path difference Delta x = d sin theta.
 Constructive condition: d sin theta = n lambda. Destructive condition: d sin theta = (n + 1/2) lambda.
@@ -1024,9 +1026,9 @@ Red light spreads farther than blue because longer wavelength gives a larger ang
           title: "Wavefront Model vs. Ray Model",
           html: `
             <h4>Wavefront Model</h4>
-            <p>Shows wavelength, phase, and amplitude. Solid lines can represent crests, dashed lines troughs, and the spacing between crests gives λ.</p>
+            <p>Shows wavelength and phase relationships. Solid lines can represent crests, dashed lines troughs, and the spacing between crests gives λ.</p>
             <h4>Ray Model</h4>
-            <p>Shows speed and direction. Rays are drawn perpendicular to the wavefronts and point along the direction the wave travels.</p>
+            <p>Emphasizes direction of propagation. Rays are drawn perpendicular to the wavefronts and point along the direction the wave travels.</p>
             <p>The ray model is simpler, but it does not show phase or amplitude directly, which is why interference problems still need the wavefront picture.</p>
           `,
         },
@@ -1265,9 +1267,9 @@ Double-slit formulas and thin-film constructive condition.
                   <td>Use minus when the source moves toward the observer</td>
                 </tr>
                 <tr>
-                  <td>f_obs = (v ± v_o)/(v ± v_s) × f_s</td>
+                  <td>f_obs = (v ± v_o)/(v ∓ v_s) × f_s</td>
                   <td>Doppler with moving observer and source</td>
-                  <td>Observer toward source uses plus in the numerator</td>
+                  <td>Observer toward source uses plus in the numerator; source toward uses minus in the denominator</td>
                 </tr>
                 <tr>
                   <td>ΔΦ = -2πΔx/λ + Δφ₀</td>
@@ -1331,7 +1333,7 @@ Double-slit formulas and thin-film constructive condition.
       title: "Chapter 13 - Textbook Supplement: Sections 8.1-8.6",
       plainText: `
 Chapter 13 Textbook Supplement Sections 8.1 to 8.6.
-Section 8.1 introduces waves as disturbances that transfer energy through a medium without transporting the medium itself.
+Section 8.1 introduces material waves as disturbances that transfer energy through a medium without transporting the medium itself.
 Material waves require both a medium that can be displaced and restoring forces between neighboring particles.
 Pulse waves are single disturbances while periodic harmonic waves repeat continuously.
 Only transverse waves can be polarized because only they have multiple possible directions of oscillation perpendicular to travel.
@@ -1363,7 +1365,7 @@ Section 8.6 shows that beats come from adding two nearby frequencies, producing 
             <p>LibreTexts explicitly contrasts a <strong>snapshot plot</strong> of displacement versus position with a <strong>time plot</strong> of displacement versus time at one position. Snapshot graphs give wavelength. Time graphs give period. You need both to reconstruct the full wave.</p>
             <p>It also leans harder on <strong>total phase</strong>, which tells you exactly where you are in the oscillation cycle:</p>
             <div class="formula-inline">Φ(x, t) = 2πt/T ± 2πx/λ + φ₀</div>
-            <p>The fixed phase constant φ₀ is the initial offset. The sign on the x-term tells the direction: minus means right-moving, plus means left-moving.</p>
+            <p>The fixed phase constant φ₀ is the initial offset for the chosen origin. The sign on the x-term tells the direction: minus means right-moving, plus means left-moving.</p>
             <p>One textbook skill that was missing from the site before is this: from graphs, you can infer not just A, T, and λ, but also the direction of travel and the value of φ₀ by plugging in a known point like a crest, trough, or zero crossing.</p>
           `,
         },
@@ -1509,7 +1511,7 @@ Section 8.6 shows that beats come from adding two nearby frequencies, producing 
     title: "Final Recap - The Complete Short Version (DL 1-5)",
     plainText: `
 All of Unit 8 in 15 sentences.
-1. A wave is energy traveling through a medium - the medium does not travel.
+1. A wave is a traveling disturbance that carries energy. For mechanical waves, the medium oscillates instead of traveling with it.
 2. Transverse = medium moves perpendicular to travel. Longitudinal = parallel.
 3. y = A sin(2pi t/T +/- 2pi x/lambda + phi0). Minus means right-moving.
 4. Speed v = lambda f. Speed depends on medium. Frequency depends on source. Wavelength depends on both.
@@ -1532,7 +1534,7 @@ Waves is a genuinely hard unit because the concepts stack on top of each other. 
         title: "All of Unit 8 in 15 Sentences",
         html: `
           <ol class="long-list">
-            <li>A wave is energy traveling through a medium - the medium doesn't travel.</li>
+            <li>A wave is a traveling disturbance that carries energy. For mechanical waves, the medium oscillates instead of traveling with it.</li>
             <li>Transverse = medium moves perpendicular to travel (rope). Longitudinal = parallel (sound).</li>
             <li>The wave equation y = A sin(2πt/T ± 2πx/λ + φ₀) encodes how a 1-D wave evolves. Minus means right-moving.</li>
             <li>Speed v = λf. Speed is medium-dependent. Frequency is source-dependent. Wavelength depends on both.</li>
@@ -1566,7 +1568,7 @@ export const QUIZ_BANK = {
     {
       id: "c1-mc-1",
       type: "mc",
-      prompt: "Which statement best defines a wave?",
+      prompt: "Which statement best defines a mechanical wave in the opening model of the guide?",
       choices: [
         "A medium physically moves from the source to the observer.",
         "A disturbance carries energy without transporting the medium itself.",
@@ -1574,7 +1576,7 @@ export const QUIZ_BANK = {
         "Waves only exist in water.",
       ],
       answer: 1,
-      explanation: "A wave is a disturbance that carries energy while the medium only oscillates around its position.",
+      explanation: "In the opening mechanical-wave model, the wave carries energy while the medium only oscillates around its position.",
     },
     {
       id: "c1-mc-2",
@@ -1668,18 +1670,13 @@ export const QUIZ_BANK = {
     {
       id: "c2-short-2",
       type: "short",
-      prompt: "According to the Chapter 2 source-vs-medium table, which source-set quantities stay the same when you keep the same source?",
-      expected: "Frequency, period, amplitude, and phase constant stay tied to the source.",
+      prompt: "If the same source drives a wave in a different medium, which wave properties are guaranteed to stay the same?",
+      expected: "Frequency stays the same, and period stays the same because it is tied to frequency.",
       rubric:
-        "Mark correct only if the answer includes all four source-set quantities from the Chapter 2 table: frequency, period, amplitude, and phase constant.",
+        "Mark correct only if the answer includes both frequency and period. Do not require amplitude or phase constant here.",
       requiredConcepts: [
         { label: "frequency", terms: ["frequency"] },
         { label: "period", terms: ["period"] },
-        { label: "amplitude", terms: ["amplitude", "maximum displacement", "max displacement"] },
-        {
-          label: "phase constant",
-          terms: ["phase constant", "fixed phase constant", "initial phase", "phi0", "phi 0", "phio"],
-        },
       ],
     },
   ],
@@ -1765,10 +1762,10 @@ export const QUIZ_BANK = {
     {
       id: "c4-mc-4",
       type: "mc",
-      prompt: "Two identical 70 dB speakers together give about:",
+      prompt: "In the guide's in-phase 70 dB speaker example, the combined level is about:",
       choices: ["73 dB", "74 dB", "76 dB", "80 dB"],
       answer: 2,
-      explanation: "The worked example in the guide gives a combined level of 76 dB.",
+      explanation: "Under the worked example's in-phase assumption, the guide gives a combined level of 76 dB.",
     },
     {
       id: "c4-short-1",
