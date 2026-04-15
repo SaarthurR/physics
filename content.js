@@ -8,18 +8,26 @@ export const FORMULA_STRIP = [
     label: "Interference",
     value: "ΔΦ = -2πΔx / λ + Δφ₀",
   },
+  {
+    label: "Beats",
+    value: "f_beat = |f₁ - f₂|",
+  },
+  {
+    label: "Double slit",
+    value: "nλ = d sin θ",
+  },
 ];
 
 export const QUICK_PROMPTS = [
   "Explain transverse vs longitudinal like I am learning it for the first time.",
   "Why does the minus sign mean the wave moves right?",
-  "Quiz me on Doppler effect sign conventions.",
-  "Walk me through the pond interference problem.",
+  "Walk me through beat frequency vs carrier frequency.",
+  "Explain Huygens's principle and double-slit interference.",
 ];
 
 export const STUDY_GUIDE = {
   title: "Waves: Complete Study Guide",
-  subtitle: "PW-Style | DL 1 - DL 3 | Acts 8.1 through 8.10",
+  subtitle: "PW-Style | DL 1 - DL 5 | Acts 8.1 through 8.15",
   chapters: [
     {
       id: "chapter-1",
@@ -706,40 +714,666 @@ Constructive Delta Phi = 2npi. Destructive Delta Phi = (2n+1)pi.
         },
       ],
     },
+    {
+      id: "chapter-8",
+      number: "08",
+      title: "Chapter 8 - Interference Scenarios & Simplified Phase Charts",
+      plainText: `
+Chapter 8 Interference Scenarios and Simplified Phase Charts DL4.
+Turn a speaker backwards and the reversed wiring creates a fixed phase difference of pi.
+Simplified phase charts keep only the changing terms: path difference and fixed phase constant difference.
+Core relation: Delta Phi = -2pi Delta x / lambda + Delta phi0.
+Scenario 1 same spot and reversed leads gives destructive interference.
+Scenario 2 one speaker forward by lambda/2 gives destructive interference.
+Scenario 3 lambda/2 apart and reversed leads gives constructive interference because the two phase shifts cancel.
+Scenario 4 one speaker forward by lambda gives constructive interference.
+Walking around lambda-separated speakers changes path difference continuously and produces loud quiet loud bands.
+      `.trim(),
+      sections: [
+        {
+          id: "chapter-8-hook",
+          title: "The Hook - Turn a Speaker Backwards",
+          html: `
+            <p>Imagine two identical speakers playing the same note side by side. Swap the red and black wires on one speaker. The cone that used to push air toward you now pulls it away at exactly the same moment the other speaker pushes.</p>
+            <p>The two waves perfectly cancel. Total silence from two working speakers. That's destructive interference in action, and it's the clearest demo of what phase difference really means.</p>
+            <figure class="concept-figure">
+              <img src="./assets/figures/chapter8-speaker-scenario.png" alt="Speaker interference scenarios from DL4" />
+              <figcaption>The DL4 speaker setups make the path-difference and wiring-difference cases concrete before you touch the algebra.</figcaption>
+            </figure>
+          `,
+        },
+        {
+          id: "chapter-8-simplified-phase-chart",
+          title: "The Simplified Phase Chart",
+          html: `
+            <p>You don't always need all three columns. When two waves exist at the same point at the same time, the time-term difference is zero. What matters is:</p>
+            <div class="formula-box">ΔΦ = -2π(Δx)/λ + Δφ₀</div>
+            <p>The simplified chart strips the problem down to just what changes between the two waves:</p>
+            <figure class="concept-figure">
+              <img src="./assets/figures/chapter8-simplified-phase-chart.png" alt="Simplified phase chart from DL4" />
+              <figcaption>This is the compact version of the phase chart: path contribution, wiring contribution, then total phase difference.</figcaption>
+            </figure>
+          `,
+        },
+        {
+          id: "chapter-8-four-scenarios",
+          title: "The Four Speaker Scenarios - Know These Cold",
+          html: `
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Scenario</th>
+                  <th>Setup</th>
+                  <th>-2πΔx/λ</th>
+                  <th>Δφ₀</th>
+                  <th>Result</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>Same spot, leads reversed</td>
+                  <td>0</td>
+                  <td>π</td>
+                  <td>Destructive - near silence</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>One speaker pushed forward λ/2</td>
+                  <td>-π</td>
+                  <td>0</td>
+                  <td>Destructive - quiet</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>λ/2 apart and leads reversed</td>
+                  <td>-π</td>
+                  <td>π</td>
+                  <td>Constructive - the two phase shifts cancel</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>One speaker pushed forward λ</td>
+                  <td>-2π</td>
+                  <td>0</td>
+                  <td>Constructive - loud</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="callout">
+              <strong>Common trap:</strong> Scenario 3 looks destructive twice, but the contributions add to zero phase difference: ΔΦ = -π + π = 0, so the result is constructive.
+            </div>
+          `,
+        },
+        {
+          id: "chapter-8-walking-around",
+          title: "Walking Around the Speakers - What You Hear",
+          html: `
+            <p>In Scenario 4, the speakers are λ apart. When you walk around them, the path length difference changes continuously.</p>
+            <p>As Δx sweeps from 0 to λ/2 to λ, you hear loud, then quiet, then loud again. You're literally scanning through the interference pattern in space.</p>
+            <p>That is the physical intuition behind interference bands: different points in space correspond to different path differences, which means different values of ΔΦ.</p>
+          `,
+        },
+      ],
+    },
+    {
+      id: "chapter-9",
+      number: "09",
+      title: "Chapter 9 - Beats: Superposition of Different Frequencies",
+      plainText: `
+Chapter 9 Beats Superposition of Different Frequencies DL4.
+Beats happen when two close frequencies drift in and out of phase.
+The beat period is the time for loud quiet loud.
+Beat formulas: f_beat = |f1 - f2| and f_carrier = (f1 + f2)/2.
+Phase-chart derivation uses only the time column because the speakers are at the same place.
+Reading the beat graphs shows a slow envelope around a faster carrier oscillation.
+Challenge example: Angharad between two bagpipers hears beat frequency 4 Hz and carrier frequency 260 Hz.
+      `.trim(),
+      sections: [
+        {
+          id: "chapter-9-hook",
+          title: "The Hook - The Tuning Trick",
+          html: `
+            <p>Guitar players use beats to tune. Play the same note on two strings. If they're slightly out of tune, you hear a slow pulsing sound: wah-wah-wah.</p>
+            <p>The closer the strings are in frequency, the slower the pulse. When the pulse disappears completely, they're in tune. That pulse is beats.</p>
+          `,
+        },
+        {
+          id: "chapter-9-what-happening",
+          title: "What's Actually Happening",
+          html: `
+            <p>Two waves with slightly different frequencies start in phase, so the sound is loud. As time goes on, they slowly drift out of phase, so the sound becomes quiet. Then they drift back into phase again.</p>
+            <p>The loud-quiet-loud cycle is the beat period. What you hear is a carrier tone whose amplitude pulses inside a slower envelope.</p>
+          `,
+        },
+        {
+          id: "chapter-9-derivation",
+          title: "Deriving the Beat Frequency - Phase Chart Method",
+          html: `
+            <p>Put both speakers at the same location, with the same phase constant, but different periods T₁ and T₂. At t = 0 they interfere constructively, so ΔΦ = 0.</p>
+            <p>After one beat period T<sub>b</sub>, they are back in phase again, so ΔΦ = 2π:</p>
+            <div class="formula-inline">ΔΦ = 2πT<sub>b</sub>/T₁ - 2πT<sub>b</sub>/T₂ = 2π</div>
+            <div class="formula-inline">T<sub>b</sub>(1/T₁ - 1/T₂) = 1</div>
+            <div class="formula-inline">T<sub>b</sub> = 1/(f₁ - f₂)</div>
+            <div class="formula-box">f<sub>beat</sub> = |f₁ - f₂| &nbsp;&nbsp;&nbsp; f<sub>carrier</sub> = (f₁ + f₂) / 2</div>
+          `,
+        },
+        {
+          id: "chapter-9-reading-graphs",
+          title: "Reading the Beat Graphs",
+          html: `
+            <div class="concept-gallery">
+              <figure class="concept-figure">
+                <img src="./assets/figures/chapter9-beat-waveforms.png" alt="Two close-frequency wave graphs from DL4" />
+                <figcaption>Figure 1 shows the two nearby frequencies that gradually drift in and out of phase.</figcaption>
+              </figure>
+              <figure class="concept-figure">
+                <img src="./assets/figures/chapter9-beat-envelope.png" alt="Beat envelope graph from DL4" />
+                <figcaption>Figure 2 shows their sum: a fast carrier oscillation wrapped in a slower beat envelope.</figcaption>
+              </figure>
+            </div>
+            <p>In the DL figure, the red curve has T = 4 s, so f = 0.25 Hz. The blue curve has T = 3.2 s, so f ≈ 0.313 Hz. That gives a beat period of about 16 s.</p>
+            <p>The tight oscillations inside the envelope are the carrier frequency, which is the average of the two source frequencies.</p>
+          `,
+        },
+        {
+          id: "chapter-9-challenge",
+          title: "Beats + Doppler Together",
+          html: `
+            <p>Angharad stands between two bagpipers: one at 258 Hz and one at 262 Hz.</p>
+            <div class="formula-inline">f<sub>beat</sub> = 262 - 258 = 4 Hz</div>
+            <div class="formula-inline">f<sub>carrier</sub> = (258 + 262) / 2 = 260 Hz</div>
+            <p>To eliminate the beats, she must run so Doppler shifting makes the two heard frequencies equal. Solving that setup gives a speed of about 2.6 m/s toward the 258 Hz piper.</p>
+          `,
+        },
+      ],
+    },
+    {
+      id: "chapter-10",
+      number: "10",
+      title: "Chapter 10 - Diffraction and Young's Double Slit Experiment",
+      plainText: `
+Chapter 10 Diffraction and Young's Double Slit Experiment DL5.
+Huygens's principle says a small hole behaves like a new point source.
+Wavefront model shows wavelength phase and amplitude; ray model shows speed and direction.
+Young's experiment shows light is a wave because two slits produce alternating bright and dark stripes.
+Double-slit geometry gives path difference Delta x = d sin theta.
+Constructive condition: d sin theta = n lambda. Destructive condition: d sin theta = (n + 1/2) lambda.
+Small angle approximation gives d = lambda D / Delta y for the first bright fringe spacing.
+Red light spreads farther than blue because longer wavelength gives a larger angle.
+      `.trim(),
+      sections: [
+        {
+          id: "chapter-10-hook",
+          title: "The Hook - Huygens's Principle",
+          html: `
+            <p>Plane waves hit a wall with a tiny hole. On the other side, you don't see a narrow beam. You see circular waves spreading in all directions, as if the hole has become a brand-new point source.</p>
+            <p>That is Huygens's principle: every point on a wavefront can be treated as a new source of circular waves.</p>
+            <figure class="concept-figure">
+              <img src="./assets/figures/chapter10-huygens-hole.png" alt="Plane waves passing through a small opening and spreading out as circular waves" />
+              <figcaption>This DL5 diagram is the visual heart of diffraction: the hole re-emits the disturbance in all directions.</figcaption>
+            </figure>
+          `,
+        },
+        {
+          id: "chapter-10-wavefront-ray",
+          title: "Wavefront Model vs. Ray Model",
+          html: `
+            <h4>Wavefront Model</h4>
+            <p>Shows wavelength, phase, and amplitude. Solid lines can represent crests, dashed lines troughs, and the spacing between crests gives λ.</p>
+            <h4>Ray Model</h4>
+            <p>Shows speed and direction. Rays are drawn perpendicular to the wavefronts and point along the direction the wave travels.</p>
+            <p>The ray model is simpler, but it does not show phase or amplitude directly, which is why interference problems still need the wavefront picture.</p>
+          `,
+        },
+        {
+          id: "chapter-10-young",
+          title: "Young's Double Slit - Light Is a Wave, Not a Particle",
+          html: `
+            <p>If light were particles, two slits would produce two bright patches on a wall and little else. If light is a wave, each slit becomes a new source and the two waves interfere.</p>
+            <p>What Young observed was an alternating pattern of bright and dark stripes across the screen. That stripe pattern is wave behavior.</p>
+          `,
+        },
+        {
+          id: "chapter-10-geometry",
+          title: "The Geometry - Deriving d sin θ = nλ",
+          html: `
+            <p>Two slits are separated by a distance d, and the screen is far away at distance D. A point on the screen at angle θ receives waves that traveled different distances from the two slits.</p>
+            <p>The path length difference is:</p>
+            <div class="formula-box">Δx = d sin θ</div>
+            <figure class="concept-figure">
+              <img src="./assets/figures/chapter10-double-slit-geometry.png" alt="Young's double slit geometry with d, D, theta, and fringe spacing" />
+              <figcaption>The DL5 geometry figure links the picture on the screen to the path-length difference that creates interference.</figcaption>
+            </figure>
+            <div class="formula-inline">Constructive: d sin θ = nλ</div>
+            <div class="formula-inline">Destructive: d sin θ = (n + 1/2)λ</div>
+          `,
+        },
+        {
+          id: "chapter-10-small-angle",
+          title: "The Small Angle Approximation",
+          html: `
+            <p>When the screen is much farther away than the slit spacing, the angle is small enough that sin θ ≈ tan θ ≈ θ.</p>
+            <div class="formula-inline">tan θ = Δy / D</div>
+            <p>For the first bright spot, n = 1, so:</p>
+            <div class="formula-box">d = λD / Δy</div>
+            <p>This lets you calculate an impossibly tiny slit separation from the much easier-to-measure fringe spacing on the screen.</p>
+          `,
+        },
+        {
+          id: "chapter-10-worked-example",
+          title: "Worked Example and Color Intuition",
+          html: `
+            <p>For a red He-Ne laser with λ = 633 nm, a screen distance D = 1.5 m, and bright-spot spacing Δy = 2.5 mm:</p>
+            <div class="formula-inline">d = (633 × 10⁻⁹ × 1.5) / 0.0025 ≈ 3.80 × 10⁻⁴ m</div>
+            <p>That is about 0.38 mm: tiny enough to be hard to measure directly, but easy to infer from the interference pattern.</p>
+            <p>Red light spreads farther than blue because its wavelength is longer, so the angle that satisfies d sin θ = nλ is larger.</p>
+          `,
+        },
+      ],
+    },
+    {
+      id: "chapter-11",
+      number: "11",
+      title: "Chapter 11 - Diffraction Gratings and Why Light Is a Wave",
+      plainText: `
+Chapter 11 Diffraction Gratings and Why Light Is a Wave DL5.
+CD rainbows come from diffraction grating behavior.
+More slits do not move the bright spots; they sharpen them.
+Grating formula: n lambda = d sin theta.
+White light spreads because each wavelength satisfies the equation at a different angle.
+Thin film interference can make blue butterfly wings appear blue.
+A phase constant difference shifts the entire interference pattern.
+      `.trim(),
+      sections: [
+        {
+          id: "chapter-11-hook",
+          title: "The Hook - The Rainbow in a CD",
+          html: `
+            <p>Hold a CD at an angle under white light and you see a rainbow. The disc acts like a diffraction grating: thousands of microscopic tracks behave like evenly spaced slit sources.</p>
+            <p>Red bends the most because it has the longest wavelength. Blue bends the least because it has the shortest.</p>
+          `,
+        },
+        {
+          id: "chapter-11-multislit",
+          title: "Multiple Slits - Why More Is Sharper",
+          html: `
+            <p>With two slits, the bright regions are fairly broad. With many slits, the bright regions become much sharper and the dark regions wider, even though the bright spots stay at the same angles.</p>
+            <p>That is why diffraction gratings are so good at separating wavelengths: they don't change the angle formula, they make the maxima much more precise.</p>
+            <figure class="concept-figure">
+              <img src="./assets/figures/chapter11-multislit-maxima.png" alt="Multi-slit or diffraction grating diagram from DL5" />
+              <figcaption>More slits sharpen the peaks instead of moving them, which is the key intuition behind diffraction gratings.</figcaption>
+            </figure>
+          `,
+        },
+        {
+          id: "chapter-11-grating-formula",
+          title: "The Diffraction Grating Formula",
+          html: `
+            <div class="formula-box">nλ = d sin θ</div>
+            <p>Here n is the order, λ is the wavelength, d is the slit spacing, and θ is the angle from the central maximum.</p>
+            <p>The same constructive-interference condition from the double-slit case still governs the bright peaks. The difference is that many slits make those peaks dramatically cleaner.</p>
+          `,
+        },
+        {
+          id: "chapter-11-white-light",
+          title: "White Light Through a Grating",
+          html: `
+            <p>White light contains wavelengths from roughly 400 nm to 700 nm. For the first bright order, each wavelength satisfies the grating equation at a different angle.</p>
+            <ul>
+              <li>Violet is closest to the center because its wavelength is shortest.</li>
+              <li>Red is farthest from the center because its wavelength is longest.</li>
+            </ul>
+            <p>That is why a diffraction grating fans white light out into a rainbow.</p>
+          `,
+        },
+        {
+          id: "chapter-11-thin-film",
+          title: "Thin Film Interference - The Butterfly Wings Problem",
+          html: `
+            <p>The blue morpho butterfly has no blue pigment. Its color comes from constructive interference of blue light reflected off stacked thin layers of material.</p>
+            <div class="formula-inline">Δx = 2d = nλ</div>
+            <div class="formula-inline">d = nλ/2</div>
+            <p>For blue light around 450 nm and n = 1, the layer thickness is about 225 nm.</p>
+          `,
+        },
+        {
+          id: "chapter-11-phase-shift",
+          title: "Double Slit with a Phase Shift",
+          html: `
+            <p>If you insert a crystal into one slit, the two waves can leave the slits with a nonzero phase constant difference Δφ₀. That shifts the whole interference pattern.</p>
+            <p>At the center of the screen, Δx = 0, so the total phase difference there is just Δφ₀. If Δφ₀ is not 0 or 2π, the center is no longer the central bright spot.</p>
+            <div class="formula-inline">-2πΔx/λ + Δφ₀ = 2π</div>
+            <div class="formula-inline">d sin θ = (Δφ₀ - 2π)λ / (2π)</div>
+            <figure class="concept-figure">
+              <img src="./assets/figures/chapter11-phase-shifted-slit.png" alt="Phase-shifted double slit figure with a shifted fringe pattern" />
+              <figcaption>A phase constant shift moves the entire pattern; path length difference then tells you where you are inside that shifted pattern.</figcaption>
+            </figure>
+          `,
+        },
+      ],
+    },
+    {
+      id: "chapter-12",
+      number: "12",
+      title: "Chapter 12 - Complete Formula Reference (DL 1-5)",
+      plainText: `
+Chapter 12 Complete Formula Reference DL1 to DL5.
+Wave speed v = lambda f = lambda/T.
+Frequency f = 1/T.
+Full wave equation y = A sin(2pi t/T +/- 2pi x/lambda + phi0).
+Intensity scales as amplitude squared.
+Inverse distance laws for 2D and 3D waves.
+Decibel definition.
+Doppler formulas.
+Interference phase difference and constructive and destructive conditions.
+Beat formulas.
+Double-slit formulas and thin-film constructive condition.
+      `.trim(),
+      sections: [
+        {
+          id: "chapter-12-reference",
+          title: "Complete Formula Reference",
+          html: `
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Formula</th>
+                  <th>What it means</th>
+                  <th>Watch out</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>v = λf = λ/T</td>
+                  <td>Wave speed = wavelength × frequency</td>
+                  <td>v is medium-dependent; f is source-dependent</td>
+                </tr>
+                <tr>
+                  <td>f = 1/T</td>
+                  <td>Frequency = reciprocal of period</td>
+                  <td>Units are Hz</td>
+                </tr>
+                <tr>
+                  <td>y = A sin(2πt/T ± 2πx/λ + φ₀)</td>
+                  <td>Full 1-D wave equation</td>
+                  <td>Minus means right-moving; plus means left-moving</td>
+                </tr>
+                <tr>
+                  <td>I ∝ A²</td>
+                  <td>Intensity scales with amplitude squared</td>
+                  <td>Double A means 4× intensity</td>
+                </tr>
+                <tr>
+                  <td>I ∝ 1/r² (3D), 1/r (2D)</td>
+                  <td>Spreading loss with distance</td>
+                  <td>Assumes no dissipation</td>
+                </tr>
+                <tr>
+                  <td>D - D₀ = 10 log₁₀(I/I₀)</td>
+                  <td>Decibel scale</td>
+                  <td>+10 dB means 10× intensity</td>
+                </tr>
+                <tr>
+                  <td>f_obs = v/(v ± v_s) × f_s</td>
+                  <td>Doppler for moving source</td>
+                  <td>Use minus when the source moves toward the observer</td>
+                </tr>
+                <tr>
+                  <td>f_obs = (v ± v_o)/(v ± v_s) × f_s</td>
+                  <td>Doppler with moving observer and source</td>
+                  <td>Observer toward source uses plus in the numerator</td>
+                </tr>
+                <tr>
+                  <td>ΔΦ = -2πΔx/λ + Δφ₀</td>
+                  <td>Core two-source phase-difference formula</td>
+                  <td>This is the whole phase-chart story in one line</td>
+                </tr>
+                <tr>
+                  <td>Constructive: ΔΦ = 2nπ</td>
+                  <td>In-phase condition</td>
+                  <td>Loud or bright result</td>
+                </tr>
+                <tr>
+                  <td>Destructive: ΔΦ = (2n+1)π</td>
+                  <td>Anti-phase condition</td>
+                  <td>Quiet or dark result</td>
+                </tr>
+                <tr>
+                  <td>f<sub>beat</sub> = |f₁ - f₂|</td>
+                  <td>Beat frequency</td>
+                  <td>Always take the absolute value</td>
+                </tr>
+                <tr>
+                  <td>f<sub>carrier</sub> = (f₁ + f₂)/2</td>
+                  <td>Carrier frequency</td>
+                  <td>This is the pitch you hear inside the envelope</td>
+                </tr>
+                <tr>
+                  <td>Δx = d sin θ</td>
+                  <td>Double-slit path length difference</td>
+                  <td>d is slit spacing</td>
+                </tr>
+                <tr>
+                  <td>nλ = d sin θ</td>
+                  <td>Bright fringes</td>
+                  <td>n = 0 is the central maximum</td>
+                </tr>
+                <tr>
+                  <td>(n + 1/2)λ = d sin θ</td>
+                  <td>Dark fringes</td>
+                  <td>First dark fringe is beside the center</td>
+                </tr>
+                <tr>
+                  <td>d = λD / Δy</td>
+                  <td>Find slit spacing from fringe spacing</td>
+                  <td>Uses the small-angle approximation</td>
+                </tr>
+                <tr>
+                  <td>2d = nλ</td>
+                  <td>Simple constructive thin-film condition</td>
+                  <td>Only valid when no extra reflection phase flip matters</td>
+                </tr>
+              </tbody>
+            </table>
+          `,
+        },
+      ],
+    },
+    {
+      id: "chapter-13",
+      number: "13",
+      title: "Chapter 13 - Textbook Supplement: Sections 8.1-8.6",
+      plainText: `
+Chapter 13 Textbook Supplement Sections 8.1 to 8.6.
+Waves need a medium and a restoring force.
+Pulse waves are single disturbances; harmonic waves are ongoing periodic disturbances.
+Only transverse waves can be polarized.
+The wave equation comes from Newton's second law and Hooke's law.
+Compact notation uses omega and k, with v = omega / k.
+Multi-dimensional intensity comes from constant power spreading over larger wavefront area.
+Doppler formulas can be derived geometrically from wavelength compression and expansion.
+Superposition math comes from the trig identity sin a + sin b.
+Beats also come from the same trig identity and naturally produce an envelope and a carrier.
+      `.trim(),
+      sections: [
+        {
+          id: "chapter-13-8-1",
+          title: "8.1 - Why Waves Exist, Pulse Waves, and Polarization",
+          html: `
+            <p>The textbook adds the deeper physical picture: waves need a medium that can be displaced and a restoring force that pulls displaced particles back toward equilibrium.</p>
+            <p>A <strong>pulse wave</strong> is a single disturbance. A <strong>continuous harmonic wave</strong> is ongoing, repeating, and sinusoidal. This course mostly uses the harmonic model.</p>
+            <p>Polarization belongs only to transverse waves. A transverse wave can oscillate in different perpendicular directions, but a longitudinal wave only has one possible direction of oscillation, so polarization does not apply there.</p>
+          `,
+        },
+        {
+          id: "chapter-13-8-2",
+          title: "8.2 - Where the Wave Equation Comes From",
+          html: `
+            <p>The textbook derives the wave equation from Newton's second law applied to a medium with a restoring force. Start from Hooke's law for one particle:</p>
+            <div class="formula-inline">F<sub>net</sub> = -ky</div>
+            <div class="formula-inline">m d²y/dt² = -ky</div>
+            <p>The solutions to that equation are sine and cosine, which is why oscillations naturally become sinusoidal. Extending that delayed oscillation from one particle to all positions x gives:</p>
+            <div class="formula-box">y(x, t) = A sin(2πt/T - 2πx/λ + φ₀)</div>
+            <p>The compact notation uses ω = 2πf and k = 2π/λ, so the same equation becomes y(x, t) = A sin(ωt - kx + φ₀).</p>
+          `,
+        },
+        {
+          id: "chapter-13-8-3",
+          title: "8.3 - The Energy Argument for 2D and 3D Waves",
+          html: `
+            <p>The textbook formalizes the intensity story with constant power spreading over larger wavefronts.</p>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Wave type</th>
+                  <th>Wavefront area</th>
+                  <th>Intensity</th>
+                  <th>Amplitude</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1-D</td>
+                  <td>Constant</td>
+                  <td>Constant</td>
+                  <td>Constant</td>
+                </tr>
+                <tr>
+                  <td>2-D</td>
+                  <td>2πr</td>
+                  <td>I ∝ 1/r</td>
+                  <td>A ∝ 1/√r</td>
+                </tr>
+                <tr>
+                  <td>3-D</td>
+                  <td>4πr²</td>
+                  <td>I ∝ 1/r²</td>
+                  <td>A ∝ 1/r</td>
+                </tr>
+              </tbody>
+            </table>
+            <p>Because intensity is proportional to amplitude squared, the amplitude falloff is just the square root of the intensity falloff.</p>
+          `,
+        },
+        {
+          id: "chapter-13-8-4",
+          title: "8.4 - Doppler Effect: The Formal Derivation",
+          html: `
+            <p>The textbook derives the Doppler formula from geometry. In one source period T, a moving source travels v<sub>s</sub>T, so the forward wavelength becomes shorter and the backward wavelength becomes longer.</p>
+            <div class="formula-inline">λ<sub>forward</sub> = (v - v<sub>s</sub>) / f<sub>s</sub></div>
+            <div class="formula-inline">λ<sub>backward</sub> = (v + v<sub>s</sub>) / f<sub>s</sub></div>
+            <p>Then the observer frequency follows from f = v/λ, which gives the same Doppler formulas you used in the DL but now with the geometry exposed underneath.</p>
+          `,
+        },
+        {
+          id: "chapter-13-8-5",
+          title: "8.5 - The Algebra Under the Phase Chart",
+          html: `
+            <p>The phase chart is a shortcut for the trig identity underneath superposition. For two equal-amplitude waves at the same point:</p>
+            <div class="formula-box">y<sub>total</sub> = 2A cos(ΔΦ/2) × sin(average phase)</div>
+            <p>That front cosine factor controls the effective amplitude. If ΔΦ = 0, the amplitude is 2A. If ΔΦ = π, the amplitude is 0. If ΔΦ = π/2, the result is partial interference.</p>
+            <p>That is why ΔΦ tells you everything about constructive, destructive, and partial interference.</p>
+          `,
+        },
+        {
+          id: "chapter-13-8-6",
+          title: "8.6 - The Trig Identity Behind Beats",
+          html: `
+            <p>Beats also come directly from a trig identity. Add two waves with different frequencies at the same location:</p>
+            <div class="formula-inline">y₁ = A sin(2πf₁t), &nbsp; y₂ = A sin(2πf₂t)</div>
+            <div class="formula-box">y<sub>total</sub> = 2A cos(π(f₁ - f₂)t) × sin(π(f₁ + f₂)t)</div>
+            <p>The cosine factor is the slow envelope and the sine factor is the fast carrier. That produces the same beat-frequency and carrier-frequency formulas you already derived with the phase chart method.</p>
+          `,
+        },
+        {
+          id: "chapter-13-summary",
+          title: "What the Textbook Adds",
+          html: `
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Topic</th>
+                  <th>DL guide gives you</th>
+                  <th>Textbook adds</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Wave equation</td>
+                  <td>Intuition and usage</td>
+                  <td>Derivation from Hooke's law and Newton's second law</td>
+                </tr>
+                <tr>
+                  <td>ω and k notation</td>
+                  <td>Not introduced</td>
+                  <td>Compact wave-equation language and v = ω/k</td>
+                </tr>
+                <tr>
+                  <td>Polarization</td>
+                  <td>Not covered</td>
+                  <td>Why only transverse waves can be polarized</td>
+                </tr>
+                <tr>
+                  <td>Superposition math</td>
+                  <td>Phase chart shortcut</td>
+                  <td>Trig-identity proof</td>
+                </tr>
+                <tr>
+                  <td>Beats</td>
+                  <td>Phase-chart derivation</td>
+                  <td>Envelope-times-carrier proof</td>
+                </tr>
+              </tbody>
+            </table>
+          `,
+        },
+      ],
+    },
   ],
   recap: {
     id: "final-recap",
-    title: "Final Recap - The Short Version",
+    title: "Final Recap - The Complete Short Version (DL 1-5)",
     plainText: `
-Waves 101 in 10 sentences.
-1. A wave is energy traveling through a medium - the medium itself doesn't travel.
+All of Unit 8 in 15 sentences.
+1. A wave is energy traveling through a medium - the medium does not travel.
 2. Transverse = medium moves perpendicular to travel. Longitudinal = parallel.
-3. The wave equation y = A sin(2pi t/T +/- 2pi x/lambda + phi0) encodes everything about a 1D wave.
-4. Speed v = lambda f. Speed is medium-dependent. Frequency is source-dependent. Wavelength depends on both.
-5. In 3D, intensity falls as 1/r^2. Amplitude falls as 1/r.
-6. Decibels are logarithmic. +10 dB = 10x more intense but only sounds 2x louder.
-7. Doppler effect: moving source compresses or stretches wavelengths, shifting observed frequency.
-8. f_obs = v/(v ∓ v_s) x f_s. Minus when approaching, plus when receding.
-9. Superposition: wave displacements add algebraically. Constructive Delta Phi = 2npi or destructive odd times pi.
-10. The phase chart is your best friend for interference - build it systematically every time.
-This was a lot and waves is genuinely one of the trickier units because it mixes spatial and temporal thinking simultaneously. The fact that you worked through the full DL 1-3 material means when this shows up on an exam, the concepts will land somewhere familiar. You already know this.
+3. y = A sin(2pi t/T +/- 2pi x/lambda + phi0). Minus means right-moving.
+4. Speed v = lambda f. Speed depends on medium. Frequency depends on source. Wavelength depends on both.
+5. Intensity falls as 1/r^2 in 3D and amplitude falls as 1/r. Decibels are logarithmic.
+6. Doppler effect changes wavelength and therefore observed frequency.
+7. Superposition means displacements add. Delta Phi = 2npi gives constructive and odd multiples of pi give destructive.
+8. Delta Phi = -2pi Delta x/lambda + Delta phi0, so both path length and wiring matter.
+9. Reversing speaker leads makes Delta phi0 = pi.
+10. Beats come from nearby frequencies. f_beat = |f1 - f2| and f_carrier = (f1 + f2)/2.
+11. Diffraction means waves spread after a small opening.
+12. Bright two-slit fringes satisfy d sin theta = n lambda and dark fringes satisfy d sin theta = (n + 1/2)lambda.
+13. Young's experiment proved light behaves like a wave.
+14. More slits sharpen the peaks at the same angles. Grating equation: n lambda = d sin theta.
+15. Phase constant shifts move the whole interference pattern.
+Waves is a genuinely hard unit because the concepts stack on top of each other. If you worked through all of this, you now have a real map of the territory. The rest is practice problems.
     `.trim(),
     sections: [
       {
         id: "final-recap-10",
-        title: "Waves 101 in 10 Sentences",
+        title: "All of Unit 8 in 15 Sentences",
         html: `
           <ol class="long-list">
-            <li>A wave is energy traveling through a medium - the medium itself doesn't travel.</li>
+            <li>A wave is energy traveling through a medium - the medium doesn't travel.</li>
             <li>Transverse = medium moves perpendicular to travel (rope). Longitudinal = parallel (sound).</li>
-            <li>The wave equation y = A sin(2πt/T ± 2πx/λ + φ₀) encodes everything about a 1-D wave.</li>
+            <li>The wave equation y = A sin(2πt/T ± 2πx/λ + φ₀) encodes how a 1-D wave evolves. Minus means right-moving.</li>
             <li>Speed v = λf. Speed is medium-dependent. Frequency is source-dependent. Wavelength depends on both.</li>
-            <li>In 3D, intensity falls as 1/r² (inverse square law). Amplitude falls as 1/r.</li>
-            <li>Decibels are logarithmic. +10 dB = 10× more intense but only sounds 2× louder.</li>
-            <li>Doppler effect: moving source compresses or stretches wavelengths, shifting observed frequency.</li>
-            <li>f_obs = v/(v ∓ v_s) × f_s. Minus when approaching, plus when receding.</li>
-            <li>Superposition: wave displacements add algebraically. Constructive (ΔΦ = 2nπ) or destructive (ΔΦ = odd × π).</li>
-            <li>The phase chart is your best friend for interference - build it systematically every time.</li>
+            <li>In 3D, intensity falls as 1/r² and amplitude falls as 1/r. Decibels are logarithmic.</li>
+            <li>Doppler effect shifts observed frequency by compressing or stretching wavelength.</li>
+            <li>Superposition means displacements add algebraically. ΔΦ = 2nπ gives constructive and odd multiples of π give destructive.</li>
+            <li>ΔΦ = -2πΔx/λ + Δφ₀, so both path difference and fixed phase difference matter.</li>
+            <li>Reversing speaker leads makes Δφ₀ = π. Combined with path offsets, it can flip destructive into constructive.</li>
+            <li>Beats come from two nearby frequencies. f<sub>beat</sub> = |f₁ - f₂| and f<sub>carrier</sub> = (f₁ + f₂)/2.</li>
+            <li>Diffraction means waves spread after passing through a small hole. Huygens's principle explains why.</li>
+            <li>Two-slit bright fringes satisfy d sin θ = nλ. Dark fringes satisfy d sin θ = (n + 1/2)λ.</li>
+            <li>Young's experiment proved light behaves like a wave because particles alone cannot make alternating bright and dark bands.</li>
+            <li>More slits sharpen the peaks at the same angles. Diffraction gratings use that to separate wavelengths.</li>
+            <li>Phase constant shifts move the whole pattern. Path length tells you where you are inside the pattern.</li>
           </ol>
         `,
       },
@@ -747,7 +1381,7 @@ This was a lot and waves is genuinely one of the trickier units because it mixes
         id: "final-recap-close",
         title: "Closing Note",
         html: `
-          <p>This was a lot - and waves is genuinely one of the trickier units because it mixes spatial and temporal thinking simultaneously. The fact that you worked through the full DL 1-3 material means when this shows up on an exam, the concepts will land somewhere familiar. You already know this.</p>
+          <p>Waves is a genuinely hard unit because the ideas stack on top of each other and the math can hide whether the physical picture is actually clear. If you worked through all of this, you now have a real map of the territory. The rest is practice problems.</p>
         `,
       },
     ],
@@ -1129,6 +1763,246 @@ export const QUIZ_BANK = {
       prompt: "If amplitude doubles, what happens to intensity?",
       expected: "Intensity becomes four times as large.",
       rubric: "Mark correct if the answer says it quadruples, becomes 4 times larger, or 4× intensity.",
+    },
+  ],
+  "chapter-8": [
+    {
+      id: "c8-mc-1",
+      type: "mc",
+      prompt: "If one speaker's leads are reversed while both speakers are in the same place, the fixed phase difference is:",
+      choices: ["0", "π/2", "π", "2π"],
+      answer: 2,
+      explanation: "Reversing the leads flips the speaker's motion, which corresponds to a fixed phase difference of π.",
+    },
+    {
+      id: "c8-mc-2",
+      type: "mc",
+      prompt: "In the simplified phase chart, which term is removed because both waves are compared at the same place and time?",
+      choices: ["The time-term difference", "The path difference", "The wavelength", "The fixed phase constant"],
+      answer: 0,
+      explanation: "The time-term difference is zero in the simplified phase chart, so only path difference and fixed phase difference remain.",
+    },
+    {
+      id: "c8-mc-3",
+      type: "mc",
+      prompt: "Scenario 3 in the guide, with λ/2 separation and reversed leads, produces:",
+      choices: ["Destructive interference", "No interference", "Constructive interference", "Only partial interference"],
+      answer: 2,
+      explanation: "The path contribution is -π and the wiring contribution is +π, so the total phase difference is zero and the result is constructive.",
+    },
+    {
+      id: "c8-short-1",
+      type: "short",
+      prompt: "What is the simplified formula for total phase difference?",
+      expected: "ΔΦ = -2πΔx/λ + Δφ₀.",
+      rubric: "Mark correct if the answer gives the phase-difference formula with path-difference and fixed phase-constant terms.",
+    },
+    {
+      id: "c8-short-2",
+      type: "short",
+      prompt: "Why do you hear loud, quiet, loud as you walk around λ-separated speakers?",
+      expected: "Because the path length difference changes with position, so the phase difference changes through constructive and destructive values.",
+      rubric: "Mark correct if the answer mentions changing path difference, changing phase difference, or moving through the interference pattern in space.",
+    },
+  ],
+  "chapter-9": [
+    {
+      id: "c9-mc-1",
+      type: "mc",
+      prompt: "Beat frequency is given by:",
+      choices: ["f₁ + f₂", "|f₁ - f₂|", "(f₁ + f₂)/2", "1/(f₁ + f₂)"],
+      answer: 1,
+      explanation: "Beat frequency is the absolute difference between the two frequencies.",
+    },
+    {
+      id: "c9-mc-2",
+      type: "mc",
+      prompt: "Carrier frequency is:",
+      choices: ["The larger of the two frequencies", "The smaller of the two frequencies", "|f₁ - f₂|", "(f₁ + f₂)/2"],
+      answer: 3,
+      explanation: "Carrier frequency is the average of the two source frequencies.",
+    },
+    {
+      id: "c9-mc-3",
+      type: "mc",
+      prompt: "Beats happen because the two waves:",
+      choices: ["Move in different media", "Start at different amplitudes only", "Gradually drift in and out of phase", "Have no wavelength"],
+      answer: 2,
+      explanation: "Beats are the loud-quiet-loud pattern caused by nearby frequencies drifting in and out of phase.",
+    },
+    {
+      id: "c9-short-1",
+      type: "short",
+      prompt: "What is the difference between beat frequency and carrier frequency?",
+      expected: "Beat frequency is the pulsing rate, while carrier frequency is the average pitch inside the envelope.",
+      rubric: "Mark correct if the answer says beats are the slow loud-quiet pulse and carrier is the faster average tone or pitch.",
+    },
+    {
+      id: "c9-short-2",
+      type: "short",
+      prompt: "If one source is 258 Hz and the other is 262 Hz, what beat frequency do you hear?",
+      expected: "4 Hz.",
+      rubric: "Mark correct if the answer says 4 Hz or four beats per second.",
+    },
+  ],
+  "chapter-10": [
+    {
+      id: "c10-mc-1",
+      type: "mc",
+      prompt: "Huygens's principle says that each point on a wavefront acts like:",
+      choices: ["A wall", "A new source of waves", "A fixed node", "A particle beam"],
+      answer: 1,
+      explanation: "Huygens's principle treats each point on a wavefront as a source of secondary waves.",
+    },
+    {
+      id: "c10-mc-2",
+      type: "mc",
+      prompt: "The path length difference in the double-slit setup is:",
+      choices: ["Δx = λ/D", "Δx = d sin θ", "Δx = D/d", "Δx = n/λ"],
+      answer: 1,
+      explanation: "The geometry gives Δx = d sin θ.",
+    },
+    {
+      id: "c10-mc-3",
+      type: "mc",
+      prompt: "Bright fringes in a double-slit pattern satisfy:",
+      choices: ["d sin θ = nλ", "d sin θ = (n + 1/2)λ", "d = λ/θ", "ΔΦ = π/2 only"],
+      answer: 0,
+      explanation: "Constructive interference produces bright fringes when d sin θ = nλ.",
+    },
+    {
+      id: "c10-short-1",
+      type: "short",
+      prompt: "Why did Young's experiment support the wave model of light?",
+      expected: "Because two slits produced alternating bright and dark stripes, which require interference.",
+      rubric: "Mark correct if the answer mentions alternating bright/dark bands, interference, or a pattern particles alone would not produce.",
+    },
+    {
+      id: "c10-short-2",
+      type: "short",
+      prompt: "What does the small-angle approximation let you calculate from fringe spacing?",
+      expected: "It lets you calculate slit spacing using d = λD/Δy.",
+      rubric: "Mark correct if the answer mentions slit spacing d, the equation d = λD/Δy, or using screen distance and fringe spacing to infer d.",
+    },
+  ],
+  "chapter-11": [
+    {
+      id: "c11-mc-1",
+      type: "mc",
+      prompt: "Adding more slits to an interference setup mainly makes the bright peaks:",
+      choices: ["Disappear", "Move to new angles", "Sharper and narrower", "All become blue"],
+      answer: 2,
+      explanation: "More slits sharpen the bright peaks without changing the angle condition for where they occur.",
+    },
+    {
+      id: "c11-mc-2",
+      type: "mc",
+      prompt: "The diffraction grating formula is:",
+      choices: ["f = 1/T", "nλ = d sin θ", "ΔΦ = -2πΔx/λ + Δφ₀", "v = ω/k only"],
+      answer: 1,
+      explanation: "The grating equation is nλ = d sin θ.",
+    },
+    {
+      id: "c11-mc-3",
+      type: "mc",
+      prompt: "In white light through a grating, which color is farthest from the center?",
+      choices: ["Violet", "Blue", "Green", "Red"],
+      answer: 3,
+      explanation: "Red has the longest wavelength, so it appears at the largest angle.",
+    },
+    {
+      id: "c11-short-1",
+      type: "short",
+      prompt: "What does a nonzero phase constant difference do to a double-slit interference pattern?",
+      expected: "It shifts the entire pattern.",
+      rubric: "Mark correct if the answer says the fringes shift, the central maximum moves, or the whole pattern is displaced.",
+    },
+    {
+      id: "c11-short-2",
+      type: "short",
+      prompt: "Why does a CD show rainbow colors under white light?",
+      expected: "Because it acts like a diffraction grating and sends different wavelengths to different angles.",
+      rubric: "Mark correct if the answer mentions diffraction grating behavior, different wavelengths separating, or different colors leaving at different angles.",
+    },
+  ],
+  "chapter-12": [
+    {
+      id: "c12-mc-1",
+      type: "mc",
+      prompt: "Which formula gives beat frequency?",
+      choices: ["f_beat = |f₁ - f₂|", "f_beat = (f₁ + f₂)/2", "f_beat = d sin θ", "f_beat = v/λ"],
+      answer: 0,
+      explanation: "Beat frequency is the absolute difference between the two source frequencies.",
+    },
+    {
+      id: "c12-mc-2",
+      type: "mc",
+      prompt: "Which formula gives the path length difference in a double-slit experiment?",
+      choices: ["Δx = d sin θ", "Δx = λ/T", "Δx = 2d = nλ", "Δx = v/(v ± v_s)"],
+      answer: 0,
+      explanation: "Δx = d sin θ is the geometry formula for double-slit path difference.",
+    },
+    {
+      id: "c12-mc-3",
+      type: "mc",
+      prompt: "Which formula gives destructive interference for double-slit dark fringes?",
+      choices: ["nλ = d sin θ", "(n + 1/2)λ = d sin θ", "ΔΦ = 2nπ", "f = 1/T"],
+      answer: 1,
+      explanation: "Dark fringes satisfy the half-integer condition (n + 1/2)λ = d sin θ.",
+    },
+    {
+      id: "c12-short-1",
+      type: "short",
+      prompt: "What does d = λD/Δy help you find?",
+      expected: "It helps you find slit spacing from the pattern on the screen.",
+      rubric: "Mark correct if the answer says slit spacing d or says it uses wavelength, screen distance, and fringe spacing to infer d.",
+    },
+    {
+      id: "c12-short-2",
+      type: "short",
+      prompt: "What should you check before using 2d = nλ for a thin-film reflection problem?",
+      expected: "You should check whether there is an extra phase flip on reflection.",
+      rubric: "Mark correct if the answer mentions reflection phase shift, phase flip, or making sure the simple condition applies.",
+    },
+  ],
+  "chapter-13": [
+    {
+      id: "c13-mc-1",
+      type: "mc",
+      prompt: "Only which type of wave can be polarized?",
+      choices: ["Longitudinal waves", "Transverse waves", "Sound waves only", "Any wave at all"],
+      answer: 1,
+      explanation: "Polarization is a property of transverse waves because they can oscillate in different perpendicular directions.",
+    },
+    {
+      id: "c13-mc-2",
+      type: "mc",
+      prompt: "In compact notation for waves, k means:",
+      choices: ["Spring constant", "Angular wavenumber 2π/λ", "Kinetic energy", "A beat constant"],
+      answer: 1,
+      explanation: "In wave equations, k is the angular wavenumber, equal to 2π/λ.",
+    },
+    {
+      id: "c13-mc-3",
+      type: "mc",
+      prompt: "The trig identity behind superposition makes the effective amplitude proportional to:",
+      choices: ["2A |cos(ΔΦ/2)|", "A²", "v/λ", "nλ"],
+      answer: 0,
+      explanation: "The algebra gives an amplitude factor of 2A times the absolute value of cos(ΔΦ/2).",
+    },
+    {
+      id: "c13-short-1",
+      type: "short",
+      prompt: "What two things are needed for waves to exist in the textbook supplement's deeper picture?",
+      expected: "A medium that can be displaced and a restoring force that pulls it back toward equilibrium.",
+      rubric: "Mark correct if the answer mentions a medium plus a restoring force, or particles plus a force returning them toward equilibrium.",
+    },
+    {
+      id: "c13-short-2",
+      type: "short",
+      prompt: "What compact formula for wave speed uses ω and k?",
+      expected: "v = ω/k.",
+      rubric: "Mark correct if the answer says v = ω/k.",
     },
   ],
 };

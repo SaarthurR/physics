@@ -101,6 +101,32 @@ const sectionHintMap = {
     "cheat sheet",
     "reference sheet",
   ],
+  "chapter-8-simplified-phase-chart": [
+    "simplified phase chart",
+    "speaker leads",
+    "reversed leads",
+    "speaker scenario",
+    "wiring phase difference",
+  ],
+  "chapter-8-four-scenarios": ["scenario 1", "scenario 2", "scenario 3", "scenario 4", "walking around speakers"],
+  "chapter-9-derivation": ["beats", "beat frequency", "carrier frequency", "beat formula", "tuning trick"],
+  "chapter-9-reading-graphs": ["beat envelope", "beat graph", "carrier wave", "envelope"],
+  "chapter-10-hook": ["huygens principle", "diffraction", "small hole", "wavefront through hole"],
+  "chapter-10-young": ["young's double slit", "double slit", "light is a wave", "bright and dark stripes"],
+  "chapter-10-geometry": ["d sin theta", "path length difference", "double slit geometry", "fringe spacing"],
+  "chapter-10-small-angle": ["small angle approximation", "d equals lambda d over delta y", "lambda d over delta y", "delta y"],
+  "chapter-11-grating-formula": ["diffraction grating", "grating equation", "n lambda equals d sin theta", "rainbow cd"],
+  "chapter-11-phase-shift": ["phase shift", "phase shifted slit", "crystal in one slit", "shifted interference pattern"],
+  "chapter-12-reference": [
+    "complete formula reference",
+    "beats formula",
+    "double slit formulas",
+    "all formulas dl 5",
+  ],
+  "chapter-13-8-1": ["polarization", "pulse wave", "harmonic wave", "restoring force"],
+  "chapter-13-8-2": ["omega and k", "compact notation", "where wave equation comes from", "hooke's law"],
+  "chapter-13-8-5": ["cos delta phi over 2", "algebra under the phase chart", "trig identity interference"],
+  "chapter-13-8-6": ["trig identity beats", "sum to product", "beats proof"],
 };
 
 const settingsKey = "waves-study-chat-settings";
