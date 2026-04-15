@@ -191,7 +191,6 @@ const annotationsKey = "waves-study-annotations";
 const notesKey = "waves-study-notes";
 const chatState = { messages: [] };
 const quizStates = new Map();
-const quizSessionLength = 5;
 let pendingShowDocQuery = null;
 let selectedDocumentText = "";
 let selectedDocumentSource = null;
@@ -2327,7 +2326,7 @@ function wireQuizSections() {
 
 function initializeQuiz(chapterId) {
   const bank = QUIZ_BANK[chapterId] || [];
-  const selected = selectQuizQuestions(bank);
+  const selected = selectQuizQuestions(chapterId, bank);
   quizStates.set(chapterId, {
     chapterId,
     totalTarget: selected.length,
@@ -2342,17 +2341,44 @@ function initializeQuiz(chapterId) {
   renderQuiz(chapterId);
 }
 
-function selectQuizQuestions(bank) {
-  const mcQuestions = shuffleArray(bank.filter((question) => question.type === "mc")).slice(0, 3);
-  const shortQuestions = shuffleArray(bank.filter((question) => question.type === "short")).slice(0, 2);
-  const selected = [...mcQuestions, ...shortQuestions];
+function selectQuizQuestions(chapterId, bank) {
+  const targetCount = getQuizTargetCount(chapterId, bank);
+  const mcQuestions = shuffleArray(bank.filter((question) => question.type === "mc"));
+  const shortQuestions = shuffleArray(bank.filter((question) => question.type === "short"));
+  const selected = [];
+
+  const preferredShortCount =
+    targetCount >= 7 ? Math.min(2, shortQuestions.length) : targetCount >= 5 ? Math.min(1, shortQuestions.length) : 0;
+  const preferredMcCount = Math.min(
+    mcQuestions.length,
+    Math.max(targetCount - preferredShortCount, Math.ceil(targetCount * 0.65)),
+  );
+
+  selected.push(...mcQuestions.slice(0, preferredMcCount));
+  selected.push(...shortQuestions.slice(0, preferredShortCount));
+
   const leftovers = shuffleArray(bank.filter((question) => !selected.some((picked) => picked.id === question.id)));
 
-  while (selected.length < Math.min(quizSessionLength, bank.length) && leftovers.length) {
+  while (selected.length < targetCount && leftovers.length) {
     selected.push(leftovers.pop());
   }
 
   return shuffleArray(selected).map((question) => ({ ...question }));
+}
+
+function getQuizTargetCount(chapterId, bank) {
+  if (!bank.length) return 0;
+
+  const chapter = STUDY_GUIDE.chapters.find((entry) => entry.id === chapterId);
+  if (!chapter) {
+    return Math.min(bank.length, 5);
+  }
+
+  const sectionCount = chapter.sections.length;
+  const contentDensityBonus = chapter.plainText.length > 3200 ? 1 : 0;
+  const target = 3 + Math.ceil(sectionCount / 2) + contentDensityBonus;
+
+  return clamp(target, Math.min(4, bank.length), bank.length);
 }
 
 function renderQuiz(chapterId) {
