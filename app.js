@@ -2266,6 +2266,7 @@ async function fetchInternetSupport(question, { includeWebNotes = false, include
   try {
     const pages = await fetchWikipediaSummaries(buildInternetSearchQuery(question), includeImages ? 4 : 3);
     const usablePages = pages.filter((page) => page?.extract);
+    const bestImagePage = includeImages ? pickBestImagePage(question, usablePages) : null;
 
     return {
       webContext: includeWebNotes
@@ -2281,17 +2282,17 @@ async function fetchInternetSupport(question, { includeWebNotes = false, include
         title: page.title,
         url: page.url,
       })),
-      images: includeImages
-        ? usablePages
-            .filter((page) => page.imageUrl)
-            .slice(0, 3)
-            .map((page) => ({
-              title: page.title,
-              src: page.imageUrl,
-              href: page.url,
-              source: "Wikipedia",
-            }))
-        : [],
+      images:
+        includeImages && bestImagePage
+          ? [
+              {
+                title: bestImagePage.title,
+                src: bestImagePage.imageUrl,
+                href: bestImagePage.url,
+                source: "Wikipedia",
+              },
+            ]
+          : [],
     };
   } catch {
     return {
@@ -2300,6 +2301,32 @@ async function fetchInternetSupport(question, { includeWebNotes = false, include
       images: [],
     };
   }
+}
+
+function pickBestImagePage(question, pages) {
+  const candidates = pages.filter((page) => page?.imageUrl);
+  if (!candidates.length) {
+    return null;
+  }
+
+  const queryTokens = [...expandQueryTokens(normalize(question))].filter((token) => token.length > 2);
+
+  return candidates
+    .map((page, index) => {
+      const title = normalize(page.title || "");
+      const extract = normalize(page.extract || "");
+      let score = 0;
+
+      queryTokens.forEach((token) => {
+        if (title.includes(token)) score += 5;
+        if (extract.includes(token)) score += 2;
+      });
+
+      score -= index * 0.5;
+
+      return { page, score };
+    })
+    .sort((a, b) => b.score - a.score)[0]?.page || null;
 }
 
 async function fetchWikipediaSummaries(query, limit = 3) {
