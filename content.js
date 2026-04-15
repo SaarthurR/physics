@@ -1665,9 +1665,19 @@ export const QUIZ_BANK = {
     {
       id: "c2-short-2",
       type: "short",
-      prompt: "If the same source enters a new medium, what stays the same?",
-      expected: "The frequency stays the same.",
-      rubric: "Mark correct if the answer says frequency stays the same; period is also acceptable because it is tied to frequency.",
+      prompt: "According to the Chapter 2 source-vs-medium table, which source-set quantities stay the same when you keep the same source?",
+      expected: "Frequency, period, amplitude, and phase constant stay tied to the source.",
+      rubric:
+        "Mark correct only if the answer includes all four source-set quantities from the Chapter 2 table: frequency, period, amplitude, and phase constant.",
+      requiredConcepts: [
+        { label: "frequency", terms: ["frequency"] },
+        { label: "period", terms: ["period"] },
+        { label: "amplitude", terms: ["amplitude", "maximum displacement", "max displacement"] },
+        {
+          label: "phase constant",
+          terms: ["phase constant", "fixed phase constant", "initial phase", "phi0", "phi 0", "phio"],
+        },
+      ],
     },
   ],
   "chapter-3": [

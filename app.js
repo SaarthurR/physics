@@ -2752,7 +2752,39 @@ function syncOpenPanelHeight(panel) {
   panel.style.maxHeight = `${nextHeight}px`;
 }
 
+function gradeRequiredConceptAnswer(question, answer) {
+  if (!Array.isArray(question?.requiredConcepts) || !question.requiredConcepts.length) {
+    return null;
+  }
+
+  const normalizedAnswer = normalize(answer);
+  const missing = question.requiredConcepts.filter((concept) => {
+    return !concept.terms.some((term) => normalizedAnswer.includes(normalize(term)));
+  });
+
+  if (!missing.length) {
+    return {
+      correct: true,
+      feedback: `Nice. You included the full Chapter 2 source-set list: ${question.requiredConcepts
+        .map((concept) => concept.label)
+        .join(", ")}.`,
+    };
+  }
+
+  return {
+    correct: false,
+    feedback: `You're close, but this one needs the full list from the source-vs-medium table. Missing: ${missing
+      .map((concept) => concept.label)
+      .join(", ")}.`,
+  };
+}
+
 async function gradeShortQuizAnswer(chapterId, question, answer) {
+  const structuredResult = gradeRequiredConceptAnswer(question, answer);
+  if (structuredResult) {
+    return structuredResult;
+  }
+
   saveSettings();
   const { provider, model, apiKey } = getActiveProviderConfig();
   if (!apiKey) {
