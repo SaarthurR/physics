@@ -18,13 +18,6 @@ export const FORMULA_STRIP = [
   },
 ];
 
-export const QUICK_PROMPTS = [
-  "Explain transverse vs longitudinal like I am learning it for the first time.",
-  "Why does the minus sign mean the wave moves right?",
-  "Walk me through beat frequency vs carrier frequency.",
-  "Explain Huygens's principle and double-slit interference.",
-];
-
 export const STUDY_GUIDE = {
   title: "Waves: Complete Study Guide",
   subtitle: "PW-Style | DL 1 - DL 5 | Acts 8.1 through 8.15",
@@ -116,8 +109,10 @@ Direction rule. Minus sign on x term means wave moves in plus x direction to the
 Source vs Medium table. Period source. Frequency source. Wave speed medium. Wavelength both. Amplitude source. Phase constant source.
 Worked Example Boat and Buoy Problem.
 Given T = 6 s, lambda = 20 m, A = 0.5 m. Wave speed v = 20/6 = 3.33 m/s. Boat at x = 0 at crest when t = 0 means sin(phi0) = 1 so phi0 = pi/2.
-Wave equation y(x,t) = 0.5 sin(2pi t/6 + 2pi x/20 + pi/2).
-At x = 5 m and t = 2 s, phase is about 5.76 rad and displacement is about -0.25 m.
+The given information determines speed, wavelength, period, amplitude, and phase constant, but it does not determine whether the wave is moving left or right.
+If the wave is left-moving then y(x,t) = 0.5 sin(2pi t/6 + 2pi x/20 + pi/2).
+If the wave is right-moving then y(x,t) = 0.5 sin(2pi t/6 - 2pi x/20 + pi/2).
+At x = 5 m and t = 2 s, the displacement depends on which direction you assume.
       `.trim(),
       sections: [
         {
@@ -236,6 +231,9 @@ At x = 5 m and t = 2 s, phase is about 5.76 rad and displacement is about -0.25 
           title: "Worked Example - The Boat and Buoy Problem",
           html: `
             <p><strong>Problem:</strong> Ocean waves pass your boat. A crest passes every 6 seconds. Crests are spaced 20 m apart. When your boat is at a peak, it is 0.5 m above the buoy 10 m to your right. Write the wave equation.</p>
+            <div class="callout">
+              <strong>Important catch:</strong> the data given here does <em>not</em> uniquely tell you whether the wave is moving left or right. The period, wavelength, amplitude, and starting phase are enough to build the equation except for the sign of the x-term. To choose a direction, the problem would need one more clue about how the pattern changes in time at two different positions.
+            </div>
             <h4>Step 1 - What do we know?</h4>
             <ul>
               <li>Period T = 6 s (one crest every 6 seconds)</li>
@@ -244,12 +242,19 @@ At x = 5 m and t = 2 s, phase is about 5.76 rad and displacement is about -0.25 
             </ul>
             <h4>Step 2 - Wave speed:</h4>
             <div class="formula-inline">v = λ / T = 20 m / 6 s ≈ 3.33 m/s</div>
-            <h4>Step 3 - Build the equation.</h4>
-            <p>Wave moves LEFT (positive x direction convention here means we use + sign). Boat at x = 0. At t = 0, boat is at crest → y(0,0) = A, so sin(φ₀) = 1 → φ₀ = π/2:</p>
+            <h4>Step 3 - Build what the data actually determines.</h4>
+            <p>Boat at x = 0. At t = 0, boat is at crest → y(0,0) = A, so sin(φ₀) = 1 → φ₀ = π/2.</p>
+            <p>If the wave is moving left, use the plus sign:</p>
             <div class="formula-box">y(x, t) = 0.5 sin(2πt/6 + 2πx/20 + π/2) meters</div>
-            <h4>Step 4 - Find displacement at x = 5 m, t = 2 s:</h4>
+            <p>If the wave is moving right, use the minus sign:</p>
+            <div class="formula-box">y(x, t) = 0.5 sin(2πt/6 - 2πx/20 + π/2) meters</div>
+            <h4>Step 4 - Example displacement at x = 5 m, t = 2 s:</h4>
+            <p><strong>Left-moving case:</strong></p>
             <div class="formula-inline">Φ = 2π(2)/6 + 2π(5)/20 + π/2 = 2π/3 + π/2 + π/2 = 2π/3 + π ≈ 5.76 rad</div>
-            <div class="formula-inline">y = 0.5 × sin(5.76) ≈ 0.5 × (-0.50) ≈ -0.25 m</div>
+            <div class="formula-inline">y ≈ 0.5 × sin(5.76) ≈ -0.25 m</div>
+            <p><strong>Right-moving case:</strong></p>
+            <div class="formula-inline">Φ = 2π(2)/6 - 2π(5)/20 + π/2 = 2π/3 - π/2 + π/2 = 2π/3</div>
+            <div class="formula-inline">y ≈ 0.5 × sin(2π/3) ≈ +0.43 m</div>
           `,
         },
       ],
