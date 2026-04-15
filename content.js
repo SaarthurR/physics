@@ -108,11 +108,12 @@ phi0 fixed phase constant from initial conditions.
 Direction rule. Minus sign on x term means wave moves in plus x direction to the right. Plus sign means wave moves in minus x direction to the left.
 Source vs Medium table. Period source. Frequency source. Wave speed medium. Wavelength both. Amplitude source. Phase constant source.
 Worked Example Boat and Buoy Problem.
-Given T = 6 s, lambda = 20 m, A = 0.5 m. Wave speed v = 20/6 = 3.33 m/s. Boat at x = 0 at crest when t = 0 means sin(phi0) = 1 so phi0 = pi/2.
-The given information determines speed, wavelength, period, amplitude, and phase constant, but it does not determine whether the wave is moving left or right.
-If the wave is left-moving then y(x,t) = 0.5 sin(2pi t/6 + 2pi x/20 + pi/2).
-If the wave is right-moving then y(x,t) = 0.5 sin(2pi t/6 - 2pi x/20 + pi/2).
-At x = 5 m and t = 2 s, the displacement depends on which direction you assume.
+Harbor boat problem asks what moves, the wave speed, the amplitude, whether the boat and buoy share the same height, the wave equation assuming the wave moves left, the buoy motion, and the displacement at x = 5 m and t = 2 s.
+Given T = 6 s, lambda = 20 m, A = 0.5 m, and boat at x = 0 on a crest when t = 0.
+Wave speed v = 20/6 = 3.33 m/s.
+Because the original prompt explicitly says to assume the wave moves left, y(x,t) = 0.5 sin(2pi t/6 + 2pi x/20 + pi/2).
+The buoy at x = 10 m follows y_buoy(t) = 0.5 sin(2pi t/6 + 3pi/2).
+At x = 5 m and t = 2 s, y ≈ -0.25 m.
       `.trim(),
       sections: [
         {
@@ -230,31 +231,36 @@ At x = 5 m and t = 2 s, the displacement depends on which direction you assume.
           id: "chapter-2-worked-example",
           title: "Worked Example - The Boat and Buoy Problem",
           html: `
-            <p><strong>Problem:</strong> Ocean waves pass your boat. A crest passes every 6 seconds. Crests are spaced 20 m apart. When your boat is at a peak, it is 0.5 m above the buoy 10 m to your right. Write the wave equation.</p>
-            <div class="callout">
-              <strong>Important catch:</strong> the data given here does <em>not</em> uniquely tell you whether the wave is moving left or right. The period, wavelength, amplitude, and starting phase are enough to build the equation except for the sign of the x-term. To choose a direction, the problem would need one more clue about how the pattern changes in time at two different positions.
+            <div class="problem-prompt">
+              <p><strong>Problem:</strong> You are in a small boat anchored in a harbor. Ocean wave crests pass by every 6 seconds, and neighboring crests are spaced 20 m apart. A buoy is anchored 10 m to your right. When your boat is at a peak, it is 0.5 m above the buoy. A few seconds later, when your boat is at a trough, it is 0.5 m below the buoy.</p>
+              <ol>
+                <li>Exactly what is moving as the waves propagate?</li>
+                <li>What is the speed of the wave?</li>
+                <li>What is the amplitude, and will the buoy and boat ever be at the same height?</li>
+                <li>Write an equation for the wave, assuming it moves to the left, your boat is at x = 0, and at t = 0 your boat is on a crest.</li>
+                <li>Write an equation for the buoy&rsquo;s motion as a function of time.</li>
+                <li>What is the displacement from equilibrium at x = 5 m and t = 2 s?</li>
+              </ol>
             </div>
-            <h4>Step 1 - What do we know?</h4>
-            <ul>
-              <li>Period T = 6 s (one crest every 6 seconds)</li>
-              <li>Wavelength λ = 20 m (spacing between crests)</li>
-              <li>The peak is 0.5 m above the buoy → boat is 0.5 m above equilibrium, buoy is at equilibrium → Amplitude A = 0.5 m</li>
-            </ul>
-            <h4>Step 2 - Wave speed:</h4>
+            <h4>1 - What is actually moving?</h4>
+            <p>The water mostly oscillates around equilibrium. The thing that propagates from place to place is the disturbance and the energy it carries, not a chunk of water sailing across the harbor.</p>
+            <h4>2 - Wave speed</h4>
             <div class="formula-inline">v = λ / T = 20 m / 6 s ≈ 3.33 m/s</div>
-            <h4>Step 3 - Build what the data actually determines.</h4>
-            <p>Boat at x = 0. At t = 0, boat is at crest → y(0,0) = A, so sin(φ₀) = 1 → φ₀ = π/2.</p>
-            <p>If the wave is moving left, use the plus sign:</p>
+            <h4>3 - Amplitude and boat/buoy relationship</h4>
+            <p>The boat is 0.5 m above the buoy at one instant and 0.5 m below a little later, so each object sits 0.5 m from equilibrium at its extreme position.</p>
+            <div class="formula-inline">A = 0.5 m</div>
+            <p>The boat and buoy are separated by 10 m, which is λ/2. That means they are always out of phase by π: when one is at a crest the other is at a trough, and they pass through equilibrium at the same height twice per cycle.</p>
+            <h4>4 - Wave equation</h4>
+            <p>The original DL1 prompt explicitly says to assume the wave moves to the left, so the sign on the x-term is plus. At x = 0 and t = 0 the boat is on a crest, so sin(φ₀) = 1 and φ₀ = π/2.</p>
             <div class="formula-box">y(x, t) = 0.5 sin(2πt/6 + 2πx/20 + π/2) meters</div>
-            <p>If the wave is moving right, use the minus sign:</p>
-            <div class="formula-box">y(x, t) = 0.5 sin(2πt/6 - 2πx/20 + π/2) meters</div>
-            <h4>Step 4 - Example displacement at x = 5 m, t = 2 s:</h4>
-            <p><strong>Left-moving case:</strong></p>
+            <h4>5 - Buoy motion</h4>
+            <p>The buoy stays at x = 10 m, so plug x = 10 into the same wave equation:</p>
+            <div class="formula-inline">y_buoy(t) = 0.5 sin(2πt/6 + 2π(10)/20 + π/2)</div>
+            <div class="formula-inline">y_buoy(t) = 0.5 sin(2πt/6 + 3π/2) meters</div>
+            <p>That matches the physical picture: when the boat is on a crest at t = 0, the buoy is 0.5 m below equilibrium.</p>
+            <h4>6 - Displacement at x = 5 m, t = 2 s</h4>
             <div class="formula-inline">Φ = 2π(2)/6 + 2π(5)/20 + π/2 = 2π/3 + π/2 + π/2 = 2π/3 + π ≈ 5.76 rad</div>
             <div class="formula-inline">y ≈ 0.5 × sin(5.76) ≈ -0.25 m</div>
-            <p><strong>Right-moving case:</strong></p>
-            <div class="formula-inline">Φ = 2π(2)/6 - 2π(5)/20 + π/2 = 2π/3 - π/2 + π/2 = 2π/3</div>
-            <div class="formula-inline">y ≈ 0.5 × sin(2π/3) ≈ +0.43 m</div>
           `,
         },
       ],
@@ -406,6 +412,7 @@ Moving source formula: f_observed = (v / (v +/- v_source)) x f_source. Toward ob
 Full formula with moving observer: f_observed = ((v +/- v_observer) / (v +/- v_source)) x f_source.
 Observer toward source uses plus in numerator. Away uses minus.
 Worked example: v_s = 50 m/s, f_s = 50 Hz, sound speed v = 350 m/s. Forward wavelength 6 m gives 58.3 Hz. Backward wavelength 8 m gives 43.75 Hz.
+The original setup also asks you to compare those wavelengths to the stationary value lambda = 7 m.
       `.trim(),
       sections: [
         {
@@ -455,25 +462,46 @@ Worked example: v_s = 50 m/s, f_s = 50 Hz, sound speed v = 350 m/s. Forward wave
           id: "chapter-5-worked-example",
           title: "Worked Example - Ambulance Problem (FNT 2)",
           html: `
-            <p><strong>Setup:</strong> ambulance at v_s = 50 m/s, siren f_s = 50 Hz, sound speed v = 350 m/s. Silas is behind, Eppie is ahead.</p>
-            <div class="concept-gallery">
-              <figure class="concept-figure">
-                <img src="./assets/figures/chapter5-doppler-setup.png" alt="Ambulance halfway between Silas and Eppie at t equals 0 seconds" />
-                <figcaption>Figure 1 from the PDF sets up the original ambulance position.</figcaption>
-              </figure>
-              <figure class="concept-figure">
-                <img src="./assets/figures/chapter5-doppler-motion.png" alt="Ambulance shifted forward after a short time interval" />
-                <figcaption>Figure 2 shows the source after moving forward, which is what squeezes the forward wavelength.</figcaption>
-              </figure>
+            <div class="problem-prompt">
+              <p><strong>Setup:</strong> An ambulance travels at v<sub>s</sub> = 50 m/s with a siren frequency f<sub>s</sub> = 50 Hz. Sound travels at v = 350 m/s. At t = 0 s the ambulance is exactly halfway between Silas and Eppie, and at that instant the siren emits a crest.</p>
+              <div class="concept-gallery">
+                <figure class="concept-figure">
+                  <img src="./assets/figures/chapter5-doppler-setup.png" alt="Ambulance halfway between Silas and Eppie at t equals 0 seconds" />
+                  <figcaption>Figure 1 from the PDF sets up the original ambulance position.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/chapter5-doppler-motion.png" alt="Ambulance shifted forward after a short time interval" />
+                  <figcaption>Figure 2 shows the source after moving forward, which is what squeezes the forward wavelength.</figcaption>
+                </figure>
+              </div>
+              <ol>
+                <li>How far does the ambulance move in 0.02 s?</li>
+                <li>What part of the cycle is the siren at after 0.02 s?</li>
+                <li>How far has the original crest traveled by then?</li>
+                <li>What are the forward and backward wavelengths?</li>
+                <li>How do those wavelengths and observed frequencies compare with the stationary case?</li>
+              </ol>
             </div>
-            <p>At t = 0: siren emits a crest. At t = 0.02 s: ambulance has moved x = v × t = 50 × 0.02 = 1 m forward.</p>
-            <p>The siren completes f × t = 50 × 0.02 = 1 full cycle. So at t = 0.02 s, the siren is back to emitting a crest.</p>
-            <p>The t = 0 crest has traveled: 350 × 0.02 = 7 m in all directions. So the t = 0 forward crest is 7 m ahead, while the new t = 0.02 s crest is at the ambulance (1 m ahead of start).</p>
-            <p>Wavelength toward Eppie: 7 - 1 = 6 m. Wavelength toward Silas: 7 + 1 = 8 m.</p>
-            <div class="formula-inline">f_Eppie = v / λ_forward = 350 / 6 ≈ 58.3 Hz (higher - ambulance coming toward her)</div>
-            <div class="formula-inline">f_Silas = v / λ_backward = 350 / 8 = 43.75 Hz (lower - ambulance going away)</div>
-            <p>Verify with the formula:</p>
+            <h4>1 - Ambulance displacement</h4>
+            <div class="formula-inline">x = v<sub>s</sub>t = 50 × 0.02 = 1 m</div>
+            <h4>2 - What is the siren doing at t = 0.02 s?</h4>
+            <p>The siren completes f × t = 50 × 0.02 = 1 full cycle, so at t = 0.02 s it is emitting another crest.</p>
+            <h4>3 - Where is the original crest?</h4>
+            <div class="formula-inline">distance = vt = 350 × 0.02 = 7 m</div>
+            <p>So the crest emitted at t = 0 has moved 7 m away from the original position in every direction, while the new crest is emitted from the ambulance's shifted position.</p>
+            <h4>4 - Forward and backward wavelengths</h4>
+            <p>Toward Eppie, the new crest starts 1 m closer to the old crest, so the wavelength is shorter. Toward Silas, the new crest starts 1 m farther away, so the wavelength is longer.</p>
+            <div class="formula-inline">λ<sub>forward</sub> = 7 - 1 = 6 m</div>
+            <div class="formula-inline">λ<sub>backward</sub> = 7 + 1 = 8 m</div>
+            <div class="formula-inline">λ<sub>stationary</sub> = v / f = 350 / 50 = 7 m</div>
+            <p>So the moving source compresses the forward wavelength below 7 m and stretches the backward wavelength above 7 m.</p>
+            <h4>5 - Observed frequencies</h4>
+            <div class="formula-inline">f_Eppie = v / λ<sub>forward</sub> = 350 / 6 ≈ 58.3 Hz</div>
+            <div class="formula-inline">f_Silas = v / λ<sub>backward</sub> = 350 / 8 = 43.75 Hz</div>
+            <p>Eppie hears the higher pitch because the ambulance is moving toward her. Silas hears the lower pitch because the ambulance is moving away from him.</p>
+            <p>Verify with the Doppler formulas:</p>
             <div class="formula-inline">f_Eppie = (350 / (350 - 50)) × 50 = (350/300) × 50 ≈ 58.3 Hz</div>
+            <div class="formula-inline">f_Silas = (350 / (350 + 50)) × 50 = (350/400) × 50 = 43.75 Hz</div>
           `,
         },
       ],
@@ -491,7 +519,9 @@ Phase chart method leads to Delta Phi = -2pi Delta x / lambda + Delta phi0.
 Constructive: Delta x = n lambda - (Delta phi0 lambda)/(2pi).
 Destructive: Delta x = (n + 1/2) lambda - (Delta phi0 lambda)/(2pi).
 If Delta phi0 = 0 then constructive Delta x = n lambda and destructive Delta x = (n + 1/2) lambda.
-Pond problem: Bob 3 m from An and 4 m from Carla gives path difference 1 m and constructive interference when lambda is 1 m or 0.5 m etc.
+Pond problem: Bob is 4 m from An and 2 m from Carla while An and Carla are 3 m apart.
+If Bob is the source and T = 4/3 s, then lambda = 4 m.
+If An and Carla are the sources and want constructive interference at Bob, the path difference is |4 - 2| = 2 m = n lambda, so possible wavelengths are 2 m, 1 m, 2/3 m, and so on.
       `.trim(),
       sections: [
         {
@@ -615,14 +645,37 @@ Pond problem: Bob 3 m from An and 4 m from Carla gives path difference 1 m and c
           id: "chapter-6-pond-problem",
           title: "Superposition in 2D - The Pond Problem",
           html: `
-            <p>An and Carla bob in a pond. Bob is 3 m from An and 4 m from Carla. An and Carla start in phase. For constructive interference at Bob:</p>
-            <figure class="concept-figure concept-figure-small">
-              <img src="./assets/figures/chapter6-pond-problem.png" alt="Pond problem diagram with An, Bob, and Carla distances" />
-              <figcaption>The DL3 pond diagram gives the exact 2 m, 3 m, and 4 m distances used in this example.</figcaption>
-            </figure>
-            <div class="formula-inline">Δx = |distance to An - distance to Carla| = |3 - 4| = 1 m = nλ</div>
-            <p>So λ = 1 m (or 0.5 m, 0.33 m, etc. for n = 1, 2, 3...)</p>
-            <p>v = 3 m/s, f = v/λ = 3/1 = 3 Hz (or 6 Hz, 9 Hz, ...)</p>
+            <div class="problem-prompt">
+              <p><strong>Problem:</strong> Three people, An, Bob, and Carla, stand in a still pond. The wave speed is 3 m/s. The diagram shows Bob 4 m from An, 2 m from Carla, and An 3 m from Carla.</p>
+              <figure class="concept-figure concept-figure-small">
+                <img src="./assets/figures/chapter6-pond-problem.png" alt="Pond problem diagram with An, Bob, and Carla distances" />
+                <figcaption>The DL3 figure gives the actual geometry: Bob-An is 4 m, Bob-Carla is 2 m, and An-Carla is 3 m.</figcaption>
+              </figure>
+              <ol>
+                <li>If Bob moves through one full cycle in 4/3 s, what wavelength does he generate?</li>
+                <li>How do An and Carla move in response to Bob's waves?</li>
+                <li>After the pond calms down, An and Carla start bobbing in phase and want a crest from each of them to reach Bob at the same time. What frequencies could they choose?</li>
+                <li>What kind of interference does Bob experience?</li>
+                <li>How does Bob's motion compare with the case where only one friend makes waves?</li>
+              </ol>
+            </div>
+            <h4>1 - Bob as the source</h4>
+            <div class="formula-inline">λ = vT = 3 × (4/3) = 4 m</div>
+            <p>So Bob's crests are 4 m apart, and troughs sit halfway between successive crests.</p>
+            <h4>2 - An and Carla responding to Bob</h4>
+            <p>Both observers move with the same frequency as Bob's wave because they are being driven by the same source. But they are not in the same phase, because Bob-An and Bob-Carla are different distances.</p>
+            <div class="formula-inline">Δx = |4 - 2| = 2 m = λ/2</div>
+            <p>That means An and Carla are out of phase by π for Bob's original wave: when one is near a crest, the other is near a trough.</p>
+            <h4>3 - An and Carla as the sources</h4>
+            <p>For Bob to receive crests from An and Carla at the same time, the path difference from the two sources to Bob must be an integer number of wavelengths:</p>
+            <div class="formula-inline">Δx = |4 - 2| = 2 m = nλ</div>
+            <div class="formula-inline">λ = 2/n</div>
+            <p>Possible wavelengths are 2 m, 1 m, 2/3 m, and so on.</p>
+            <h4>4 - Allowed driving frequencies and interference type</h4>
+            <div class="formula-inline">f = v/λ = 3 / (2/n) = 1.5n Hz</div>
+            <p>So possible frequencies are 1.5 Hz, 3.0 Hz, 4.5 Hz, and so on. Those choices make the interference at Bob constructive.</p>
+            <h4>5 - Bob's motion</h4>
+            <p>With both An and Carla timed this way, Bob gets a larger oscillation than he would from either one alone because the two arriving disturbances reinforce each other instead of partially canceling.</p>
           `,
         },
       ],
@@ -733,6 +786,7 @@ Scenario 2 one speaker forward by lambda/2 gives destructive interference.
 Scenario 3 lambda/2 apart and reversed leads gives constructive interference because the two phase shifts cancel.
 Scenario 4 one speaker forward by lambda gives constructive interference.
 Walking around lambda-separated speakers changes path difference continuously and produces loud quiet loud bands.
+KDVS radio antennas add a fixed phase constant difference of pi/2 before path difference is even considered.
       `.trim(),
       sections: [
         {
@@ -819,6 +873,29 @@ Walking around lambda-separated speakers changes path difference continuously an
             <p>That is the physical intuition behind interference bands: different points in space correspond to different path differences, which means different values of ΔΦ.</p>
           `,
         },
+        {
+          id: "chapter-8-kdvs",
+          title: "Problem Start - KDVS Radio Antennas",
+          html: `
+            <div class="problem-prompt">
+              <p><strong>Problem start:</strong> Suppose KDVS, the campus radio station, transmits from two antennas placed symmetrically about the north-south direction. Antenna A emits each maximum a time T/4 earlier than antenna B, which means the two sources begin with a fixed phase offset before any path difference is added in.</p>
+              <ul>
+                <li>How does that fixed phase constant difference change the received signal?</li>
+                <li>Which quantities determine whether the interference is constructive, destructive, or partial?</li>
+                <li>Does the kind of interference depend on where the observer stands?</li>
+              </ul>
+            </div>
+            <h4>1 - Translate the timing lead into phase language</h4>
+            <p>If antenna A is one-quarter period ahead of antenna B, then the fixed phase constant difference is:</p>
+            <div class="formula-inline">Δφ₀ = 2π(T/4)/T = π/2</div>
+            <h4>2 - Combine source phase and path difference</h4>
+            <p>The observer cares about both the source offset and the extra distance one wave travels compared with the other.</p>
+            <div class="formula-box">ΔΦ = -2πΔx/λ + π/2</div>
+            <h4>3 - Decide what happens at a location</h4>
+            <p>Constructive interference happens when ΔΦ = 2nπ. Destructive interference happens when ΔΦ = (2n + 1)π. Partial interference is everything in between.</p>
+            <p>Because Δx changes with observer position, the interference pattern changes with observer position too. The source phase difference shifts the whole pattern, but location still matters.</p>
+          `,
+        },
       ],
     },
     {
@@ -832,7 +909,8 @@ The beat period is the time for loud quiet loud.
 Beat formulas: f_beat = |f1 - f2| and f_carrier = (f1 + f2)/2.
 Phase-chart derivation uses only the time column because the speakers are at the same place.
 Reading the beat graphs shows a slow envelope around a faster carrier oscillation.
-Challenge example: Angharad between two bagpipers hears beat frequency 4 Hz and carrier frequency 260 Hz.
+Challenge problem: Angharad between two bagpipers hears beat frequency 4 Hz and carrier frequency 260 Hz.
+Running toward the 258 Hz piper and away from the 262 Hz piper at about 2.62 m/s makes the heard frequencies equal.
       `.trim(),
       sections: [
         {
@@ -883,12 +961,30 @@ Challenge example: Angharad between two bagpipers hears beat frequency 4 Hz and 
         },
         {
           id: "chapter-9-challenge",
-          title: "Beats + Doppler Together",
+          title: "Challenge Problem - Beats + Doppler Together",
           html: `
-            <p>Angharad stands between two bagpipers: one at 258 Hz and one at 262 Hz.</p>
+            <div class="problem-prompt">
+              <p><strong>Challenge:</strong> Angharad stands midway between two out-of-tune bagpipers. One plays f₁ = 258 Hz, the other plays f₂ = 262 Hz. The speed of sound is 340 m/s.</p>
+              <ol>
+                <li>What beat frequency does Angharad hear, and what is the carrier frequency?</li>
+                <li>If Angharad does not want to hear beats, how fast and in which direction should she run so that the two heard frequencies become the same?</li>
+                <li>What common frequency would she hear then?</li>
+              </ol>
+            </div>
+            <h4>1 - Beat frequency and carrier frequency</h4>
             <div class="formula-inline">f<sub>beat</sub> = 262 - 258 = 4 Hz</div>
             <div class="formula-inline">f<sub>carrier</sub> = (258 + 262) / 2 = 260 Hz</div>
-            <p>To eliminate the beats, she must run so Doppler shifting makes the two heard frequencies equal. Solving that setup gives a speed of about 2.6 m/s toward the 258 Hz piper.</p>
+            <h4>2 - Which way should she run?</h4>
+            <p>She wants the lower note to shift up and the higher note to shift down, so she must run toward the 258 Hz piper and away from the 262 Hz piper.</p>
+            <div class="formula-inline">f&rsquo;<sub>258</sub> = ((340 + u) / 340) × 258</div>
+            <div class="formula-inline">f&rsquo;<sub>262</sub> = ((340 - u) / 340) × 262</div>
+            <p>Set them equal so the beats disappear:</p>
+            <div class="formula-inline">258(340 + u) = 262(340 - u)</div>
+            <div class="formula-inline">520u = 4 × 340</div>
+            <div class="formula-inline">u ≈ 2.62 m/s</div>
+            <h4>3 - Common heard frequency</h4>
+            <div class="formula-inline">f&rsquo; ≈ ((340 + 2.62) / 340) × 258 ≈ 260 Hz</div>
+            <p>So she hears a single tone near 260 Hz once the Doppler shifts cancel the original mismatch.</p>
           `,
         },
       ],
@@ -967,12 +1063,20 @@ Red light spreads farther than blue because longer wavelength gives a larger ang
         },
         {
           id: "chapter-10-worked-example",
-          title: "Worked Example and Color Intuition",
+          title: "Worked Example - Measuring Slit Spacing and Color Spread",
           html: `
-            <p>For a red He-Ne laser with λ = 633 nm, a screen distance D = 1.5 m, and bright-spot spacing Δy = 2.5 mm:</p>
+            <div class="problem-prompt">
+              <p><strong>Worked example:</strong> A red He-Ne laser with λ = 633 nm shines through two slits. The screen is D = 1.5 m away, and the distance between neighboring bright fringes is Δy = 2.5 mm.</p>
+              <ul>
+                <li>Estimate the slit separation.</li>
+                <li>Then ask the color question the DL wants you to notice: if you switch from red to blue, what happens to the fringe spacing?</li>
+              </ul>
+            </div>
+            <h4>1 - Use the small-angle result</h4>
             <div class="formula-inline">d = (633 × 10⁻⁹ × 1.5) / 0.0025 ≈ 3.80 × 10⁻⁴ m</div>
             <p>That is about 0.38 mm: tiny enough to be hard to measure directly, but easy to infer from the interference pattern.</p>
-            <p>Red light spreads farther than blue because its wavelength is longer, so the angle that satisfies d sin θ = nλ is larger.</p>
+            <h4>2 - Why red spreads more than blue</h4>
+            <p>For fixed slit spacing d, the fringe spacing scales with wavelength because Δy = λD/d. Red light has the longer wavelength, so its bright fringes land farther apart. Blue light has the shorter wavelength, so its fringes bunch closer together.</p>
           `,
         },
       ],
@@ -987,8 +1091,8 @@ CD rainbows come from diffraction grating behavior.
 More slits do not move the bright spots; they sharpen them.
 Grating formula: n lambda = d sin theta.
 White light spreads because each wavelength satisfies the equation at a different angle.
-Thin film interference can make blue butterfly wings appear blue.
-A phase constant difference shifts the entire interference pattern.
+Thin-film butterfly problem uses reflections from successive layers and asks for the spacing that makes blue light constructive.
+Phase-shifted double slit problem places a screen 4 m away and asks how a nonzero phase constant difference moves the bright pattern.
       `.trim(),
       sections: [
         {
@@ -1036,24 +1140,57 @@ A phase constant difference shifts the entire interference pattern.
           id: "chapter-11-thin-film",
           title: "Thin Film Interference - The Butterfly Wings Problem",
           html: `
-            <p>The blue morpho butterfly has no blue pigment. Its color comes from constructive interference of blue light reflected off stacked thin layers of material.</p>
+            <div class="problem-prompt">
+              <p><strong>Challenge:</strong> The blue morpho butterfly has no blue pigment. Its wing color comes from many thin scales separated by air. Blue light reflects from successive layers and interferes.</p>
+              <ol>
+                <li>Draw one ray reflecting from the top scale and another transmitting through the first layer, reflecting from the second, and coming back out.</li>
+                <li>If the reflected rays have no extra phase constant difference, how large must the spacing d be so blue light with λ ≈ 450 nm interferes constructively?</li>
+                <li>What kind of interference do repeated blue reflections produce?</li>
+                <li>Will some other wavelengths interfere destructively?</li>
+              </ol>
+            </div>
+            <h4>1 - The two important rays</h4>
+            <p>One ray reflects immediately from the top layer. The other travels down to the next layer, reflects, and then travels back up. That second ray covers an extra round-trip distance inside the layered structure.</p>
+            <h4>2 - Constructive blue reflection</h4>
+            <p>If there is no extra reflection phase offset, the path length difference is just the extra round trip:</p>
             <div class="formula-inline">Δx = 2d = nλ</div>
             <div class="formula-inline">d = nλ/2</div>
-            <p>For blue light around 450 nm and n = 1, the layer thickness is about 225 nm.</p>
+            <p>For the smallest nonzero thickness that works for blue light, choose n = 1:</p>
+            <div class="formula-inline">d = 450 nm / 2 = 225 nm</div>
+            <h4>3 - What repeated reflections do</h4>
+            <p>If many successive layers are built around that same spacing, the blue reflections keep arriving in phase and strongly reinforce one another. That gives the wing its bright structural blue.</p>
+            <h4>4 - Other wavelengths</h4>
+            <p>Yes. Other wavelengths can satisfy destructive or only partial-interference conditions, which is why thin-film structures can boost one color while suppressing others.</p>
           `,
         },
         {
           id: "chapter-11-phase-shift",
-          title: "Double Slit with a Phase Shift",
+          title: "Problem Start - Double Slit with a Phase Shift",
           html: `
-            <p>If you insert a crystal into one slit, the two waves can leave the slits with a nonzero phase constant difference Δφ₀. That shifts the whole interference pattern.</p>
-            <p>At the center of the screen, Δx = 0, so the total phase difference there is just Δφ₀. If Δφ₀ is not 0 or 2π, the center is no longer the central bright spot.</p>
-            <div class="formula-inline">-2πΔx/λ + Δφ₀ = 2π</div>
-            <div class="formula-inline">d sin θ = (Δφ₀ - 2π)λ / (2π)</div>
-            <figure class="concept-figure">
-              <img src="./assets/figures/chapter11-phase-shifted-slit.png" alt="Phase-shifted double slit figure with a shifted fringe pattern" />
-              <figcaption>A phase constant shift moves the entire pattern; path length difference then tells you where you are inside that shifted pattern.</figcaption>
-            </figure>
+            <div class="problem-prompt">
+              <p><strong>Problem start:</strong> In a double-slit experiment, a crystal is placed in one slit so the two rays leave the slits with a nonzero phase constant difference Δφ₀. The screen is 4 m away, and you observe the first bright spot above the center. You may use D ≫ d and sin θ ≈ tan θ.</p>
+              <figure class="concept-figure">
+                <img src="./assets/figures/chapter11-phase-shifted-slit.png" alt="Phase-shifted double slit figure with a shifted fringe pattern" />
+                <figcaption>A phase constant shift moves the entire pattern; path length difference then tells you where you are inside that shifted pattern.</figcaption>
+              </figure>
+              <ul>
+                <li>How does the phase constant difference affect the pattern?</li>
+                <li>What is the total phase difference at the center?</li>
+                <li>What path-length difference is needed for a bright fringe once Δφ₀ is included?</li>
+              </ul>
+            </div>
+            <h4>1 - Start at the center of the screen</h4>
+            <p>At y = 0 the two paths are the same length, so Δx = 0. That means the center no longer has zero total phase difference. Instead:</p>
+            <div class="formula-inline">ΔΦ_center = Δφ₀</div>
+            <p>So if Δφ₀ is not 0 or 2π, the center is not the central bright maximum anymore. The whole interference pattern shifts.</p>
+            <h4>2 - Bright-fringe condition with a phase offset</h4>
+            <div class="formula-inline">ΔΦ = -2πΔx/λ + Δφ₀</div>
+            <div class="formula-inline">-2πΔx/λ + Δφ₀ = 2πn</div>
+            <div class="formula-inline">Δx = (Δφ₀ - 2πn)λ / (2π)</div>
+            <h4>3 - Convert path difference into screen position</h4>
+            <p>For a double slit, Δx ≈ d sin θ, so the shifted bright spots satisfy:</p>
+            <div class="formula-inline">d sin θ = (Δφ₀ - 2πn)λ / (2π)</div>
+            <p>With the small-angle approximation, y ≈ D tan θ ≈ D sin θ. Once you know the first bright spot's y-value, that relation tells you how far the whole pattern moved because of the crystal.</p>
           `,
         },
       ],
