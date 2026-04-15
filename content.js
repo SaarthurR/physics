@@ -1186,43 +1186,49 @@ Double-slit formulas and thin-film constructive condition.
       title: "Chapter 13 - Textbook Supplement: Sections 8.1-8.6",
       plainText: `
 Chapter 13 Textbook Supplement Sections 8.1 to 8.6.
-Waves need a medium and a restoring force.
-Pulse waves are single disturbances; harmonic waves are ongoing periodic disturbances.
-Only transverse waves can be polarized.
-The wave equation comes from Newton's second law and Hooke's law.
-Compact notation uses omega and k, with v = omega / k.
-Multi-dimensional intensity comes from constant power spreading over larger wavefront area.
-Doppler formulas can be derived geometrically from wavelength compression and expansion.
-Superposition math comes from the trig identity sin a + sin b.
-Beats also come from the same trig identity and naturally produce an envelope and a carrier.
+Section 8.1 introduces waves as disturbances that transfer energy through a medium without transporting the medium itself.
+Material waves require both a medium that can be displaced and restoring forces between neighboring particles.
+Pulse waves are single disturbances while periodic harmonic waves repeat continuously.
+Only transverse waves can be polarized because only they have multiple possible directions of oscillation perpendicular to travel.
+Section 8.2 focuses on wave representation through equations, snapshots, time plots, total phase, and fixed phase constant.
+The wave equation includes amplitude, wavelength, period, frequency, direction, and phase information.
+Section 8.3 treats multi-dimensional waves using wavefronts, rays, sound as a pressure wave, and intensity spreading over larger wavefronts.
+Section 8.4 derives Doppler formulas for moving sources, moving observers, and the combined case.
+Section 8.5 formalizes superposition and interference using total phase difference, path length difference, and phase constant difference.
+Section 8.6 shows that beats come from adding two nearby frequencies, producing a carrier and an envelope.
       `.trim(),
       sections: [
         {
           id: "chapter-13-8-1",
-          title: "8.1 - Why Waves Exist, Pulse Waves, and Polarization",
+          title: "8.1 - Introduction to Waves",
           html: `
-            <p>The textbook adds the deeper physical picture: waves need a medium that can be displaced and a restoring force that pulls displaced particles back toward equilibrium.</p>
-            <p>A <strong>pulse wave</strong> is a single disturbance. A <strong>continuous harmonic wave</strong> is ongoing, repeating, and sinusoidal. This course mostly uses the harmonic model.</p>
-            <p>Polarization belongs only to transverse waves. A transverse wave can oscillate in different perpendicular directions, but a longitudinal wave only has one possible direction of oscillation, so polarization does not apply there.</p>
+            <p>The LibreTexts section starts from the physical picture underneath the formulas: a wave exists because a medium can be displaced, and once one part is displaced, restoring forces push and pull neighboring parts so the disturbance keeps getting handed forward.</p>
+            <p>That is why a wave can move energy through the medium without the medium itself being carried away with it. The particles only wobble around equilibrium; the disturbance is what travels.</p>
+            <p>A <strong>pulse wave</strong> is one brief disturbance. A <strong>periodic harmonic wave</strong> repeats continuously and gives us the clean sinusoidal model used all over the rest of the chapter.</p>
+            <p>The textbook also formalizes the vocabulary around waves: displacement, equilibrium, amplitude, period, frequency, wavelength, wave speed, and dimensionality.</p>
+            <p><strong>Polarization</strong> is the special idea this section adds most clearly. Only transverse waves can be polarized, because only transverse waves can choose among different perpendicular directions to oscillate in. A longitudinal wave oscillates only along the direction of travel, so there is nothing to filter into one plane.</p>
           `,
         },
         {
           id: "chapter-13-8-2",
-          title: "8.2 - Where the Wave Equation Comes From",
+          title: "8.2 - Wave Representation",
           html: `
-            <p>The textbook derives the wave equation from Newton's second law applied to a medium with a restoring force. Start from Hooke's law for one particle:</p>
-            <div class="formula-inline">F<sub>net</sub> = -ky</div>
-            <div class="formula-inline">m d²y/dt² = -ky</div>
-            <p>The solutions to that equation are sine and cosine, which is why oscillations naturally become sinusoidal. Extending that delayed oscillation from one particle to all positions x gives:</p>
-            <div class="formula-box">y(x, t) = A sin(2πt/T - 2πx/λ + φ₀)</div>
-            <p>The compact notation uses ω = 2πf and k = 2π/λ, so the same equation becomes y(x, t) = A sin(ωt - kx + φ₀).</p>
+            <p>This textbook section is really about becoming fluent at reading a wave from both an equation and a graph. The wave equation is treated like a compact sentence that stores the amplitude, timing, spacing, direction, and starting offset of the wave all at once.</p>
+            <div class="formula-box">y(x, t) = A sin(2πt/T ± 2πx/λ + φ₀)</div>
+            <p>LibreTexts explicitly contrasts a <strong>snapshot plot</strong> of displacement versus position with a <strong>time plot</strong> of displacement versus time at one position. Snapshot graphs give wavelength. Time graphs give period. You need both to reconstruct the full wave.</p>
+            <p>It also leans harder on <strong>total phase</strong>, which tells you exactly where you are in the oscillation cycle:</p>
+            <div class="formula-inline">Φ(x, t) = 2πt/T ± 2πx/λ + φ₀</div>
+            <p>The fixed phase constant φ₀ is the initial offset. The sign on the x-term tells the direction: minus means right-moving, plus means left-moving.</p>
+            <p>One textbook skill that was missing from the site before is this: from graphs, you can infer not just A, T, and λ, but also the direction of travel and the value of φ₀ by plugging in a known point like a crest, trough, or zero crossing.</p>
           `,
         },
         {
           id: "chapter-13-8-3",
-          title: "8.3 - The Energy Argument for 2D and 3D Waves",
+          title: "8.3 - Multi-Dimensional Waves",
           html: `
-            <p>The textbook formalizes the intensity story with constant power spreading over larger wavefronts.</p>
+            <p>This section combines three ideas into one picture: <strong>wavefronts</strong>, <strong>rays</strong>, and <strong>intensity spreading</strong>. Wavefronts connect points in the same phase. Rays point in the direction the energy is moving, and they are perpendicular to the wavefronts.</p>
+            <p>The textbook also frames sound more explicitly as a <strong>pressure wave</strong>. Instead of tracking the up-and-down displacement of a rope, you can track how the pressure in the air oscillates above and below atmospheric equilibrium.</p>
+            <p>Then comes the energy argument: the source may emit the same total power, but that power spreads over larger and larger wavefronts as the radius grows.</p>
             <table class="data-table">
               <thead>
                 <tr>
@@ -1253,37 +1259,54 @@ Beats also come from the same trig identity and naturally produce an envelope an
                 </tr>
               </tbody>
             </table>
-            <p>Because intensity is proportional to amplitude squared, the amplitude falloff is just the square root of the intensity falloff.</p>
+            <p>Because intensity is proportional to amplitude squared, the amplitude falloff is the square-root version of the intensity falloff. That is why in 3-D, intensity goes like 1/r² while amplitude goes like 1/r.</p>
+            <p>So the main textbook contribution here is not a random extra formula. It is the geometry explaining why loudness fades with distance and why wavefronts and rays are such useful tools in two and three dimensions.</p>
           `,
         },
         {
           id: "chapter-13-8-4",
-          title: "8.4 - Doppler Effect: The Formal Derivation",
+          title: "8.4 - Doppler Effect",
           html: `
-            <p>The textbook derives the Doppler formula from geometry. In one source period T, a moving source travels v<sub>s</sub>T, so the forward wavelength becomes shorter and the backward wavelength becomes longer.</p>
+            <p>The textbook version of Doppler goes one step farther than the basic DL treatment. It starts with the <strong>moving source</strong>, then handles the <strong>moving observer</strong>, and finally combines both effects into one expression.</p>
+            <p>For a moving source, the geometry is the same one you already know: in one source period T, the source moves a distance v<sub>s</sub>T, so the wavelength ahead is compressed and the wavelength behind is stretched.</p>
             <div class="formula-inline">λ<sub>forward</sub> = (v - v<sub>s</sub>) / f<sub>s</sub></div>
             <div class="formula-inline">λ<sub>backward</sub> = (v + v<sub>s</sub>) / f<sub>s</sub></div>
-            <p>Then the observer frequency follows from f = v/λ, which gives the same Doppler formulas you used in the DL but now with the geometry exposed underneath.</p>
+            <p>Then f = v/λ gives the usual moving-source Doppler formula.</p>
+            <p>The part that was missing before is the <strong>moving observer</strong> case. There, the wavelength in the medium stays the same, but the observer meets crests faster or slower depending on their own motion.</p>
+            <div class="formula-inline">f<sub>o</sub> = ((v ± v<sub>o</sub>) / v) f<sub>s</sub></div>
+            <p>Putting both effects together gives the combined formula:</p>
+            <div class="formula-box">f<sub>o</sub> = ((v ± v<sub>o</sub>) / (v ∓ v<sub>s</sub>)) f<sub>s</sub></div>
+            <p>Use plus in the numerator when the observer moves toward the source, minus when away. Use minus in the denominator when the source moves toward the observer, plus when away.</p>
           `,
         },
         {
           id: "chapter-13-8-5",
-          title: "8.5 - The Algebra Under the Phase Chart",
+          title: "8.5 - Superposition and Interference",
           html: `
-            <p>The phase chart is a shortcut for the trig identity underneath superposition. For two equal-amplitude waves at the same point:</p>
+            <p>The textbook opens with the superposition principle itself: the total displacement is simply the sum of the individual displacements.</p>
+            <div class="formula-inline">y<sub>total</sub> = y₁ + y₂</div>
+            <p>From there it builds constructive, destructive, and partial interference using total phase difference. It also makes a cleaner distinction between <strong>path length difference</strong> and <strong>phase constant difference</strong>.</p>
+            <div class="formula-inline">Δx = x₂ - x₁</div>
+            <div class="formula-inline">ΔΦ = -(2π/λ)Δx + Δφ₀</div>
+            <p>That means two sources can interfere differently because one wave traveled farther, because the sources started out out-of-step, or because both effects happen together.</p>
+            <p>The trig identity underneath the phase chart for equal-amplitude waves at one point is:</p>
             <div class="formula-box">y<sub>total</sub> = 2A cos(ΔΦ/2) × sin(average phase)</div>
             <p>That front cosine factor controls the effective amplitude. If ΔΦ = 0, the amplitude is 2A. If ΔΦ = π, the amplitude is 0. If ΔΦ = π/2, the result is partial interference.</p>
-            <p>That is why ΔΦ tells you everything about constructive, destructive, and partial interference.</p>
+            <p>So the textbook confirms that the phase chart is not a separate trick. It is just a fast bookkeeping method for the same superposition math.</p>
           `,
         },
         {
           id: "chapter-13-8-6",
-          title: "8.6 - The Trig Identity Behind Beats",
+          title: "8.6 - Beats",
           html: `
-            <p>Beats also come directly from a trig identity. Add two waves with different frequencies at the same location:</p>
+            <p>The beat section explains beats as plain old superposition between two waves whose frequencies are close but not identical. The relative phase drifts slowly, so the sound grows loud, soft, loud, soft in a repeating envelope.</p>
+            <div class="formula-inline">f<sub>beat</sub> = |f₁ - f₂|</div>
+            <div class="formula-inline">f<sub>carrier</sub> = (f₁ + f₂)/2</div>
+            <p>The textbook then derives those formulas from the trig identity for adding two sine waves:</p>
             <div class="formula-inline">y₁ = A sin(2πf₁t), &nbsp; y₂ = A sin(2πf₂t)</div>
             <div class="formula-box">y<sub>total</sub> = 2A cos(π(f₁ - f₂)t) × sin(π(f₁ + f₂)t)</div>
-            <p>The cosine factor is the slow envelope and the sine factor is the fast carrier. That produces the same beat-frequency and carrier-frequency formulas you already derived with the phase chart method.</p>
+            <p>The cosine factor is the slow envelope. The sine factor is the fast carrier. LibreTexts also spells out a subtle point students miss all the time: the envelope oscillates at half the beat frequency, but one full envelope cycle contains two intensity maxima, so the number of beats you hear per second is still |f₁ - f₂|.</p>
+            <p>That is exactly why musicians tune by listening for beats to slow down and disappear.</p>
           `,
         },
         {
@@ -1300,29 +1323,34 @@ Beats also come from the same trig identity and naturally produce an envelope an
               </thead>
               <tbody>
                 <tr>
-                  <td>Wave equation</td>
-                  <td>Intuition and usage</td>
-                  <td>Derivation from Hooke's law and Newton's second law</td>
+                  <td>Introduction to waves</td>
+                  <td>Hook, intuition, and core definitions</td>
+                  <td>Formal medium/restoring-force picture, periodic-vs-pulse language, and polarization framing</td>
                 </tr>
                 <tr>
-                  <td>ω and k notation</td>
-                  <td>Not introduced</td>
-                  <td>Compact wave-equation language and v = ω/k</td>
+                  <td>Wave representation</td>
+                  <td>Reading A, T, λ, and direction from graphs</td>
+                  <td>Snapshot vs time plots, total phase, and solving for φ₀ from known points</td>
                 </tr>
                 <tr>
-                  <td>Polarization</td>
-                  <td>Not covered</td>
-                  <td>Why only transverse waves can be polarized</td>
+                  <td>Multi-dimensional waves</td>
+                  <td>Wavefronts, rays, and intensity ideas</td>
+                  <td>Pressure-wave framing for sound and the geometry behind spreading power</td>
+                </tr>
+                <tr>
+                  <td>Doppler effect</td>
+                  <td>Moving-source intuition and worked example</td>
+                  <td>Observer-motion formula and the full combined expression</td>
                 </tr>
                 <tr>
                   <td>Superposition math</td>
                   <td>Phase chart shortcut</td>
-                  <td>Trig-identity proof</td>
+                  <td>Explicit path-length plus phase-constant bookkeeping under ΔΦ</td>
                 </tr>
                 <tr>
                   <td>Beats</td>
-                  <td>Phase-chart derivation</td>
-                  <td>Envelope-times-carrier proof</td>
+                  <td>Phase-drift intuition</td>
+                  <td>Carrier-frequency formula and the envelope-versus-beat-frequency distinction</td>
                 </tr>
               </tbody>
             </table>
@@ -1977,32 +2005,32 @@ export const QUIZ_BANK = {
     {
       id: "c13-mc-2",
       type: "mc",
-      prompt: "In compact notation for waves, k means:",
-      choices: ["Spring constant", "Angular wavenumber 2π/λ", "Kinetic energy", "A beat constant"],
+      prompt: "A graph of displacement versus position at one instant is best used to read:",
+      choices: ["Frequency", "Wavelength", "Phase speed only", "Beat frequency"],
       answer: 1,
-      explanation: "In wave equations, k is the angular wavenumber, equal to 2π/λ.",
+      explanation: "A snapshot graph shows the spatial pattern of the wave, so it is the graph you use to read wavelength.",
     },
     {
       id: "c13-mc-3",
       type: "mc",
-      prompt: "The trig identity behind superposition makes the effective amplitude proportional to:",
-      choices: ["2A |cos(ΔΦ/2)|", "A²", "v/λ", "nλ"],
+      prompt: "In the Doppler formula, when the observer moves toward the source, which sign is used with vₒ in the numerator?",
+      choices: ["Plus", "Minus", "Zero", "It depends only on wavelength"],
       answer: 0,
-      explanation: "The algebra gives an amplitude factor of 2A times the absolute value of cos(ΔΦ/2).",
+      explanation: "Observer moving toward the source means they meet crests faster, so the numerator becomes v + vₒ.",
     },
     {
       id: "c13-short-1",
       type: "short",
-      prompt: "What two things are needed for waves to exist in the textbook supplement's deeper picture?",
-      expected: "A medium that can be displaced and a restoring force that pulls it back toward equilibrium.",
-      rubric: "Mark correct if the answer mentions a medium plus a restoring force, or particles plus a force returning them toward equilibrium.",
+      prompt: "What two things does the textbook say material waves need in order to exist?",
+      expected: "A medium that can be displaced and restoring forces between neighboring parts of the medium.",
+      rubric: "Mark correct if the answer mentions a medium plus restoring forces, or particles plus a force pulling them back toward equilibrium.",
     },
     {
       id: "c13-short-2",
       type: "short",
-      prompt: "What compact formula for wave speed uses ω and k?",
-      expected: "v = ω/k.",
-      rubric: "Mark correct if the answer says v = ω/k.",
+      prompt: "What is the path-length contribution to total phase difference between two sources?",
+      expected: "The path-length term is -(2π/λ)Δx.",
+      rubric: "Mark correct if the answer gives the path-length term as minus two pi over lambda times delta x, or an equivalent statement inside the total phase-difference formula.",
     },
   ],
 };
