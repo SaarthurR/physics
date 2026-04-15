@@ -24,6 +24,12 @@ const studyConceptsClose = document.querySelector("#study-concepts-close");
 const chatBubble = document.querySelector("#chat-bubble");
 const selectionAction = document.querySelector("#selection-action");
 const selectionStudyAction = document.querySelector("#selection-study-action");
+const selectionHighlightAction = document.querySelector("#selection-highlight-action");
+const notesButton = document.querySelector("#notes-button");
+const notesShell = document.querySelector("#notes-shell");
+const notesClose = document.querySelector("#notes-close");
+const notesInput = document.querySelector("#notes-input");
+const notesHighlightsRoot = document.querySelector("#notes-highlights-root");
 const chatShell = document.querySelector("#chat-shell");
 const chatClose = document.querySelector("#chat-close");
 const openChatHero = document.querySelector("#open-chat-hero");
@@ -181,23 +187,31 @@ const sidebarStateKey = "waves-study-sidebar-collapsed";
 const responseModeKey = "waves-study-response-mode";
 const autoCompactKey = "waves-study-auto-compact";
 const studyLaterKey = "waves-study-later-items";
+const annotationsKey = "waves-study-annotations";
+const notesKey = "waves-study-notes";
 const chatState = { messages: [] };
 const quizStates = new Map();
 const quizSessionLength = 5;
 let pendingShowDocQuery = null;
 let selectedDocumentText = "";
 let selectedDocumentSource = null;
+let selectedDocumentSelection = null;
 let lastStudyTopicQuery = "";
 let chatSettingsState = null;
 let studyLaterItems = [];
 let studyLaterSession = null;
+let annotationItems = [];
+let notesText = "";
 let lastOpenedSectionId = "";
 
 renderFormulaStrip();
 renderOutline();
 loadStudyLaterItems();
 renderDocument();
+loadAnnotations();
+loadNotes();
 renderStudyLaterSection();
+renderNotesHighlights();
 loadSettings();
 applySavedChatLayout();
 loadSidebarState();
@@ -210,6 +224,7 @@ wireResponsivePanels();
 wireScrollSpy();
 wireChatEvents();
 wireStudyConceptsShell();
+wireNotesShell();
 wireChatDragAndResize();
 wireSelectionAssist();
 renderMathInNode(messagesRoot);
@@ -664,6 +679,9 @@ function wireChatEvents() {
     if (event.key === "Escape" && studyConceptsShell.classList.contains("is-open")) {
       closeStudyConceptsShell();
     }
+    if (event.key === "Escape" && notesShell.classList.contains("is-open")) {
+      closeNotesShell();
+    }
   });
 }
 
@@ -913,6 +931,7 @@ function wireStudyConceptsShell() {
 }
 
 function openStudyConceptsShell() {
+  closeNotesShell();
   studyConceptsShell.classList.add("is-open");
   studyConceptsShell.setAttribute("aria-hidden", "false");
   studyConceptsButton.setAttribute("aria-expanded", "true");
@@ -930,6 +949,292 @@ function toggleStudyConceptsShell() {
     return;
   }
   openStudyConceptsShell();
+}
+
+function wireNotesShell() {
+  notesButton.addEventListener("click", () => {
+    toggleNotesShell();
+  });
+
+  notesClose.addEventListener("click", closeNotesShell);
+
+  notesInput.addEventListener("input", () => {
+    notesText = notesInput.value;
+    saveNotes();
+  });
+
+  notesHighlightsRoot.addEventListener("click", (event) => {
+    const jumpButton = event.target.closest("[data-highlight-jump]");
+    if (jumpButton) {
+      focusPersistentHighlight(jumpButton.getAttribute("data-highlight-jump"));
+      return;
+    }
+
+    const removeButton = event.target.closest("[data-highlight-remove]");
+    if (removeButton) {
+      removePersistentHighlight(removeButton.getAttribute("data-highlight-remove"));
+    }
+  });
+
+  document.addEventListener("pointerdown", (event) => {
+    if (!notesShell.classList.contains("is-open")) return;
+    if (notesShell.contains(event.target) || notesButton.contains(event.target)) return;
+    closeNotesShell();
+  });
+}
+
+function openNotesShell() {
+  closeStudyConceptsShell();
+  notesShell.classList.add("is-open");
+  notesShell.setAttribute("aria-hidden", "false");
+  notesButton.setAttribute("aria-expanded", "true");
+}
+
+function closeNotesShell() {
+  notesShell.classList.remove("is-open");
+  notesShell.setAttribute("aria-hidden", "true");
+  notesButton.setAttribute("aria-expanded", "false");
+}
+
+function toggleNotesShell() {
+  if (notesShell.classList.contains("is-open")) {
+    closeNotesShell();
+    return;
+  }
+  openNotesShell();
+}
+
+function loadNotes() {
+  const saved = safeJsonParse(localStorage.getItem(notesKey));
+  notesText = typeof saved?.text === "string" ? saved.text : "";
+  notesInput.value = notesText;
+}
+
+function saveNotes() {
+  localStorage.setItem(notesKey, JSON.stringify({ text: notesText }));
+}
+
+function loadAnnotations() {
+  const saved = safeJsonParse(localStorage.getItem(annotationsKey));
+  annotationItems = Array.isArray(saved?.items) ? saved.items : [];
+  applyAllPersistentHighlights();
+}
+
+function saveAnnotations() {
+  localStorage.setItem(annotationsKey, JSON.stringify({ items: annotationItems }));
+  renderNotesHighlights();
+}
+
+function renderNotesHighlights() {
+  if (!annotationItems.length) {
+    notesHighlightsRoot.innerHTML = `
+      <div class="notes-empty">
+        <p><strong>No document highlights yet.</strong></p>
+        <p>Highlight any line in the study guide and use the new <strong>H</strong> action to keep it marked here.</p>
+      </div>
+    `;
+    return;
+  }
+
+  notesHighlightsRoot.innerHTML = `
+    <div class="notes-highlight-list">
+      ${annotationItems
+        .slice()
+        .sort((a, b) => b.createdAt - a.createdAt)
+        .map(
+          (item) => `
+            <article class="notes-highlight-item">
+              <button
+                class="notes-highlight-jump"
+                type="button"
+                data-highlight-jump="${escapeAttribute(item.id)}"
+              >
+                <p class="study-concept-source">${escapeHtml(item.sectionTitle || "Highlighted passage")}</p>
+                <p class="notes-highlight-text">${escapeHtml(item.text)}</p>
+              </button>
+              <button
+                class="study-remove"
+                type="button"
+                data-highlight-remove="${escapeAttribute(item.id)}"
+                aria-label="Remove saved highlight"
+              >
+                ×
+              </button>
+            </article>
+          `,
+        )
+        .join("")}
+    </div>
+  `;
+}
+
+function addPersistentHighlight(selectionMeta) {
+  if (!selectionMeta?.sectionId || typeof selectionMeta.start !== "number" || typeof selectionMeta.end !== "number") {
+    return false;
+  }
+
+  const section = document.getElementById(selectionMeta.sectionId);
+  const body = section?.querySelector(".doc-section-body");
+  if (!body) return false;
+
+  const start = Math.max(0, Math.min(selectionMeta.start, selectionMeta.end));
+  const end = Math.max(selectionMeta.start, selectionMeta.end);
+  if (end - start < 1) return false;
+
+  let nextStart = start;
+  let nextEnd = end;
+  const remaining = [];
+
+  annotationItems.forEach((item) => {
+    if (item.sectionId !== selectionMeta.sectionId) {
+      remaining.push(item);
+      return;
+    }
+
+    if (rangesTouchOrOverlap(item.start, item.end, nextStart, nextEnd)) {
+      nextStart = Math.min(nextStart, item.start);
+      nextEnd = Math.max(nextEnd, item.end);
+      return;
+    }
+
+    remaining.push(item);
+  });
+
+  const plainText = body.textContent || "";
+  const text = plainText.slice(nextStart, nextEnd).trim();
+  if (!text) return false;
+
+  annotationItems = [
+    ...remaining,
+    {
+      id: `highlight-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      sectionId: selectionMeta.sectionId,
+      sectionTitle: selectionMeta.sectionTitle || "Highlighted passage",
+      start: nextStart,
+      end: nextEnd,
+      text,
+      createdAt: Date.now(),
+    },
+  ];
+
+  applyHighlightsForSection(selectionMeta.sectionId);
+  saveAnnotations();
+  openNotesShell();
+  return true;
+}
+
+function removePersistentHighlight(highlightId) {
+  const removed = annotationItems.find((item) => item.id === highlightId);
+  if (!removed) return;
+
+  annotationItems = annotationItems.filter((item) => item.id !== highlightId);
+  applyHighlightsForSection(removed.sectionId);
+  saveAnnotations();
+}
+
+function applyAllPersistentHighlights() {
+  const sectionIds = [...new Set(annotationItems.map((item) => item.sectionId))];
+  sectionIds.forEach((sectionId) => {
+    applyHighlightsForSection(sectionId);
+  });
+}
+
+function applyHighlightsForSection(sectionId) {
+  const section = document.getElementById(sectionId);
+  const body = section?.querySelector(".doc-section-body");
+  if (!body) return;
+
+  clearPersistentHighlights(body);
+  const items = annotationItems
+    .filter((item) => item.sectionId === sectionId)
+    .slice()
+    .sort((a, b) => a.start - b.start);
+
+  items.forEach((item) => {
+    applySinglePersistentHighlight(body, item);
+  });
+
+  const panel = section.querySelector(".doc-section-panel");
+  syncOpenPanelHeight(panel);
+}
+
+function clearPersistentHighlights(root) {
+  root.querySelectorAll(".doc-persistent-highlight").forEach((highlight) => {
+    const fragment = document.createDocumentFragment();
+    while (highlight.firstChild) {
+      fragment.appendChild(highlight.firstChild);
+    }
+    highlight.replaceWith(fragment);
+  });
+  root.normalize();
+}
+
+function applySinglePersistentHighlight(root, item) {
+  const startPosition = locateTextPosition(root, item.start);
+  const endPosition = locateTextPosition(root, item.end);
+  if (!startPosition || !endPosition) return;
+
+  const range = document.createRange();
+  range.setStart(startPosition.node, startPosition.offset);
+  range.setEnd(endPosition.node, endPosition.offset);
+
+  if (range.collapsed || !range.toString().trim()) return;
+
+  const wrapper = document.createElement("mark");
+  wrapper.className = "doc-persistent-highlight";
+  wrapper.dataset.highlightId = item.id;
+  const contents = range.extractContents();
+  wrapper.appendChild(contents);
+  range.insertNode(wrapper);
+}
+
+function locateTextPosition(root, offset) {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  let currentNode = null;
+  let traversed = 0;
+
+  while ((currentNode = walker.nextNode())) {
+    const length = currentNode.textContent?.length || 0;
+    if (offset <= traversed + length) {
+      return {
+        node: currentNode,
+        offset: Math.max(0, Math.min(length, offset - traversed)),
+      };
+    }
+    traversed += length;
+  }
+
+  if (!root.lastChild) return null;
+  const fallback = root.lastChild.nodeType === Node.TEXT_NODE ? root.lastChild : walker.currentNode;
+  if (!fallback) return null;
+  return {
+    node: fallback,
+    offset: fallback.textContent?.length || 0,
+  };
+}
+
+function rangesTouchOrOverlap(startA, endA, startB, endB) {
+  return Math.max(startA, startB) <= Math.min(endA, endB);
+}
+
+function focusPersistentHighlight(highlightId) {
+  const item = annotationItems.find((entry) => entry.id === highlightId);
+  if (!item) return;
+
+  const section = document.getElementById(item.sectionId);
+  if (!section) return;
+
+  revealSection(section, false);
+  requestAnimationFrame(() => {
+    const target = section.querySelector(`[data-highlight-id="${CSS.escape(item.id)}"]`) || section;
+    centerTarget(target);
+    if (target.classList.contains("doc-persistent-highlight")) {
+      target.classList.add("is-focused");
+      window.setTimeout(() => {
+        target.classList.remove("is-focused");
+      }, 1800);
+    }
+  });
 }
 
 function loadStudyLaterItems() {
@@ -1129,6 +1434,37 @@ function getStudyLaterSelectionMeta(node) {
   };
 }
 
+function getClosestSectionBody(node) {
+  if (!node) return null;
+  const element = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+  return element?.closest?.(".doc-section-body") || null;
+}
+
+function getHighlightBlock(node) {
+  if (!node) return null;
+  const element = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+  return (
+    element?.closest?.(
+      "p, li, h4, td, th, figcaption, .formula-inline, .formula-box, .callout",
+    ) || null
+  );
+}
+
+function getSelectionOffsetsInRoot(root, range) {
+  const startRange = document.createRange();
+  startRange.selectNodeContents(root);
+  startRange.setEnd(range.startContainer, range.startOffset);
+
+  const endRange = document.createRange();
+  endRange.selectNodeContents(root);
+  endRange.setEnd(range.endContainer, range.endOffset);
+
+  return {
+    start: startRange.toString().length,
+    end: endRange.toString().length,
+  };
+}
+
 function addStudyLaterItem(text, meta) {
   const trimmed = text.trim();
   if (!trimmed) return false;
@@ -1288,8 +1624,21 @@ function wireSelectionAssist() {
       range.commonAncestorContainer.nodeType === Node.TEXT_NODE
         ? range.commonAncestorContainer.parentElement
         : range.commonAncestorContainer;
+    const startBody = getClosestSectionBody(range.startContainer);
+    const endBody = getClosestSectionBody(range.endContainer);
+    const startBlock = getHighlightBlock(range.startContainer);
+    const endBlock = getHighlightBlock(range.endContainer);
 
-    if (!commonAncestor || !documentRoot.contains(commonAncestor)) {
+    if (
+      !commonAncestor ||
+      !documentRoot.contains(commonAncestor) ||
+      !startBody ||
+      !endBody ||
+      startBody !== endBody ||
+      !startBlock ||
+      !endBlock ||
+      startBlock !== endBlock
+    ) {
       hideSelectionAction();
       return;
     }
@@ -1302,13 +1651,22 @@ function wireSelectionAssist() {
 
     selectedDocumentText = text;
     selectedDocumentSource = getStudyLaterSelectionMeta(commonAncestor);
+    selectedDocumentSelection = {
+      ...selectedDocumentSource,
+      ...getSelectionOffsetsInRoot(startBody, range),
+      text,
+    };
     const top = Math.max(12, rect.top - 18);
-    const askLeft = Math.min(window.innerWidth - 78, rect.right + 8);
+    const highlightLeft = Math.min(window.innerWidth - 112, rect.right + 8);
+    const askLeft = Math.min(window.innerWidth - 78, highlightLeft + 34);
     const studyLeft = Math.min(window.innerWidth - 44, askLeft + 34);
+    selectionHighlightAction.style.left = `${highlightLeft}px`;
+    selectionHighlightAction.style.top = `${top}px`;
     selectionAction.style.left = `${askLeft}px`;
     selectionAction.style.top = `${top}px`;
     selectionStudyAction.style.left = `${studyLeft}px`;
     selectionStudyAction.style.top = `${top}px`;
+    selectionHighlightAction.classList.add("is-visible");
     selectionAction.classList.add("is-visible");
     selectionStudyAction.classList.add("is-visible");
   };
@@ -1327,6 +1685,7 @@ function wireSelectionAssist() {
     chatInput.value = `Can you explain this passage?\n\n"${selectedDocumentText}"`;
     autoResizeChatInput();
     chatInput.focus();
+    window.getSelection()?.removeAllRanges();
     hideSelectionAction();
   });
 
@@ -1334,13 +1693,24 @@ function wireSelectionAssist() {
     if (!selectedDocumentText) return;
 
     addStudyLaterItem(selectedDocumentText, selectedDocumentSource);
+    window.getSelection()?.removeAllRanges();
+    hideSelectionAction();
+  });
+
+  selectionHighlightAction.addEventListener("click", () => {
+    if (!selectedDocumentSelection) return;
+
+    addPersistentHighlight(selectedDocumentSelection);
+    window.getSelection()?.removeAllRanges();
     hideSelectionAction();
   });
 }
 
 function hideSelectionAction() {
+  selectionHighlightAction.classList.remove("is-visible");
   selectionAction.classList.remove("is-visible");
   selectionStudyAction.classList.remove("is-visible");
+  selectedDocumentSelection = null;
 }
 
 function showInDocument(query) {

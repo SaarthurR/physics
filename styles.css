@@ -840,6 +840,28 @@ textarea:focus-visible {
   box-shadow: 0 18px 50px rgba(191, 118, 45, 0.24);
 }
 
+.notes-fab {
+  position: fixed;
+  right: 228px;
+  bottom: 22px;
+  z-index: 60;
+  width: 62px;
+  height: 62px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(135deg, #7e8f9a, #4e6471);
+  box-shadow: 0 18px 50px rgba(56, 75, 86, 0.24);
+}
+
+.notes-fab svg {
+  width: 26px;
+  height: 26px;
+}
+
 .study-concepts-fab svg {
   width: 26px;
   height: 26px;
@@ -879,6 +901,12 @@ textarea:focus-visible {
 
 .selection-action-secondary {
   background: linear-gradient(135deg, #f59d4e, #d9732c);
+}
+
+.selection-action-highlight {
+  background: linear-gradient(135deg, #f2d56b, #d7a43b);
+  color: #5d4306;
+  font-weight: 800;
 }
 
 .selection-action[data-tooltip]::after {
@@ -956,6 +984,166 @@ textarea:focus-visible {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0) scale(1);
+}
+
+.notes-shell {
+  position: fixed;
+  right: 22px;
+  top: 92px;
+  bottom: 96px;
+  z-index: 69;
+  width: min(410px, calc(100vw - 32px));
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid rgba(36, 50, 58, 0.14);
+  border-radius: 26px;
+  background:
+    linear-gradient(180deg, rgba(255, 252, 247, 0.98), rgba(246, 250, 252, 0.96)),
+    rgba(255, 255, 255, 0.95);
+  box-shadow: 0 28px 110px rgba(21, 31, 37, 0.22);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(12px) scale(0.98);
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+.notes-shell.is-open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0) scale(1);
+}
+
+.notes-header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.notes-header h2 {
+  margin: 0;
+  font-family: "Fraunces", serif;
+  font-size: clamp(1.5rem, 3vw, 1.9rem);
+  line-height: 1.04;
+}
+
+.notes-body {
+  display: grid;
+  gap: 16px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.notes-label {
+  color: var(--accent-deep);
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.notes-input {
+  width: 100%;
+  min-height: 220px;
+  padding: 14px 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--ink);
+  line-height: 1.75;
+  resize: vertical;
+}
+
+.notes-saved {
+  display: grid;
+  gap: 12px;
+  min-height: 0;
+}
+
+.notes-saved-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.notes-highlights-root {
+  min-height: 0;
+  max-height: 100%;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.notes-highlight-list {
+  display: grid;
+  gap: 12px;
+}
+
+.notes-highlight-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: start;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.notes-highlight-jump {
+  display: grid;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  color: inherit;
+}
+
+.notes-highlight-text,
+.notes-empty p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.72;
+}
+
+.notes-empty {
+  padding: 14px 16px;
+  border: 1px dashed rgba(95, 129, 195, 0.26);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.doc-persistent-highlight {
+  padding: 0.06em 0.18em;
+  border-radius: 0.35em;
+  background: rgba(242, 213, 107, 0.58);
+  box-shadow: 0 0 0 1px rgba(215, 164, 59, 0.18) inset;
+}
+
+.doc-persistent-highlight.is-focused {
+  animation: persistent-highlight-flash 1.8s ease-out;
+}
+
+@keyframes persistent-highlight-flash {
+  0% {
+    background: rgba(242, 213, 107, 0.88);
+    box-shadow: 0 0 0 0 rgba(215, 164, 59, 0.2);
+  }
+
+  35% {
+    background: rgba(242, 213, 107, 0.76);
+    box-shadow: 0 0 0 10px rgba(242, 213, 107, 0.12);
+  }
+
+  100% {
+    background: rgba(242, 213, 107, 0.58);
+    box-shadow: 0 0 0 0 rgba(215, 164, 59, 0);
+  }
 }
 
 .study-concepts-header {
@@ -1510,6 +1698,10 @@ textarea:focus-visible {
 
   .study-concepts-fab {
     right: 120px;
+  }
+
+  .notes-fab {
+    right: 198px;
   }
 
   .study-concept-item {

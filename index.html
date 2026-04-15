@@ -142,6 +142,32 @@
       +
     </button>
 
+    <button
+      class="selection-action selection-action-highlight"
+      id="selection-highlight-action"
+      type="button"
+      aria-label="Highlight selected text"
+      data-tooltip="Highlight in document"
+    >
+      H
+    </button>
+
+    <button
+      class="notes-fab"
+      id="notes-button"
+      type="button"
+      aria-expanded="false"
+      aria-controls="notes-shell"
+      aria-label="Open notes"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path
+          d="M6 3H15.5L20 7.5V19C20 20.1 19.1 21 18 21H6C4.9 21 4 20.1 4 19V5C4 3.9 4.9 3 6 3ZM15 4.5V8H18.5L15 4.5ZM8 11H16V12.5H8V11ZM8 14H16V15.5H8V14ZM8 17H13V18.5H8V17Z"
+          fill="currentColor"
+        />
+      </svg>
+    </button>
+
     <aside class="study-concepts-shell" id="study-concepts-shell" aria-hidden="true">
       <div class="study-concepts-header">
         <div>
@@ -153,6 +179,36 @@
         </button>
       </div>
       <div class="study-concepts-root" id="study-later-root"></div>
+    </aside>
+
+    <aside class="notes-shell" id="notes-shell" aria-hidden="true">
+      <div class="notes-header">
+        <div>
+          <p class="chat-kicker">Reading notes</p>
+          <h2>Notepad</h2>
+        </div>
+        <button class="chat-close" id="notes-close" type="button" aria-label="Close notes">
+          ×
+        </button>
+      </div>
+      <div class="notes-body">
+        <label class="notes-label" for="notes-input">Notes</label>
+        <textarea
+          id="notes-input"
+          class="notes-input"
+          rows="12"
+          placeholder="Type notes as you read. They save automatically in this browser."
+        ></textarea>
+        <div class="notes-saved">
+          <div class="notes-saved-head">
+            <div>
+              <p class="quiz-kicker">Saved highlights</p>
+              <h4 class="quiz-title">Marked passages</h4>
+            </div>
+          </div>
+          <div class="notes-highlights-root" id="notes-highlights-root"></div>
+        </div>
+      </div>
     </aside>
 
     <aside class="chat-shell" id="chat-shell" aria-hidden="true">
