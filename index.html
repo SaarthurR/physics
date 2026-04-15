@@ -141,39 +141,41 @@
       </button>
     </div>
 
-    <button
-      class="selection-action"
-      id="selection-action"
-      type="button"
-      aria-label="Ask the tutor about selected text"
-    >
-      ?
-    </button>
+    <div class="selection-actions" id="selection-actions" aria-hidden="true">
+      <button
+        class="selection-action"
+        id="selection-action"
+        type="button"
+        aria-label="Ask the tutor about selected text"
+      >
+        ?
+      </button>
 
-    <button
-      class="selection-action selection-action-secondary"
-      id="selection-study-action"
-      type="button"
-      aria-label="Save selected text to study later"
-      data-tooltip="Save to study later"
-    >
-      +
-    </button>
+      <button
+        class="selection-action selection-action-secondary"
+        id="selection-study-action"
+        type="button"
+        aria-label="Save selected text to study later"
+        data-tooltip="Save to study later"
+      >
+        +
+      </button>
 
-    <button
-      class="selection-action selection-action-highlight"
-      id="selection-highlight-action"
-      type="button"
-      aria-label="Highlight selected text"
-      data-tooltip="Highlight in document"
-    >
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path
-          d="M15.9 3.8L20.2 8.1L11.1 17.2L6.2 17.8L6.8 12.9L15.9 3.8ZM5.6 18.6L9.7 18.1L5.1 22.7L1.3 18.9L5.6 18.6Z"
-          fill="currentColor"
-        />
-      </svg>
-    </button>
+      <button
+        class="selection-action selection-action-highlight"
+        id="selection-highlight-action"
+        type="button"
+        aria-label="Highlight selected text"
+        data-tooltip="Highlight in document"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path
+            d="M15.9 3.8L20.2 8.1L11.1 17.2L6.2 17.8L6.8 12.9L15.9 3.8ZM5.6 18.6L9.7 18.1L5.1 22.7L1.3 18.9L5.6 18.6Z"
+            fill="currentColor"
+          />
+        </svg>
+      </button>
+    </div>
 
     <aside class="study-concepts-shell" id="study-concepts-shell" aria-hidden="true">
       <div class="study-concepts-header">

@@ -22,6 +22,7 @@ const studyConceptsShell = document.querySelector("#study-concepts-shell");
 const studyConceptsClose = document.querySelector("#study-concepts-close");
 
 const chatBubble = document.querySelector("#chat-bubble");
+const selectionActions = document.querySelector("#selection-actions");
 const selectionAction = document.querySelector("#selection-action");
 const selectionStudyAction = document.querySelector("#selection-study-action");
 const selectionHighlightAction = document.querySelector("#selection-highlight-action");
@@ -121,15 +122,10 @@ const sectionHintMap = {
   "chapter-6-phase-chart": ["phase chart", "phase difference", "delta phi"],
   "chapter-6-conditions": ["constructive interference", "destructive interference", "interference conditions"],
   "chapter-7-reference": [
-    "master formula",
-    "formula reference",
-    "formula sheet",
-    "all formulas",
-    "equation sheet",
-    "equation cheat sheet",
-    "formula cheat sheet",
-    "cheat sheet",
-    "reference sheet",
+    "core formula reference",
+    "core formula sheet",
+    "dl1 dl3 formulas",
+    "early formula reference",
   ],
   "chapter-8-simplified-phase-chart": [
     "simplified phase chart",
@@ -1815,17 +1811,21 @@ function wireSelectionAssist() {
       ...getSelectionOffsetsInRoot(startBody, range),
       text,
     };
-    const baseLeft = Math.max(12, window.innerWidth - 48);
-    const baseTop = clamp(rect.top + rect.height / 2 - 48, 16, window.innerHeight - 120);
-    selectionHighlightAction.style.left = `${baseLeft}px`;
-    selectionHighlightAction.style.top = `${baseTop}px`;
-    selectionAction.style.left = `${baseLeft}px`;
-    selectionAction.style.top = `${baseTop + 36}px`;
-    selectionStudyAction.style.left = `${baseLeft}px`;
-    selectionStudyAction.style.top = `${baseTop + 72}px`;
-    selectionHighlightAction.classList.add("is-visible");
-    selectionAction.classList.add("is-visible");
-    selectionStudyAction.classList.add("is-visible");
+    const stackWidth = 112;
+    const stackHeight = 36;
+    const preferredLeft = rect.right - stackWidth;
+    const preferredTop = rect.top - stackHeight - 10;
+    const fallbackTop = rect.bottom + 10;
+    const clampedLeft = clamp(preferredLeft, 12, window.innerWidth - stackWidth - 12);
+    const clampedTop =
+      preferredTop >= 12
+        ? preferredTop
+        : clamp(fallbackTop, 12, window.innerHeight - stackHeight - 12);
+
+    selectionActions.style.left = `${clampedLeft}px`;
+    selectionActions.style.top = `${clampedTop}px`;
+    selectionActions.classList.add("is-visible");
+    selectionActions.setAttribute("aria-hidden", "false");
   };
 
   document.addEventListener("selectionchange", () => {
@@ -1864,9 +1864,8 @@ function wireSelectionAssist() {
 }
 
 function hideSelectionAction() {
-  selectionHighlightAction.classList.remove("is-visible");
-  selectionAction.classList.remove("is-visible");
-  selectionStudyAction.classList.remove("is-visible");
+  selectionActions.classList.remove("is-visible");
+  selectionActions.setAttribute("aria-hidden", "true");
   selectedDocumentSelection = null;
 }
 
@@ -1932,7 +1931,7 @@ function findBestSectionForQuery(query) {
       }
 
       if (wantsReferenceSheet) {
-        if (record.id === "chapter-7-reference") score += 34;
+        if (record.id === "chapter-12-reference") score += 34;
         if (/\b(reference|sheet|cheat)\b/.test(sectionTitle)) score += 10;
         if (record.id === "chapter-2-equation") score -= 8;
       }
@@ -1947,7 +1946,7 @@ function findBestSectionForQuery(query) {
 
       if (wantsWaveSpeed) {
         if (record.id === "chapter-2-symbols") score += 18;
-        if (record.id === "chapter-7-reference") score += 14;
+        if (record.id === "chapter-12-reference") score += 14;
         if (/\bwave speed\b/.test(haystack)) score += 12;
         if (/\bv\b|\bspeed\b/.test(haystack)) score += 7;
       }

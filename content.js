@@ -232,13 +232,13 @@ At x = 5 m and t = 2 s, y ≈ -0.25 m.
           title: "Worked Example - The Boat and Buoy Problem",
           html: `
             <div class="problem-prompt">
-              <p><strong>Problem:</strong> You are in a small boat anchored in a harbor. Ocean wave crests pass by every 6 seconds, and neighboring crests are spaced 20 m apart. A buoy is anchored 10 m to your right. When your boat is at a peak, it is 0.5 m above the buoy. A few seconds later, when your boat is at a trough, it is 0.5 m below the buoy.</p>
+              <p><strong>Problem:</strong> You are in a small boat anchored in a harbor. Ocean waves are moving past you such that a wave crest passes by every six seconds. You observe that these crests are spaced 20 m apart. You also notice that a buoy anchored 10 m to the right of you is also bobbing along with the waves.</p>
               <ol>
                 <li>Exactly what is moving as the waves propagate?</li>
                 <li>What is the speed of the wave?</li>
-                <li>What is the amplitude, and will the buoy and boat ever be at the same height?</li>
-                <li>Write an equation for the wave, assuming it moves to the left, your boat is at x = 0, and at t = 0 your boat is on a crest.</li>
-                <li>Write an equation for the buoy&rsquo;s motion as a function of time.</li>
+                <li>When your boat is at a wave peak, you notice that it is 0.5 m above the buoy. A few seconds later when your boat is at a trough, it is 0.5 m lower than the buoy. What is the amplitude of this wave? Will the buoy and your boat ever be at the same height? (Draw a physical picture of the boat and buoy and label relevant distances.)</li>
+                <li>Write an equation to describe this wave, assuming the wave moves to the left, your boat is at position x = 0, and that at time t = 0, your boat is on a crest. Explain all values.</li>
+                <li>Using your answer in 3), write an equation to describe the motion of the buoy. On your board, graph the buoy&rsquo;s motion as a function of time, being sure to show at least two full periods.</li>
                 <li>What is the displacement from equilibrium at x = 5 m and t = 2 s?</li>
               </ol>
             </div>
@@ -467,7 +467,7 @@ The original setup also asks you to compare those wavelengths to the stationary 
           title: "Worked Example - Ambulance Problem (FNT 2)",
           html: `
             <div class="problem-prompt">
-              <p><strong>Setup:</strong> An ambulance travels at v<sub>s</sub> = 50 m/s with a siren frequency f<sub>s</sub> = 50 Hz. Sound travels at v = 350 m/s. At t = 0 s the ambulance is exactly halfway between Silas and Eppie, and at that instant the siren emits a crest.</p>
+              <p><strong>Setup:</strong> Consider an ambulance racing towards an accident at speed v = 50 m/s. The ambulance is equipped with a siren that emits a sine wave with frequency f = 50 Hz. At time t = 0 s, it is exactly halfway between two observers (Silas and Eppie), as shown in Figure 1 below. Furthermore, at t = 0 s, the siren is emitting a crest.</p>
               <div class="concept-gallery">
                 <figure class="concept-figure">
                   <img src="./assets/figures/chapter5-doppler-setup.png" alt="Ambulance halfway between Silas and Eppie at t equals 0 seconds" />
@@ -479,11 +479,11 @@ The original setup also asks you to compare those wavelengths to the stationary 
                 </figure>
               </div>
               <ol>
-                <li>How far does the ambulance move in 0.02 s?</li>
-                <li>What part of the cycle is the siren at after 0.02 s?</li>
-                <li>How far has the original crest traveled by then?</li>
-                <li>What are the forward and backward wavelengths?</li>
-                <li>How do those wavelengths and observed frequencies compare with the stationary case?</li>
+                <li>What is the distance, x, that the ambulance has traveled between t = 0 s and t = 0.02 s?</li>
+                <li>If the ambulance siren was emitting a crest at time t = 0, what is the siren doing at time t = 0.02 s? Is it emitting a crest or trough, or is it somewhere else in the cycle? How do you know?</li>
+                <li>If sound travels in the air at 350 m/s, how far has the crest that was emitted at time t = 0 s traveled at time t = 0.02 s? Where is the t = 0 s crest that was emitted forward towards Eppie at time t = 0.02 s? Where is the t = 0 s crest that was emitted backwards towards Silas at time t = 0.02 s?</li>
+                <li>Recall that the wavelength of a wave is defined to be the distance between successive crests. Based on your answers above, what is the wavelength of the wave traveling forward towards Eppie? What is the wavelength of the wave traveling backward towards Silas?</li>
+                <li>How do your answers compare to the wavelength you would calculate using the equation v = λf (i.e., the wavelength observed if the ambulance were stationary)?</li>
               </ol>
             </div>
             <h4>1 - Ambulance displacement</h4>
@@ -651,17 +651,17 @@ If An and Carla are the sources and want constructive interference at Bob, the p
           title: "Superposition in 2D - The Pond Problem",
           html: `
             <div class="problem-prompt">
-              <p><strong>Problem:</strong> Three people, An, Bob, and Carla, stand in a still pond. The wave speed is 3 m/s. The diagram shows Bob 4 m from An, 2 m from Carla, and An 3 m from Carla.</p>
+              <p><strong>Problem:</strong> Three people (An, Bob, and Carla) are in a very still pond. Bob generates waves by moving up and down in the water. The speed of water waves in this pond is 3 m/s.</p>
               <figure class="concept-figure concept-figure-small">
                 <img src="./assets/figures/chapter6-pond-problem.png" alt="Pond problem diagram with An, Bob, and Carla distances" />
                 <figcaption>The DL3 figure gives the actual geometry: Bob-An is 4 m, Bob-Carla is 2 m, and An-Carla is 3 m.</figcaption>
               </figure>
               <ol>
-                <li>If Bob moves through one full cycle in 4/3 s, what wavelength does he generate?</li>
-                <li>How do An and Carla move in response to Bob's waves?</li>
-                <li>After the pond calms down, An and Carla start bobbing in phase and want a crest from each of them to reach Bob at the same time. What frequencies could they choose?</li>
-                <li>What kind of interference does Bob experience?</li>
-                <li>How does Bob's motion compare with the case where only one friend makes waves?</li>
+                <li>Suppose it takes Bob 4/3 seconds to travel through a cycle. Determine the wavelength of the resulting waves and use the wavefront representation to draw in the wave crests and troughs generated by Bob on your board. Label the wavelength on your sketch.</li>
+                <li>Compare the motion of An and Carla, due to waves generated by Bob. Be as detailed as possible. (i.e. Do they move up and down at the same rate? Are they both at a crest at the same time?)</li>
+                <li>The group allows the water to become calm, and then An and Carla move up and down with the same frequency as each other (different from Bob&rsquo;s in parts 1 and 2), starting their motion at the same instant at the same point in the cycle. They wish to team up so that, after they have been bobbing for a while, a wave crest from each person always arrives at Bob at the same time. With what frequency should they move? (Note that more than one correct answer is possible, your group only needs to find one possibility!) What type of interference is Bob experiencing?</li>
+                <li>Use the wavefront representation to draw in the wave crests and troughs generated by An and by Carla. Do this on a different sketch than you used for questions 1) and 2).</li>
+                <li>Describe Bob&rsquo;s motion in a sentence or two (no equation necessary). How does his motion differ from how it would be if only Carla were making waves?</li>
               </ol>
             </div>
             <h4>1 - Bob as the source</h4>
@@ -688,9 +688,9 @@ If An and Carla are the sources and want constructive interference at Bob, the p
     {
       id: "chapter-7",
       number: "07",
-      title: "Chapter 7 - Master Formula Reference",
+      title: "Chapter 7 - Core Formula Reference (DL 1-3)",
       plainText: `
-Chapter 7 Master Formula Reference.
+Chapter 7 Core Formula Reference for DL1 to DL3.
 v = lambda f = lambda/T wave speed.
 f = 1/T frequency inverse of period.
 y(x,t) = A sin(2pi t/T +/- 2pi x/lambda + phi0) full wave equation.
@@ -705,8 +705,9 @@ Constructive Delta Phi = 2npi. Destructive Delta Phi = (2n+1)pi.
       sections: [
         {
           id: "chapter-7-reference",
-          title: "Master Formula Reference",
+          title: "Core Formula Reference (DL 1-3)",
           html: `
+            <p>This is the compact DL1-DL3 subset. For the full DL1-DL5 formula sheet, use Chapter 12.</p>
             <table class="data-table">
               <thead>
                 <tr>
@@ -883,12 +884,8 @@ KDVS radio antennas add a fixed phase constant difference of pi/2 before path di
           title: "Problem Start - KDVS Radio Antennas",
           html: `
             <div class="problem-prompt">
-              <p><strong>Problem start:</strong> Suppose KDVS, the campus radio station, transmits from two antennas placed symmetrically about the north-south direction. Antenna A emits each maximum a time T/4 earlier than antenna B, which means the two sources begin with a fixed phase offset before any path difference is added in.</p>
-              <ul>
-                <li>How does that fixed phase constant difference change the received signal?</li>
-                <li>Which quantities determine whether the interference is constructive, destructive, or partial?</li>
-                <li>Does the kind of interference depend on where the observer stands?</li>
-              </ul>
+              <p><strong>Problem start:</strong> Suppose KDVS, the campus radio station, were to transmit from two antennas, each set a distance x from the North-South direction (see figure). Also, suppose there is a phase constant difference, Δϕ₀, associated with the waves coming from each antenna such that each maximum from antenna A is emitted a time T/4 earlier than those of antenna B (the words an electrical engineer might use for this are “the signal from A is π/2 ahead of the signal from antenna B”).</p>
+              <p><strong>NOTE:</strong> How does the phase constant difference affect the signal received from both antennas? Which quantities affect the type of interference? Does the type of interference depend on where the observer is located?</p>
             </div>
             <h4>1 - Translate the timing lead into phase language</h4>
             <p>If antenna A is one-quarter period ahead of antenna B, then the fixed phase constant difference is:</p>
@@ -969,11 +966,10 @@ Running toward the 258 Hz piper and away from the 262 Hz piper at about 2.62 m/s
           title: "Challenge Problem - Beats + Doppler Together",
           html: `
             <div class="problem-prompt">
-              <p><strong>Challenge:</strong> Angharad stands midway between two out-of-tune bagpipers. One plays f₁ = 258 Hz, the other plays f₂ = 262 Hz. The speed of sound is 340 m/s.</p>
+              <p><strong>Challenge:</strong> Angharad stands midway between two out-of-tune bagpipers. One is playing a note with frequency f₁ = 258 Hz, while the other is playing a note with frequency f₂ = 262 Hz. The speed of sound in the air is 340 m/s.</p>
               <ol>
-                <li>What beat frequency does Angharad hear, and what is the carrier frequency?</li>
-                <li>If Angharad does not want to hear beats, how fast and in which direction should she run so that the two heard frequencies become the same?</li>
-                <li>What common frequency would she hear then?</li>
+                <li>What is the beat frequency Angharad hears? What is the carrier frequency she hears?</li>
+                <li>If Angharad does not want to hear beats, how fast and in which direction should she run so that the frequencies she hears from the two bagpipers are the same? What is this frequency she hears?</li>
               </ol>
             </div>
             <h4>1 - Beat frequency and carrier frequency</h4>
@@ -1071,11 +1067,12 @@ Red light spreads farther than blue because longer wavelength gives a larger ang
           title: "Worked Example - Measuring Slit Spacing and Color Spread",
           html: `
             <div class="problem-prompt">
-              <p><strong>Worked example:</strong> A red He-Ne laser with λ = 633 nm shines through two slits. The screen is D = 1.5 m away, and the distance between neighboring bright fringes is Δy = 2.5 mm.</p>
-              <ul>
-                <li>Estimate the slit separation.</li>
-                <li>Then ask the color question the DL wants you to notice: if you switch from red to blue, what happens to the fringe spacing?</li>
-              </ul>
+              <p><strong>DL5 application:</strong> We are now going to test what we learned in the previous activity. You will shine light from a single wavelength red He-Ne laser on a &ldquo;wall&rdquo; with two slits in it. Then you will use the known value of the laser wavelength and measurements concerning the position of the bright spots to determine the spacing of the slits.</p>
+              <ol>
+                <li>Slide the slide horizontally so the laser hits the two-slit pattern. Make sure the laser spot is vertically centered across the slits. You can do this by adjusting the slits while watching the diffraction pattern on the wall. Describe the pattern and make a measurement of the spot separation, Δy.</li>
+                <li>Use what you learned in the previous activity to determine the slit separation. The red laser has a wavelength of 633 nm or 6.33 × 10⁻⁷ m.</li>
+                <li>Predict what will happen to the distance between the bright fringes when you change the light to blue color. Explain your prediction and run the simulation by changing the color of the laser to blue. If the result is different from what you predicted, explain why.</li>
+              </ol>
             </div>
             <h4>1 - Use the small-angle result</h4>
             <div class="formula-inline">d = (633 × 10⁻⁹ × 1.5) / 0.0025 ≈ 3.80 × 10⁻⁴ m</div>
@@ -1146,12 +1143,12 @@ Phase-shifted double slit problem places a screen 4 m away and asks how a nonzer
           title: "Thin Film Interference - The Butterfly Wings Problem",
           html: `
             <div class="problem-prompt">
-              <p><strong>Challenge:</strong> The blue morpho butterfly has no blue pigment. Its wing color comes from many thin scales separated by air. Blue light reflects from successive layers and interferes.</p>
+              <p><strong>Challenge:</strong> The blue morpho butterfly is famous for its iridescent blue wings. This brilliant coloration is produced not by pigmentation but rather by many layers of very thin scales separated by air, as shown in the figure to the right. The scales themselves are much smaller than the wavelength of visible light, and the interference that produces the distinctive coloration is from rays of light reflected off the successive layers of scales.</p>
               <ol>
-                <li>Draw one ray reflecting from the top scale and another transmitting through the first layer, reflecting from the second, and coming back out.</li>
-                <li>If the reflected rays have no extra phase constant difference, how large must the spacing d be so blue light with λ ≈ 450 nm interferes constructively?</li>
-                <li>What kind of interference do repeated blue reflections produce?</li>
-                <li>Will some other wavelengths interfere destructively?</li>
+                <li>Draw one incident ray coming from the light source, as shown in the picture, reflecting straight back from the top scale. Draw another incident ray transmitting through the first scale but reflecting from the second scale.</li>
+                <li>The two reflected rays you drew in a) meet at the top scale and interfere. How large must the distance d be for the two reflections of blue light rays to interfere constructively? Blue light has a wavelength of about 450 nm in air. Assume that the reflected rays do not have a phase constant difference.</li>
+                <li>What type of interference would result from multiple reflections of blue light from successive layers of scales?</li>
+                <li>Will there be some wavelengths of light that interfere destructively?</li>
               </ol>
             </div>
             <h4>1 - The two important rays</h4>
@@ -1173,16 +1170,12 @@ Phase-shifted double slit problem places a screen 4 m away and asks how a nonzer
           title: "Problem Start - Double Slit with a Phase Shift",
           html: `
             <div class="problem-prompt">
-              <p><strong>Problem start:</strong> In a double-slit experiment, a crystal is placed in one slit so the two rays leave the slits with a nonzero phase constant difference Δφ₀. The screen is 4 m away, and you observe the first bright spot above the center. You may use D ≫ d and sin θ ≈ tan θ.</p>
+              <p><strong>Problem start:</strong> You are performing a double slit experiment very similar to the one from DL by shining a laser on two narrow slits spaced by some small distance. However, by placing a piece of crystal in one of the slits, you are able to make it so that the rays of light that travel through the two slits have some non-zero phase constant difference, φ₀,bottom − φ₀,top = Δφ₀. You observe the first bright spot above the center (y = 0) of the interference pattern on a screen placed 4 meters away from the slits. As in DL, you may use the approximations D ≫ d and sin θ ≈ tan θ.</p>
               <figure class="concept-figure">
                 <img src="./assets/figures/chapter11-phase-shifted-slit.png" alt="Phase-shifted double slit figure with a shifted fringe pattern" />
                 <figcaption>A phase constant shift moves the entire pattern; path length difference then tells you where you are inside that shifted pattern.</figcaption>
               </figure>
-              <ul>
-                <li>How does the phase constant difference affect the pattern?</li>
-                <li>What is the total phase difference at the center?</li>
-                <li>What path-length difference is needed for a bright fringe once Δφ₀ is included?</li>
-              </ul>
+              <p><strong>NOTE:</strong> How does the phase constant difference affect the interference pattern? What is the path length difference at the center of the interference pattern? What about the total phase difference? What kind of interference happens at the center? What is the path length difference condition to have a bright spot?</p>
             </div>
             <h4>1 - Start at the center of the screen</h4>
             <p>At y = 0 the two paths are the same length, so Δx = 0. That means the center no longer has zero total phase difference. Instead:</p>

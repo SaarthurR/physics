@@ -880,9 +880,28 @@ textarea:focus-visible {
   box-shadow: 0 8px 18px rgba(103, 54, 18, 0.14);
 }
 
-.selection-action {
+.selection-actions {
   position: fixed;
   z-index: 80;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(4px) scale(0.98);
+  transition:
+    opacity 140ms ease,
+    transform 140ms ease;
+}
+
+.selection-actions.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+.selection-action {
+  position: relative;
   width: 28px;
   height: 28px;
   display: inline-flex;
@@ -893,12 +912,6 @@ textarea:focus-visible {
   background: linear-gradient(135deg, var(--accent), var(--accent-deep));
   color: #fff;
   box-shadow: 0 10px 24px rgba(59, 90, 153, 0.2);
-  opacity: 0;
-  pointer-events: none;
-  transform: scale(0.92);
-  transition:
-    opacity 140ms ease,
-    transform 140ms ease;
 }
 
 .selection-action-secondary {
@@ -939,12 +952,6 @@ textarea:focus-visible {
 .selection-action[data-tooltip]:focus-visible::after {
   opacity: 1;
   transform: translateY(0);
-}
-
-.selection-action.is-visible {
-  opacity: 1;
-  pointer-events: auto;
-  transform: scale(1);
 }
 
 .chat-bubble-ping {
