@@ -885,6 +885,10 @@ KDVS radio antennas add a fixed phase constant difference of pi/2 before path di
           html: `
             <div class="problem-prompt">
               <p><strong>Problem start:</strong> Suppose KDVS, the campus radio station, were to transmit from two antennas, each set a distance x from the North-South direction (see figure). Also, suppose there is a phase constant difference, Δϕ₀, associated with the waves coming from each antenna such that each maximum from antenna A is emitted a time T/4 earlier than those of antenna B (the words an electrical engineer might use for this are “the signal from A is π/2 ahead of the signal from antenna B”).</p>
+              <figure class="concept-figure concept-figure-small">
+                <img src="./assets/figures/chapter8-kdvs-antennas.png" alt="KDVS radio antenna figure showing antennas A and B placed symmetrically about the north-south direction" />
+                <figcaption>The original DL4 KDVS figure: antennas A and B sit symmetrically about the north-south line, each a distance x from center.</figcaption>
+              </figure>
               <p><strong>NOTE:</strong> How does the phase constant difference affect the signal received from both antennas? Which quantities affect the type of interference? Does the type of interference depend on where the observer is located?</p>
             </div>
             <h4>1 - Translate the timing lead into phase language</h4>
