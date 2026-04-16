@@ -993,12 +993,12 @@ Running toward the 258 Hz piper and away from the 262 Hz piper at about 2.62 m/s
     {
       id: "chapter-10",
       number: "10",
-      title: "Chapter 10 - Diffraction and Young's Double Slit Experiment",
+      title: "Chapter 10 - Diffraction and Young's Double Slit Interference",
       plainText: `
-Chapter 10 Diffraction and Young's Double Slit Experiment DL5.
-Huygens's principle says a small hole behaves like a new point source.
+Chapter 10 Diffraction and Young's Double Slit Interference DL5.
+Huygens's principle says a sufficiently small opening can act approximately like a new point source because each point on a wavefront emits secondary wavelets.
 Wavefront model shows wavelength and phase relationships; ray model emphasizes direction of propagation.
-Young's experiment shows light is a wave because two slits produce alternating bright and dark stripes.
+Young's experiment gives decisive evidence for the wave behavior of light because two slits produce alternating bright and dark stripes.
 Double-slit geometry gives path difference Delta x = d sin theta.
 Constructive condition: d sin theta = n lambda. Destructive condition: d sin theta = (n + 1/2) lambda.
 Small angle approximation gives d = lambda D / Delta y for the first bright fringe spacing.
@@ -1010,7 +1010,7 @@ Red light spreads farther than blue because longer wavelength gives a larger ang
           title: "The Hook - Huygens's Principle",
           html: `
             <p>Plane waves hit a wall with a tiny hole. On the other side, you don't see a narrow beam. You see circular waves spreading in all directions, as if the hole has become a brand-new point source.</p>
-            <p>That is Huygens's principle: every point on a wavefront can be treated as a new source of circular waves.</p>
+            <p>That is Huygens's principle: every point on a wavefront acts like a source of secondary wavelets, and a sufficiently small opening behaves approximately like a new point source.</p>
             <figure class="concept-figure">
               <img src="./assets/figures/chapter10-huygens-hole.png" alt="Plane waves passing through a small opening and spreading out as circular waves" />
               <figcaption>This DL5 diagram is the visual heart of diffraction: the hole re-emits the disturbance in all directions.</figcaption>
@@ -1030,10 +1030,10 @@ Red light spreads farther than blue because longer wavelength gives a larger ang
         },
         {
           id: "chapter-10-young",
-          title: "Young's Double Slit - Light Is a Wave, Not a Particle",
+          title: "Young's Double Slit - Light Shows Wave Behavior",
           html: `
-            <p>If light were particles, two slits would produce two bright patches on a wall and little else. If light is a wave, each slit becomes a new source and the two waves interfere.</p>
-            <p>What Young observed was an alternating pattern of bright and dark stripes across the screen. That stripe pattern is wave behavior.</p>
+            <p>If light behaved only like classical particles, two slits would produce two bright patches on a wall and little else. If light behaves as a wave, each slit becomes a new source and the two waves interfere.</p>
+            <p>What Young observed was an alternating pattern of bright and dark stripes across the screen. That pattern gave decisive evidence for the wave character of light.</p>
           `,
         },
         {
@@ -1086,9 +1086,9 @@ Red light spreads farther than blue because longer wavelength gives a larger ang
     {
       id: "chapter-11",
       number: "11",
-      title: "Chapter 11 - Diffraction Gratings and Why Light Is a Wave",
+      title: "Chapter 11 - Diffraction Gratings and Wave Behavior of Light",
       plainText: `
-Chapter 11 Diffraction Gratings and Why Light Is a Wave DL5.
+Chapter 11 Diffraction Gratings and Wave Behavior of Light DL5.
 CD rainbows come from diffraction grating behavior.
 More slits do not move the bright spots; they sharpen them.
 Grating formula: n lambda = d sin theta.
@@ -1514,9 +1514,9 @@ All of Unit 8 in 15 sentences.
 8. Delta Phi = -2pi Delta x/lambda + Delta phi0, so both path length and wiring matter.
 9. Reversing speaker leads makes Delta phi0 = pi.
 10. Beats come from nearby frequencies. f_beat = |f1 - f2| and f_carrier = (f1 + f2)/2.
-11. Diffraction means waves spread after a small opening.
+11. Diffraction means waves spread after a small opening or around an obstacle.
 12. Bright two-slit fringes satisfy d sin theta = n lambda and dark fringes satisfy d sin theta = (n + 1/2)lambda.
-13. Young's experiment proved light behaves like a wave.
+13. Young's experiment gave decisive evidence for the wave behavior of light.
 14. More slits sharpen the peaks at the same angles. Grating equation: n lambda = d sin theta.
 15. Phase constant shifts move the whole interference pattern.
 Waves is a genuinely hard unit because the concepts stack on top of each other. If you worked through all of this, you now have a real map of the territory. The rest is practice problems.
@@ -1537,9 +1537,9 @@ Waves is a genuinely hard unit because the concepts stack on top of each other. 
             <li>ΔΦ = -2πΔx/λ + Δφ₀, so both path difference and fixed phase difference matter.</li>
             <li>Reversing speaker leads makes Δφ₀ = π. Combined with path offsets, it can flip destructive into constructive.</li>
             <li>Beats come from two nearby frequencies. f<sub>beat</sub> = |f₁ - f₂| and f<sub>carrier</sub> = (f₁ + f₂)/2.</li>
-            <li>Diffraction means waves spread after passing through a small hole. Huygens's principle explains why.</li>
+            <li>Diffraction means waves spread after passing through a small opening or around an obstacle. Huygens's principle explains why.</li>
             <li>Two-slit bright fringes satisfy d sin θ = nλ. Dark fringes satisfy d sin θ = (n + 1/2)λ.</li>
-            <li>Young's experiment proved light behaves like a wave because particles alone cannot make alternating bright and dark bands.</li>
+            <li>Young's experiment gave decisive evidence for the wave behavior of light because it produced alternating bright and dark interference bands.</li>
             <li>More slits sharpen the peaks at the same angles. Diffraction gratings use that to separate wavelengths.</li>
             <li>Phase constant shifts move the whole pattern. Path length tells you where you are inside the pattern.</li>
           </ol>
@@ -2049,7 +2049,7 @@ export const QUIZ_BANK = {
       type: "short",
       prompt: "Why did Young's experiment support the wave model of light?",
       expected: "Because two slits produced alternating bright and dark stripes, which require interference.",
-      rubric: "Mark correct if the answer mentions alternating bright/dark bands, interference, or a pattern particles alone would not produce.",
+      rubric: "Mark correct if the answer mentions alternating bright/dark bands, interference, or a pattern classical particles alone would not produce.",
     },
     {
       id: "c10-short-2",
