@@ -889,7 +889,12 @@ KDVS radio antennas add a fixed phase constant difference of pi/2 before path di
                 <img src="./assets/figures/chapter8-kdvs-antennas.png" alt="KDVS radio antenna figure showing antennas A and B placed symmetrically about the north-south direction" />
                 <figcaption>The original DL4 KDVS figure: antennas A and B sit symmetrically about the north-south line, each a distance x from center.</figcaption>
               </figure>
-              <p><strong>NOTE:</strong> How does the phase constant difference affect the signal received from both antennas? Which quantities affect the type of interference? Does the type of interference depend on where the observer is located?</p>
+              <p><strong>Exact DL questions:</strong></p>
+              <ol>
+                <li>How does the phase constant difference affect the signal received from both antennas?</li>
+                <li>Which quantities affect the type of interference?</li>
+                <li>Does the type of interference depend on where the observer is located?</li>
+              </ol>
             </div>
             <h4>1 - Translate the timing lead into phase language</h4>
             <p>If antenna A is one-quarter period ahead of antenna B, then the fixed phase constant difference is:</p>
