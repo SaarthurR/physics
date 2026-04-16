@@ -981,6 +981,10 @@ Running toward the 258 Hz piper and away from the 262 Hz piper at about 2.62 m/s
                 <li>If Angharad does not want to hear beats, how fast and in which direction should she run so that the frequencies she hears from the two bagpipers are the same? What is this frequency she hears?</li>
               </ol>
             </div>
+            <figure class="concept-figure">
+              <img src="./assets/figures/chapter9-bagpipers-doppler.svg" alt="Angharad standing midway between two bagpipers playing 258 and 262 hertz notes" />
+              <figcaption>The DL4 bagpiper challenge itself is text-only, so this support diagram makes the midpoint setup and running direction visual.</figcaption>
+            </figure>
             <h4>1 - Beat frequency and carrier frequency</h4>
             <div class="formula-inline">f<sub>beat</sub> = 262 - 258 = 4 Hz</div>
             <div class="formula-inline">f<sub>carrier</sub> = (258 + 262) / 2 = 260 Hz</div>
