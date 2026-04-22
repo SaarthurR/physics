@@ -1,4 +1,10 @@
-import { FORMULA_STRIP, QUIZ_BANK, STUDY_GUIDE } from "./content.js";
+import {
+  FORMULA_STRIP,
+  QUIZ_2_FORMULA_STRIP,
+  QUIZ_2_GUIDE,
+  QUIZ_BANK,
+  STUDY_GUIDE,
+} from "./content.js";
 
 const HARDCODED_GROQ_KEY =
   "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";
@@ -8,6 +14,13 @@ const defaultModels = {
   openrouter: "meta-llama/llama-3.3-70b-instruct",
 };
 
+const guideEyebrow = document.querySelector("#guide-eyebrow");
+const guideTitle = document.querySelector("#guide-title");
+const guideTabs = [...document.querySelectorAll("[data-guide-tab]")];
+const docGuideLabel = document.querySelector("#doc-guide-label");
+const docGuideHeading = document.querySelector("#doc-guide-heading");
+const docGuideSummary = document.querySelector("#doc-guide-summary");
+const sidebarLabel = document.querySelector("#sidebar-label");
 const formulaStrip = document.querySelector("#formula-strip");
 const workspace = document.querySelector("#workspace");
 const docSidebar = document.querySelector("#doc-sidebar");
@@ -53,7 +66,7 @@ const chatMinWidth = 320;
 const chatMinHeight = 380;
 const chatCondensedWidth = 320;
 const chatCondensedHeight = 520;
-const unitQuizConfigs = [
+const quiz1UnitQuizConfigs = [
   {
     id: "unit-dl-quiz",
     wrapperId: "unit-quizzes",
@@ -75,6 +88,35 @@ const unitQuizConfigs = [
     chapterIds: STUDY_GUIDE.chapters.map((chapter) => chapter.id),
   },
 ];
+
+const guideConfigs = {
+  quiz1: {
+    id: "quiz1",
+    label: "Quiz 1",
+    eyebrow: "Physics 7C · Quiz 1",
+    title: "Quiz 1 Study Guide",
+    heading: "Waves foundations and worked examples",
+    summary:
+      "The original DL1 through DL5 guide, cleaned up into one scrollable sheet with bookmarks, notes, and quick checks.",
+    formulaStrip: FORMULA_STRIP,
+    guide: STUDY_GUIDE,
+    quizzesEnabled: true,
+    unitQuizConfigs: quiz1UnitQuizConfigs,
+  },
+  quiz2: {
+    id: "quiz2",
+    label: "Quiz 2",
+    eyebrow: "Physics 7C · Quiz 2",
+    title: "Quiz 2 Study Guide",
+    heading: "Interference, diffraction, standing waves, and quantum basics",
+    summary:
+      "A cleaner quiz-focused guide built from the DL3 through DL6 topics and the new study-guide outline.",
+    formulaStrip: QUIZ_2_FORMULA_STRIP,
+    guide: QUIZ_2_GUIDE,
+    quizzesEnabled: false,
+    unitQuizConfigs: [],
+  },
+};
 
 const sectionHintMap = {
   "chapter-1-core": [
@@ -200,6 +242,7 @@ const sectionHintMap = {
 };
 
 const settingsKey = "waves-study-chat-settings";
+const activeGuideKey = "waves-study-active-guide";
 const chatLayoutKey = "waves-study-chat-layout";
 const sidebarStateKey = "waves-study-sidebar-collapsed";
 const responseModeKey = "waves-study-response-mode";
@@ -209,6 +252,7 @@ const annotationsKey = "waves-study-annotations";
 const notesKey = "waves-study-notes";
 const chatState = { messages: [] };
 const quizStates = new Map();
+let scrollSpyObserver = null;
 let pendingShowDocQuery = null;
 let selectedDocumentText = "";
 let selectedDocumentSource = null;
@@ -220,46 +264,101 @@ let studyLaterSession = null;
 let annotationItems = [];
 let notesText = "";
 let lastOpenedSectionId = "";
+let activeGuideId = loadActiveGuideId();
 
-renderFormulaStrip();
-renderOutline();
+renderActiveGuide();
 loadStudyLaterItems();
-renderDocument();
 loadAnnotations();
 loadNotes();
 renderStudyLaterSection();
 renderNotesHighlights();
 loadSettings();
-applySavedChatLayout();
 loadSidebarState();
-loadResponseMode();
-loadAutoCompactState();
-wireSectionAccordions();
 wireExampleSolutionToggles();
-wireQuizSections();
 wireStudyLaterSection();
-wireResponsivePanels();
-wireScrollSpy();
 wireChatEvents();
 wireStudyConceptsShell();
 wireNotesShell();
-wireChatDragAndResize();
 wireSelectionAssist();
-renderMathInNode(messagesRoot);
+
+function loadActiveGuideId() {
+  const saved = safeJsonParse(localStorage.getItem(activeGuideKey));
+  return saved?.id === "quiz2" ? "quiz2" : "quiz1";
+}
+
+function getActiveGuideConfig() {
+  return guideConfigs[activeGuideId] || guideConfigs.quiz1;
+}
+
+function getActiveStudyGuide() {
+  return getActiveGuideConfig().guide;
+}
+
+function getActiveUnitQuizConfigs() {
+  return getActiveGuideConfig().unitQuizConfigs;
+}
+
+function guideHasQuizzes() {
+  return Boolean(getActiveGuideConfig().quizzesEnabled);
+}
+
+function setActiveGuide(guideId, options = {}) {
+  const nextGuideId = guideId === "quiz2" ? "quiz2" : "quiz1";
+  if (nextGuideId === activeGuideId && !options.force) return;
+
+  activeGuideId = nextGuideId;
+  localStorage.setItem(activeGuideKey, JSON.stringify({ id: activeGuideId }));
+  renderActiveGuide();
+
+  if (!options.preserveScroll) {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+}
+
+function renderActiveGuide() {
+  renderGuideChrome();
+  renderFormulaStrip();
+  renderOutline();
+  renderDocument();
+  wireQuizSections();
+  applyAllPersistentHighlights();
+  wireScrollSpy();
+  renderMathInNode(documentRoot);
+}
+
+function renderGuideChrome() {
+  const config = getActiveGuideConfig();
+
+  if (guideEyebrow) guideEyebrow.textContent = config.eyebrow;
+  if (guideTitle) guideTitle.textContent = config.title;
+  if (docGuideLabel) docGuideLabel.textContent = config.label;
+  if (docGuideHeading) docGuideHeading.textContent = config.heading;
+  if (docGuideSummary) docGuideSummary.textContent = config.summary;
+  if (sidebarLabel) sidebarLabel.textContent = `${config.label} bookmarks`;
+
+  guideTabs.forEach((tab) => {
+    const isActive = tab.getAttribute("data-guide-tab") === activeGuideId;
+    tab.classList.toggle("is-active", isActive);
+    tab.setAttribute("aria-selected", String(isActive));
+  });
+}
 
 function renderFormulaStrip() {
-  formulaStrip.innerHTML = FORMULA_STRIP.map(
-    (item) => `
-      <div class="formula-chip">
-        <strong>${escapeHtml(item.label)}</strong>
-        <span>${escapeHtml(item.value)}</span>
-      </div>
-    `,
-  ).join("");
+  formulaStrip.innerHTML = getActiveGuideConfig()
+    .formulaStrip.map(
+      (item) => `
+        <div class="formula-chip">
+          <strong>${escapeHtml(item.label)}</strong>
+          <span>${escapeHtml(item.value)}</span>
+        </div>
+      `,
+    )
+    .join("");
 }
 
 function renderOutline() {
-  const chapterLinks = STUDY_GUIDE.chapters
+  const studyGuide = getActiveStudyGuide();
+  const chapterLinks = studyGuide.chapters
     .map(
       (chapter) => `
         <li class="outline-item">
@@ -282,92 +381,89 @@ function renderOutline() {
                 `,
               )
               .join("")}
-            <li>
-              <a
-                class="outline-link outline-link-section outline-link-quiz"
-                href="#${chapter.id}-quiz"
-                data-outline-link="${chapter.id}-quiz"
-              >
-                Chapter ${escapeHtml(String(Number(chapter.number)))} Quiz
-              </a>
-            </li>
+            ${
+              guideHasQuizzes()
+                ? `
+                  <li>
+                    <a
+                      class="outline-link outline-link-section outline-link-quiz"
+                      href="#${chapter.id}-quiz"
+                      data-outline-link="${chapter.id}-quiz"
+                    >
+                      Chapter ${escapeHtml(String(Number(chapter.number)))} Quiz
+                    </a>
+                  </li>
+                `
+                : ""
+            }
           </ul>
         </li>
       `,
     )
     .join("");
 
-  const recapLinks = `
-    <li class="outline-item">
-      <a class="outline-link outline-link-chapter" href="#${STUDY_GUIDE.recap.id}" data-outline-link="${STUDY_GUIDE.recap.id}">
-        ${escapeHtml(STUDY_GUIDE.recap.title)}
-      </a>
-      <ul class="outline-sublist">
-        ${STUDY_GUIDE.recap.sections
-          .map(
-            (section) => `
-              <li>
-                <a
-                  class="outline-link outline-link-section"
-                  href="#${section.id}"
-                  data-outline-link="${section.id}"
-                >
-                  ${escapeHtml(section.title)}
-                </a>
-              </li>
-            `,
-          )
-          .join("")}
-      </ul>
-    </li>
-  `;
+  const recapLinks = studyGuide.recap
+    ? `
+      <li class="outline-item">
+        <a class="outline-link outline-link-chapter" href="#${studyGuide.recap.id}" data-outline-link="${studyGuide.recap.id}">
+          ${escapeHtml(studyGuide.recap.title)}
+        </a>
+        <ul class="outline-sublist">
+          ${studyGuide.recap.sections
+            .map(
+              (section) => `
+                <li>
+                  <a
+                    class="outline-link outline-link-section"
+                    href="#${section.id}"
+                    data-outline-link="${section.id}"
+                  >
+                    ${escapeHtml(section.title)}
+                  </a>
+                </li>
+              `,
+            )
+            .join("")}
+        </ul>
+      </li>
+    `
+    : "";
 
-  const unitQuizLinks = `
-    <li class="outline-item">
-      <a class="outline-link outline-link-chapter" href="#unit-quizzes" data-outline-link="unit-quizzes">
-        Full Unit Quizzes
-      </a>
-      <ul class="outline-sublist">
-        ${unitQuizConfigs
-          .map(
-            (quiz) => `
-              <li>
-                <a
-                  class="outline-link outline-link-section outline-link-quiz"
-                  href="#${quiz.id}"
-                  data-outline-link="${quiz.id}"
-                >
-                  ${escapeHtml(quiz.sectionTitle)}
-                </a>
-              </li>
-            `,
-          )
-          .join("")}
-      </ul>
-    </li>
-  `;
+  const unitQuizConfigs = getActiveUnitQuizConfigs();
+  const unitQuizLinks =
+    guideHasQuizzes() && unitQuizConfigs.length
+      ? `
+        <li class="outline-item">
+          <a class="outline-link outline-link-chapter" href="#unit-quizzes" data-outline-link="unit-quizzes">
+            Full Unit Quizzes
+          </a>
+          <ul class="outline-sublist">
+            ${unitQuizConfigs
+              .map(
+                (quiz) => `
+                  <li>
+                    <a
+                      class="outline-link outline-link-section outline-link-quiz"
+                      href="#${quiz.id}"
+                      data-outline-link="${quiz.id}"
+                    >
+                      ${escapeHtml(quiz.sectionTitle)}
+                    </a>
+                  </li>
+                `,
+              )
+              .join("")}
+          </ul>
+        </li>
+      `
+      : "";
 
   outlineNav.innerHTML = `<ul class="outline-list">${chapterLinks}${recapLinks}${unitQuizLinks}</ul>`;
-
-  outlineNav.querySelectorAll("[data-outline-link]").forEach((link) => {
-    link.addEventListener("click", (event) => {
-      event.preventDefault();
-
-      const targetId = link.getAttribute("data-outline-link");
-      const target = document.getElementById(targetId);
-      if (!target) return;
-
-      if (target.classList.contains("doc-section")) {
-        revealSection(target, true);
-      } else {
-        centerTarget(target);
-      }
-    });
-  });
 }
 
 function renderDocument() {
-  const chapterMarkup = STUDY_GUIDE.chapters
+  const studyGuide = getActiveStudyGuide();
+  const chapterMarkup = studyGuide.chapters
     .map(
       (chapter) => `
         <section class="doc-chapter" id="${chapter.id}">
@@ -380,65 +476,51 @@ function renderDocument() {
               .map(
                 (section) => `
                   <article class="doc-section" id="${section.id}">
-                    <button
-                      class="doc-section-trigger"
-                      type="button"
-                      aria-expanded="false"
-                      aria-controls="${section.id}-panel"
-                    >
+                    <div class="doc-section-heading">
                       <span class="doc-section-title">${escapeHtml(section.title)}</span>
-                      <span class="doc-section-chevron" aria-hidden="true">+</span>
-                    </button>
-                    <div class="doc-section-panel" id="${section.id}-panel">
-                      <div class="doc-section-body">
-                        ${renderSectionBody(section)}
-                      </div>
+                    </div>
+                    <div class="doc-section-body">
+                      ${renderSectionBody(section)}
                     </div>
                   </article>
                 `,
               )
               .join("")}
-            ${renderQuizSection(chapter)}
+            ${guideHasQuizzes() ? renderQuizSection(chapter) : ""}
           </div>
         </section>
       `,
     )
     .join("");
 
-  const recapMarkup = `
-    <section class="doc-chapter recap-chapter" id="${STUDY_GUIDE.recap.id}">
-      <div class="doc-chapter-head">
-        <p class="chapter-eyebrow">Final Recap</p>
-        <h3>${escapeHtml(STUDY_GUIDE.recap.title.replace(" - ", " - "))}</h3>
-      </div>
-      <div class="doc-section-stack">
-        ${STUDY_GUIDE.recap.sections
-          .map(
-            (section) => `
-              <article class="doc-section" id="${section.id}">
-                <button
-                  class="doc-section-trigger"
-                  type="button"
-                  aria-expanded="false"
-                  aria-controls="${section.id}-panel"
-                >
-                  <span class="doc-section-title">${escapeHtml(section.title)}</span>
-                  <span class="doc-section-chevron" aria-hidden="true">+</span>
-                </button>
-                <div class="doc-section-panel" id="${section.id}-panel">
+  const recapMarkup = studyGuide.recap
+    ? `
+      <section class="doc-chapter recap-chapter" id="${studyGuide.recap.id}">
+        <div class="doc-chapter-head">
+          <p class="chapter-eyebrow">${guideHasQuizzes() ? "Final Recap" : "Appendix"}</p>
+          <h3>${escapeHtml(studyGuide.recap.title)}</h3>
+        </div>
+        <div class="doc-section-stack">
+          ${studyGuide.recap.sections
+            .map(
+              (section) => `
+                <article class="doc-section" id="${section.id}">
+                  <div class="doc-section-heading">
+                    <span class="doc-section-title">${escapeHtml(section.title)}</span>
+                  </div>
                   <div class="doc-section-body">
                     ${renderSectionBody(section)}
                   </div>
-                </div>
-              </article>
-            `,
-          )
-          .join("")}
-      </div>
-    </section>
-  `;
+                </article>
+              `,
+            )
+            .join("")}
+        </div>
+      </section>
+    `
+    : "";
 
-  documentRoot.innerHTML = chapterMarkup + recapMarkup + renderUnitQuizSections();
+  documentRoot.innerHTML = chapterMarkup + recapMarkup + (guideHasQuizzes() ? renderUnitQuizSections() : "");
 }
 
 function renderUnitQuizSections() {
@@ -449,23 +531,15 @@ function renderUnitQuizSections() {
         <h3>Comprehensive Quizzes</h3>
       </div>
       <div class="doc-section-stack">
-        ${unitQuizConfigs
+        ${getActiveUnitQuizConfigs()
           .map(
             (quiz) => `
               <article class="doc-section doc-quiz-section" id="${quiz.id}">
-                <button
-                  class="doc-section-trigger"
-                  type="button"
-                  aria-expanded="false"
-                  aria-controls="${quiz.id}-panel"
-                >
+                <div class="doc-section-heading">
                   <span class="doc-section-title">${escapeHtml(quiz.sectionTitle)}</span>
-                  <span class="doc-section-chevron" aria-hidden="true">+</span>
-                </button>
-                <div class="doc-section-panel" id="${quiz.id}-panel">
-                  <div class="doc-section-body">
-                    <div class="quiz-shell" data-quiz-root="${quiz.id}"></div>
-                  </div>
+                </div>
+                <div class="doc-section-body">
+                  <div class="quiz-shell" data-quiz-root="${quiz.id}"></div>
                 </div>
               </article>
             `,
@@ -530,19 +604,11 @@ function buildStudyExampleMarkup(html) {
 function renderQuizSection(chapter) {
   return `
     <article class="doc-section doc-quiz-section" id="${chapter.id}-quiz">
-      <button
-        class="doc-section-trigger"
-        type="button"
-        aria-expanded="false"
-        aria-controls="${chapter.id}-quiz-panel"
-      >
+      <div class="doc-section-heading">
         <span class="doc-section-title">Chapter ${escapeHtml(String(Number(chapter.number)))} Quiz</span>
-        <span class="doc-section-chevron" aria-hidden="true">+</span>
-      </button>
-      <div class="doc-section-panel" id="${chapter.id}-quiz-panel">
-        <div class="doc-section-body">
-          <div class="quiz-shell" data-quiz-root="${chapter.id}"></div>
-        </div>
+      </div>
+      <div class="doc-section-body">
+        <div class="quiz-shell" data-quiz-root="${chapter.id}"></div>
       </div>
     </article>
   `;
@@ -617,21 +683,24 @@ function wireResponsivePanels() {
 }
 
 function wireScrollSpy() {
+  if (scrollSpyObserver) {
+    scrollSpyObserver.disconnect();
+  }
+
+  const studyGuide = getActiveStudyGuide();
   const targets = [
-    ...STUDY_GUIDE.chapters.flatMap((chapter) => [
+    ...studyGuide.chapters.flatMap((chapter) => [
       chapter.id,
       ...chapter.sections.map((section) => section.id),
-      `${chapter.id}-quiz`,
+      ...(guideHasQuizzes() ? [`${chapter.id}-quiz`] : []),
     ]),
-    STUDY_GUIDE.recap.id,
-    ...STUDY_GUIDE.recap.sections.map((section) => section.id),
-    "unit-quizzes",
-    ...unitQuizConfigs.map((quiz) => quiz.id),
+    ...(studyGuide.recap ? [studyGuide.recap.id, ...studyGuide.recap.sections.map((section) => section.id)] : []),
+    ...(guideHasQuizzes() ? ["unit-quizzes", ...getActiveUnitQuizConfigs().map((quiz) => quiz.id)] : []),
   ]
     .map((id) => document.getElementById(id))
     .filter(Boolean);
 
-  const observer = new IntersectionObserver(
+  scrollSpyObserver = new IntersectionObserver(
     (entries) => {
       const visible = entries
         .filter((entry) => entry.isIntersecting)
@@ -650,7 +719,7 @@ function wireScrollSpy() {
     },
   );
 
-  targets.forEach((target) => observer.observe(target));
+  targets.forEach((target) => scrollSpyObserver.observe(target));
 }
 
 function wireChatEvents() {
@@ -663,174 +732,17 @@ function wireChatEvents() {
     localStorage.setItem(sidebarStateKey, JSON.stringify({ collapsed: nextCollapsed }));
   });
 
-  chatBubble.addEventListener("click", openChat);
-  openChatHero.addEventListener("click", openChat);
-  chatClose.addEventListener("click", closeChat);
-
-  chatSettingsToggle.addEventListener("click", () => {
-    chatSettings.classList.toggle("is-hidden");
-  });
-
-  autoCompactToggle.addEventListener("change", () => {
-    localStorage.setItem(autoCompactKey, JSON.stringify({ enabled: autoCompactToggle.checked }));
-    if (autoCompactToggle.checked) {
-      compactToMostRecentSection();
-    }
+  guideTabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      setActiveGuide(tab.getAttribute("data-guide-tab"));
+    });
   });
 
   studyConceptsButton.addEventListener("click", () => {
     toggleStudyConceptsShell();
   });
 
-  providerSelect.addEventListener("change", () => {
-    persistProviderInputs(chatSettingsState?.provider || "groq");
-    chatSettingsState.provider = providerSelect.value;
-    applyProviderSettings(providerSelect.value);
-    saveSettings();
-  });
-
-  modelInput.addEventListener("input", saveSettings);
-  apiKeyInput.addEventListener("input", saveSettings);
-  webLookupToggle.addEventListener("change", saveSettings);
-  imageSearchToggle.addEventListener("change", saveSettings);
-
-  modeButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const mode = button.getAttribute("data-mode");
-      setResponseMode(mode);
-    });
-  });
-
-  chatInput.addEventListener("input", autoResizeChatInput);
-  chatInput.addEventListener("keydown", (event) => {
-    if (event.key === "Enter" && !event.shiftKey) {
-      event.preventDefault();
-      chatForm.requestSubmit();
-    }
-  });
-
-  chatForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    const question = chatInput.value.trim();
-    if (!question) return;
-
-    const { apiKey } = getActiveProviderConfig();
-    if (!apiKey) {
-      addMessage("assistant", "Open the gear menu and add an API key first.", "message-error");
-      return;
-    }
-
-    if (isAffirmative(question) && pendingShowDocQuery) {
-      const navigated = showInDocument(pendingShowDocQuery);
-      addMessage(
-        "assistant",
-        navigated
-          ? "I opened the most relevant part of the document and highlighted the best matching passage."
-          : "I tried to find the closest place in the document, but I could not match it confidently.",
-      );
-      pendingShowDocQuery = null;
-      chatInput.value = "";
-      autoResizeChatInput();
-      return;
-    }
-
-    addMessage("user", question);
-    chatState.messages.push({ role: "user", content: question });
-    chatInput.value = "";
-    autoResizeChatInput();
-
-    const documentQuery = resolveDocumentNavigationQuery(question);
-    if (documentQuery) {
-      const navigated = showInDocument(documentQuery);
-      if (!shouldAnswerAlongsideNavigation(question)) {
-        const response = navigated
-          ? [
-              "1. Opened the best matching section in the study guide.",
-              "2. Expanded that section, closed the previous one, and highlighted the most relevant line.",
-              "3. If you want, I can also explain that exact part step by step.",
-            ].join("\n")
-          : [
-              "1. I tried to open the best matching place in the document.",
-              "2. I could not match that request confidently enough to jump there.",
-              "3. Try naming the concept or formula one more time and I will take you to it.",
-            ].join("\n");
-
-        addMessage("assistant", response, navigated ? "" : "message-error");
-        chatState.messages.push({ role: "assistant", content: response });
-        pendingShowDocQuery = null;
-        return;
-      }
-
-      const loadingId = addMessage(
-        "assistant",
-        navigated
-          ? "Opening the matching section and putting together the explanation..."
-          : "I could not confidently open the document section, but I can still explain the concept...",
-      );
-
-      try {
-        const answer = await requestTutorAnswer(question);
-        const response = [
-          navigated
-            ? "1. Opened the best matching section in the study guide."
-            : "1. I could not confidently open the matching section in the document.",
-          "2. Explanation:",
-          answer.text,
-        ].join("\n");
-        updateMessage(loadingId, response, "message-assistant", {
-          sources: answer.sources,
-          images: answer.images,
-        });
-        chatState.messages.push({ role: "assistant", content: response });
-      } catch (error) {
-        updateMessage(
-          loadingId,
-          error instanceof Error ? error.message : "Something went wrong while calling the model.",
-          "message-assistant message-error",
-        );
-      }
-
-      pendingShowDocQuery = null;
-      return;
-    }
-
-    if (!isGenericDocumentPrompt(question)) {
-      lastStudyTopicQuery = question;
-    }
-
-    const loadingId = addMessage("assistant", "Thinking through the guide...");
-
-    try {
-      const answer = await requestTutorAnswer(question);
-      updateMessage(loadingId, answer.text, "message-assistant", {
-        sources: answer.sources,
-        images: answer.images,
-      });
-      chatState.messages.push({ role: "assistant", content: answer.text });
-
-      if (shouldOfferShowInDocument(question)) {
-        pendingShowDocQuery = question;
-        addMessage(
-          "assistant",
-          "If you want, say `yes` and I will open the most relevant part of the document and highlight it for you.",
-        );
-      } else {
-        pendingShowDocQuery = null;
-      }
-    } catch (error) {
-      updateMessage(
-        loadingId,
-        error instanceof Error ? error.message : "Something went wrong while calling the model.",
-        "message-assistant message-error",
-      );
-    }
-  });
-
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && chatShell.classList.contains("is-open")) {
-      closeChat();
-    }
     if (event.key === "Escape" && studyConceptsShell.classList.contains("is-open")) {
       closeStudyConceptsShell();
     }
@@ -843,10 +755,6 @@ function wireChatEvents() {
 function loadSettings() {
   const saved = safeJsonParse(localStorage.getItem(settingsKey));
   chatSettingsState = normalizeChatSettings(saved);
-  providerSelect.value = chatSettingsState.provider;
-  applyProviderSettings(chatSettingsState.provider);
-  applyFeatureSettings();
-  autoResizeChatInput();
 }
 
 function normalizeChatSettings(saved) {
@@ -909,19 +817,11 @@ function normalizeChatSettings(saved) {
 }
 
 function applyProviderSettings(provider) {
-  const settings = chatSettingsState?.providers?.[provider];
-  modelInput.value = settings?.model || defaultModels[provider];
-  apiKeyInput.value =
-    provider === "groq" ? settings?.apiKey || HARDCODED_GROQ_KEY : settings?.apiKey || "";
-  modelInput.placeholder = defaultModels[provider];
-  apiKeyInput.placeholder =
-    provider === "groq" ? "Groq key stored here" : "Paste your OpenRouter key";
+  return provider;
 }
 
 function applyFeatureSettings() {
-  const features = getFeatureSettings();
-  webLookupToggle.checked = features.webLookup;
-  imageSearchToggle.checked = features.imageSearch;
+  return getFeatureSettings();
 }
 
 function getFeatureSettings() {
@@ -932,23 +832,14 @@ function getFeatureSettings() {
 }
 
 function persistProviderInputs(provider) {
-  if (!chatSettingsState?.providers?.[provider]) return;
-
-  chatSettingsState.providers[provider].model = modelInput.value.trim() || defaultModels[provider];
-  chatSettingsState.providers[provider].apiKey =
-    provider === "groq" ? apiKeyInput.value.trim() || HARDCODED_GROQ_KEY : apiKeyInput.value.trim();
+  return provider;
 }
 
 function getActiveProviderConfig() {
-  const provider = providerSelect.value;
-  persistProviderInputs(provider);
   return {
-    provider,
-    model: chatSettingsState.providers[provider].model || defaultModels[provider],
-    apiKey:
-      provider === "groq"
-        ? chatSettingsState.providers[provider].apiKey || HARDCODED_GROQ_KEY
-        : chatSettingsState.providers[provider].apiKey || "",
+    provider: "groq",
+    model: chatSettingsState?.providers?.groq?.model || defaultModels.groq,
+    apiKey: chatSettingsState?.providers?.groq?.apiKey || HARDCODED_GROQ_KEY,
   };
 }
 
@@ -962,11 +853,13 @@ function loadSidebarState() {
 }
 
 function loadResponseMode() {
+  if (!modeButtons.length) return;
   const saved = safeJsonParse(localStorage.getItem(responseModeKey));
   setResponseMode(saved?.mode || "concise");
 }
 
 function loadAutoCompactState() {
+  if (!autoCompactToggle) return;
   const saved = safeJsonParse(localStorage.getItem(autoCompactKey));
   autoCompactToggle.checked = saved?.enabled !== false;
 }
@@ -985,7 +878,7 @@ function getResponseMode() {
 }
 
 function getAutoCompactState() {
-  return autoCompactToggle.checked;
+  return autoCompactToggle?.checked || false;
 }
 
 function revealSection(targetSection, shouldCenter, forceExclusive = false) {
@@ -1263,6 +1156,7 @@ function addPersistentHighlight(selectionMeta) {
     ...remaining,
     {
       id: `highlight-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      guideId: selectionMeta.guideId || activeGuideId,
       sectionId: selectionMeta.sectionId,
       sectionTitle: selectionMeta.sectionTitle || "Highlighted passage",
       start: nextStart,
@@ -1376,6 +1270,10 @@ function focusPersistentHighlight(highlightId) {
   const item = annotationItems.find((entry) => entry.id === highlightId);
   if (!item) return;
 
+  if (item.guideId && item.guideId !== activeGuideId) {
+    setActiveGuide(item.guideId, { preserveScroll: true });
+  }
+
   const section = document.getElementById(item.sectionId);
   if (!section) return;
 
@@ -1421,7 +1319,7 @@ function renderStudyLaterBody() {
     return `
       <div class="study-empty">
         <p><strong>No saved concepts yet.</strong></p>
-        <p>Highlight a line in the document and use the new <strong>+</strong> action to save it for a separate AI study round.</p>
+        <p>Highlight a line in the document and use the <strong>+</strong> action to save it for a separate study round.</p>
       </div>
     `;
   }
@@ -1462,7 +1360,7 @@ function renderStudyLaterBody() {
         </div>
         <button class="quiz-restart" type="button" data-study-start>Study concepts</button>
       </div>
-      <p class="study-note">These highlights stay separate from the chapter quizzes and let the AI focus only on the exact ideas you marked.</p>
+      <p class="study-note">These highlights stay separate from the chapter quizzes and keep your review focused on the exact ideas you marked.</p>
       ${listMarkup}
     `;
   }
@@ -1470,7 +1368,7 @@ function renderStudyLaterBody() {
   const progressMarkup = `
     <div class="quiz-progress">
       <span>Mastered ${session.mastered}/${session.totalTarget}</span>
-      <span>${session.queue.length ? "AI study round" : "Round complete"}</span>
+      <span>${session.queue.length ? "Study round" : "Round complete"}</span>
     </div>
   `;
 
@@ -1489,7 +1387,7 @@ function renderStudyLaterBody() {
       ${progressMarkup}
       <div class="quiz-summary">
         <p><strong>${session.mastered}/${session.totalTarget}</strong> saved concepts answered confidently.</p>
-        <p>Restart for another AI-led pass through your highlights.</p>
+        <p>Restart for another pass through your highlights.</p>
       </div>
       ${listMarkup}
     `;
@@ -1584,6 +1482,7 @@ function getStudyLaterSelectionMeta(node) {
   const section = node?.closest?.(".doc-section");
   if (!section) return null;
   return {
+    guideId: activeGuideId,
     sectionId: section.id,
     sectionTitle: section.querySelector(".doc-section-title")?.textContent?.trim() || "Saved concept",
   };
@@ -1630,6 +1529,7 @@ function addStudyLaterItem(text, meta) {
   studyLaterItems.unshift({
     id: `study-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     text: trimmed,
+    guideId: meta?.guideId || activeGuideId,
     sectionId: meta?.sectionId || "",
     sectionTitle: meta?.sectionTitle || "Saved concept",
     createdAt: Date.now(),
@@ -1811,7 +1711,7 @@ function wireSelectionAssist() {
       ...getSelectionOffsetsInRoot(startBody, range),
       text,
     };
-    const stackWidth = 112;
+    const stackWidth = 76;
     const stackHeight = 36;
     const preferredLeft = rect.right - stackWidth;
     const preferredTop = rect.top - stackHeight - 10;
@@ -1835,17 +1735,6 @@ function wireSelectionAssist() {
   window.addEventListener("scroll", hideSelectionAction, true);
   window.addEventListener("resize", hideSelectionAction);
 
-  selectionAction.addEventListener("click", () => {
-    if (!selectedDocumentText) return;
-
-    openChat();
-    chatInput.value = `Can you explain this passage?\n\n"${selectedDocumentText}"`;
-    autoResizeChatInput();
-    chatInput.focus();
-    window.getSelection()?.removeAllRanges();
-    hideSelectionAction();
-  });
-
   selectionStudyAction.addEventListener("click", () => {
     if (!selectedDocumentText) return;
 
@@ -1866,6 +1755,8 @@ function wireSelectionAssist() {
 function hideSelectionAction() {
   selectionActions.classList.remove("is-visible");
   selectionActions.setAttribute("aria-hidden", "true");
+  selectedDocumentText = "";
+  selectedDocumentSource = null;
   selectedDocumentSelection = null;
 }
 
@@ -2074,8 +1965,8 @@ function saveSettings() {
 
   persistProviderInputs(chatSettingsState.provider);
   chatSettingsState.features = {
-    webLookup: webLookupToggle.checked,
-    imageSearch: imageSearchToggle.checked,
+    webLookup: false,
+    imageSearch: false,
   };
   localStorage.setItem(
     settingsKey,
@@ -2513,7 +2404,7 @@ function initializeQuiz(chapterId) {
 }
 
 function getUnitQuizConfig(quizId) {
-  return unitQuizConfigs.find((quiz) => quiz.id === quizId) || null;
+  return getActiveUnitQuizConfigs().find((quiz) => quiz.id === quizId) || null;
 }
 
 function getQuizBank(quizId) {
@@ -2603,14 +2494,14 @@ function getQuizTargetCount(chapterId, bank) {
   const unitQuiz = getUnitQuizConfig(chapterId);
   if (unitQuiz) {
     const sectionTotal = unitQuiz.chapterIds.reduce((sum, id) => {
-      const chapter = STUDY_GUIDE.chapters.find((entry) => entry.id === id);
+      const chapter = getActiveStudyGuide().chapters.find((entry) => entry.id === id);
       return sum + (chapter?.sections.length || 0);
     }, 0);
     const target = unitQuiz.chapterIds.length + Math.ceil(sectionTotal / 5);
     return clamp(target, Math.min(unitQuiz.chapterIds.length, bank.length), Math.min(bank.length, 24));
   }
 
-  const chapter = STUDY_GUIDE.chapters.find((entry) => entry.id === chapterId);
+  const chapter = getActiveStudyGuide().chapters.find((entry) => entry.id === chapterId);
   if (!chapter) {
     return Math.min(bank.length, 5);
   }
@@ -2814,7 +2705,7 @@ async function gradeShortQuizAnswer(chapterId, question, answer) {
   saveSettings();
   const { provider, model, apiKey } = getActiveProviderConfig();
   if (!apiKey) {
-    throw new Error("Open the gear menu and add an API key for the selected provider first.");
+    throw new Error("Quiz grading is not configured right now.");
   }
 
   const content = await callChatModel({
@@ -2856,7 +2747,7 @@ async function generateStudyLaterCard(item) {
   saveSettings();
   const { provider, model, apiKey } = getActiveProviderConfig();
   if (!apiKey) {
-    throw new Error("Open the gear menu and add an API key for the selected provider first.");
+    throw new Error("Question generation is not configured right now.");
   }
 
   const content = await callChatModel({
@@ -2897,7 +2788,7 @@ async function gradeStudyLaterAnswer(item, card, answer) {
   saveSettings();
   const { provider, model, apiKey } = getActiveProviderConfig();
   if (!apiKey) {
-    throw new Error("Open the gear menu and add an API key for the selected provider first.");
+    throw new Error("Study grading is not configured right now.");
   }
 
   const content = await callChatModel({

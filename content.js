@@ -18,6 +18,15 @@ export const FORMULA_STRIP = [
   },
 ];
 
+export const QUIZ_2_FORMULA_STRIP = [
+  { label: "Wave speed", value: "v = λf" },
+  { label: "Total phase", value: "ΔΦ = -2πΔx / λ + Δφ₀" },
+  { label: "Doppler", value: "f_obs = f_s ((v ± v_o) / (v ∓ v_s))" },
+  { label: "Beats", value: "f_beat = |f₁ - f₂|" },
+  { label: "Double slit", value: "Δx = d sin θ" },
+  { label: "de Broglie", value: "λ = h / p" },
+];
+
 export const STUDY_GUIDE = {
   title: "Waves: Complete Study Guide",
   subtitle: "PW-Style | DL 1 - DL 5 | Acts 8.1 through 8.15",
@@ -1563,6 +1572,669 @@ Waves is a genuinely hard unit because the concepts stack on top of each other. 
         title: "Closing Note",
         html: `
           <p>Waves is a genuinely hard unit because the ideas stack on top of each other and the math can hide whether the physical picture is actually clear. If you worked through all of this, you now have a real map of the territory. The rest is practice problems.</p>
+        `,
+      },
+    ],
+  },
+};
+
+export const QUIZ_2_GUIDE = {
+  title: "Quiz 2 Study Guide",
+  subtitle: "DL3-DL6 | Interference, diffraction, standing waves, and quantum ideas",
+  chapters: [
+    {
+      id: "quiz2-chapter-1",
+      number: "01",
+      title: "Start Here",
+      plainText: `
+Quiz 2 covers the wave-equation logic from DL3, the phase-difference and beats ideas from DL4, the diffraction and double-slit material from DL5, and the standing-wave and particle-wave extensions from DL6.
+The fastest way to attack a problem start is to identify the wave type, decide which quantities are source-set and which are medium-set, write the relevant phase or wavelength rule, and only then start algebra.
+Most mistakes on this quiz come from mixing up beat rate with heard pitch, using the wrong Doppler sign, forgetting that the center is not automatically bright when there is a phase shift, or using the wrong standing-wave boundary condition.
+      `.trim(),
+      sections: [
+        {
+          id: "quiz2-chapter-1-coverage",
+          title: "What Quiz 2 Covers",
+          html: `
+            <p>This guide is focused on the parts of DL3 through DL6 that actually feed quiz-style problem starts: wave-equation reading, interference and total phase, Doppler, beats, double-slit logic, standing waves, and the first particle-as-wave ideas.</p>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>DL</th>
+                  <th>Main quiz use</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>DL3</td>
+                  <td>Wave equation wrap-up, Doppler effect, and 2D interference setups</td>
+                </tr>
+                <tr>
+                  <td>DL4</td>
+                  <td>Total phase difference, sound interference, beats, beat rate, carrier pitch</td>
+                </tr>
+                <tr>
+                  <td>DL5</td>
+                  <td>Huygens/diffraction, Young's double slit, path-difference geometry</td>
+                </tr>
+                <tr>
+                  <td>DL6</td>
+                  <td>Crystal phase shifts, standing waves, de Broglie, particle in a box</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="callout">
+              <strong>Focus rule:</strong> most quiz questions are not asking you to remember a paragraph. They are asking you to identify the right model first, then use the right formula second.
+            </div>
+          `,
+        },
+        {
+          id: "quiz2-chapter-1-roadmap",
+          title: "Problem Start Roadmap",
+          html: `
+            <ol class="long-list">
+              <li><strong>Name the wave model.</strong> Is this 1D, 2D, or 3D? Is it Doppler, interference, double slit, standing waves, or particle waves?</li>
+              <li><strong>Sort the quantities.</strong> Frequency and period stay with the source. Wave speed comes from the medium. Wavelength adjusts to fit both.</li>
+              <li><strong>Draw the geometry.</strong> Mark distances, path differences, source directions, and boundary conditions before doing algebra.</li>
+              <li><strong>Write the one governing rule.</strong> That might be the wave equation, total phase equation, Doppler formula, beat formula, or harmonic condition.</li>
+              <li><strong>Check the physical meaning.</strong> Ask whether your answer means louder or quieter, higher or lower pitch, bright or dark, node or antinode.</li>
+            </ol>
+            <div class="callout">
+              <strong>Dimension check:</strong> in 2D, intensity falls like 1/r and amplitude like 1/√r. In 3D, intensity falls like 1/r² and amplitude like 1/r.
+            </div>
+          `,
+        },
+        {
+          id: "quiz2-chapter-1-mistakes",
+          title: "Common Mistakes to Catch Early",
+          html: `
+            <ul>
+              <li>Mixing up <strong>beat rate</strong> with <strong>heard pitch</strong>.</li>
+              <li>Using the wrong Doppler sign without first drawing motion arrows.</li>
+              <li>Forgetting that the time term cancels when you compare two waves at the same place and time.</li>
+              <li>Assuming the center of a double-slit pattern must be bright even when a crystal shifts one slit by a phase constant.</li>
+              <li>Using the fixed-fixed harmonic rule on a fixed-open standing-wave problem.</li>
+            </ul>
+          `,
+        },
+      ],
+    },
+    {
+      id: "quiz2-chapter-2",
+      number: "02",
+      title: "Wave Equation",
+      plainText: `
+Use the wave equation to read amplitude, period, wavelength, direction, and phase constant. Frequency and period are source-set. Speed is medium-set. Wavelength depends on both because λ = v/f. Minus on the x-term means right-moving and plus means left-moving.
+      `.trim(),
+      sections: [
+        {
+          id: "quiz2-chapter-2-source-medium",
+          title: "Source vs Medium",
+          html: `
+            <p>Start here whenever a problem mentions a new medium, a new string tension, or a new source. The cleanest logic is to ask: who fixes this quantity, the source or the medium?</p>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Wave property</th>
+                  <th>Determined by</th>
+                  <th>Why it matters</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Period T</td>
+                  <td>Source</td>
+                  <td>It is the time the source takes to complete one cycle.</td>
+                </tr>
+                <tr>
+                  <td>Frequency f</td>
+                  <td>Source</td>
+                  <td>It is how many cycles the source creates each second.</td>
+                </tr>
+                <tr>
+                  <td>Phase constant φ₀</td>
+                  <td>Source / initial setup</td>
+                  <td>It records the starting offset at t = 0 and x = 0.</td>
+                </tr>
+                <tr>
+                  <td>Amplitude A</td>
+                  <td>Mainly source</td>
+                  <td>It tracks how strongly the source shakes the medium in the simple model.</td>
+                </tr>
+                <tr>
+                  <td>Wave speed v</td>
+                  <td>Medium</td>
+                  <td>It depends on the material or boundary conditions.</td>
+                </tr>
+                <tr>
+                  <td>Wavelength λ</td>
+                  <td>Both</td>
+                  <td>It must satisfy λ = v/f.</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="callout">
+              <strong>Quiz rule:</strong> when a wave enters a different medium, the frequency does <em>not</em> change. If the speed increases, the wavelength must increase with it.
+            </div>
+          `,
+        },
+        {
+          id: "quiz2-chapter-2-equation",
+          title: "Read the 1-D Wave Equation",
+          html: `
+            <div class="formula-box">y(x,t) = A sin(2πt/T ∓ 2πx/λ + φ₀)</div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Part</th>
+                  <th>Meaning</th>
+                  <th>Where to find it</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>A</td>
+                  <td>Maximum displacement from equilibrium</td>
+                  <td>Crest height above the center line</td>
+                </tr>
+                <tr>
+                  <td>T</td>
+                  <td>Seconds per cycle</td>
+                  <td>History graph y vs. t</td>
+                </tr>
+                <tr>
+                  <td>λ</td>
+                  <td>Meters per cycle</td>
+                  <td>Snapshot graph y vs. x</td>
+                </tr>
+                <tr>
+                  <td>φ₀</td>
+                  <td>Starting phase offset</td>
+                  <td>Plug in a known point</td>
+                </tr>
+              </tbody>
+            </table>
+            <figure class="concept-figure">
+              <img src="./assets/figures/chapter3-position-time-comparison.png" alt="Position and time wave graphs for reading wavelength and period" />
+              <figcaption>Use the position graph to read λ and the time graph to read T. They answer different questions.</figcaption>
+            </figure>
+          `,
+        },
+        {
+          id: "quiz2-chapter-2-direction",
+          title: "Direction: Minus Right, Plus Left",
+          html: `
+            <p>The sign in the wave equation is opposite to the physical travel direction:</p>
+            <ul>
+              <li><strong>- 2πx/λ</strong> means the wave travels to the right.</li>
+              <li><strong>+ 2πx/λ</strong> means the wave travels to the left.</li>
+            </ul>
+            <div class="callout">
+              <strong>Fast check:</strong> if the same crest shows up at a larger x-value a little later, the disturbance is moving to the right.
+            </div>
+          `,
+        },
+      ],
+    },
+    {
+      id: "quiz2-chapter-3",
+      number: "03",
+      title: "Interference",
+      plainText: `
+Interference is controlled by total phase difference. At the same place and time, the time term cancels, so the main rule becomes ΔΦ = -2πΔx/λ + Δφ₀. Constructive interference happens at even multiples of pi and destructive at odd multiples of pi.
+      `.trim(),
+      sections: [
+        {
+          id: "quiz2-chapter-3-checklist",
+          title: "Superposition Checklist",
+          html: `
+            <p>When two waves meet, add their displacements. To decide whether that addition is constructive or destructive, compare their total phases.</p>
+            <div class="formula-box">ΔΦ = 2πΔt/T - 2πΔx/λ + Δφ₀</div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Difference term</th>
+                  <th>Question to ask</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Δt</td>
+                  <td>Did one wave start later than the other?</td>
+                </tr>
+                <tr>
+                  <td>Δx</td>
+                  <td>Do the waves travel different path lengths to the observer?</td>
+                </tr>
+                <tr>
+                  <td>Δφ₀</td>
+                  <td>Do the sources begin in phase or already offset?</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="callout">
+              <strong>Same-place, same-time comparison:</strong> in the most common quiz setup, the time term is zero, so you only track path difference and source phase difference.
+            </div>
+          `,
+        },
+        {
+          id: "quiz2-chapter-3-total-phase",
+          title: "Compute Total Phase Difference",
+          html: `
+            <div class="formula-inline">ΔΦ = -2πΔx/λ + Δφ₀</div>
+            <p>This is the version you will use again and again for speakers, slits, and any problem where two waves travel to one location.</p>
+            <figure class="concept-figure">
+              <img src="./assets/figures/chapter6-speaker-paths.png" alt="Two-source path difference geometry" />
+              <figcaption>Path difference is purely geometric: measure how much farther one wave travels than the other.</figcaption>
+            </figure>
+          `,
+        },
+        {
+          id: "quiz2-chapter-3-conditions",
+          title: "Constructive vs Destructive",
+          html: `
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Result</th>
+                  <th>Total phase condition</th>
+                  <th>What you observe</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Constructive</td>
+                  <td>ΔΦ = 0, 2π, 4π, ...</td>
+                  <td>Loud / bright / maximum amplitude</td>
+                </tr>
+                <tr>
+                  <td>Destructive</td>
+                  <td>ΔΦ = π, 3π, 5π, ...</td>
+                  <td>Quiet / dark / cancellation</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="callout">
+              <strong>Translation tip:</strong> if a prompt says the sources are out of phase, that means you already have a built-in Δφ₀ = π before any path difference is added.
+            </div>
+          `,
+        },
+      ],
+    },
+    {
+      id: "quiz2-chapter-4",
+      number: "04",
+      title: "Doppler and Beats",
+      plainText: `
+For Doppler, draw the motion arrows first. Numerator sign follows observer motion. Denominator sign follows source motion. For beats, the beat rate is |f1 - f2| but the note you hear is the average pitch. They are not the same quantity.
+      `.trim(),
+      sections: [
+        {
+          id: "quiz2-chapter-4-doppler",
+          title: "Choose the Doppler Signs",
+          html: `
+            <p>Doppler problems are easier when you think physically first: approaching squeezes wavefronts and raises the observed frequency; receding stretches them and lowers it.</p>
+            <div class="formula-box">f<sub>obs</sub> = f<sub>s</sub> ((v ± v<sub>o</sub>) / (v ∓ v<sub>s</sub>))</div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Motion</th>
+                  <th>Sign rule</th>
+                  <th>Memory hook</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Observer toward source</td>
+                  <td>Use <strong>+</strong> in the numerator</td>
+                  <td>Top toward</td>
+                </tr>
+                <tr>
+                  <td>Observer away from source</td>
+                  <td>Use <strong>-</strong> in the numerator</td>
+                  <td>Top away</td>
+                </tr>
+                <tr>
+                  <td>Source toward observer</td>
+                  <td>Use <strong>-</strong> in the denominator</td>
+                  <td>Bottom squeeze</td>
+                </tr>
+                <tr>
+                  <td>Source away from observer</td>
+                  <td>Use <strong>+</strong> in the denominator</td>
+                  <td>Bottom stretch</td>
+                </tr>
+              </tbody>
+            </table>
+            <figure class="concept-figure">
+              <img src="./assets/figures/chapter5-doppler-motion.png" alt="Moving source shifting crest spacing for the Doppler effect" />
+              <figcaption>The source moves between emissions, so the forward wavelength is shorter and the rear wavelength is longer.</figcaption>
+            </figure>
+          `,
+        },
+        {
+          id: "quiz2-chapter-4-beats",
+          title: "Beat Rate vs Heard Pitch",
+          html: `
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Quantity</th>
+                  <th>Formula</th>
+                  <th>What it means</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Beat rate</td>
+                  <td>|f₁ - f₂|</td>
+                  <td>How fast the volume pulses loud-soft-loud</td>
+                </tr>
+                <tr>
+                  <td>Heard pitch</td>
+                  <td>(f₁ + f₂) / 2</td>
+                  <td>The average note you hear underneath the pulsing</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="callout">
+              <strong>Do not mix them up:</strong> the beat rate is not a second pitch. It is the rate of loudness change.</div>
+            <div class="figure-grid">
+              <figure class="concept-figure">
+                <img src="./assets/figures/chapter9-beat-waveforms.png" alt="Two close frequencies making beats" />
+                <figcaption>Two nearby frequencies gradually drift in and out of phase.</figcaption>
+              </figure>
+              <figure class="concept-figure">
+                <img src="./assets/figures/chapter9-beat-envelope.png" alt="Beat envelope showing carrier and beat pattern" />
+                <figcaption>The fast oscillation is the carrier. The slow envelope sets the beat rate.</figcaption>
+              </figure>
+            </div>
+          `,
+        },
+        {
+          id: "quiz2-chapter-4-combined",
+          title: "Beats Plus Doppler",
+          html: `
+            <p>Combined problems usually ask you to change one heard frequency upward and the other downward until the beat rate reaches zero.</p>
+            <figure class="concept-figure">
+              <img src="./assets/figures/chapter9-bagpipers-doppler.svg" alt="Bagpiper beats plus Doppler setup" />
+              <figcaption>Run toward the lower note and away from the higher note if you want the Doppler shift to cancel the original mismatch.</figcaption>
+            </figure>
+          `,
+        },
+      ],
+    },
+    {
+      id: "quiz2-chapter-5",
+      number: "05",
+      title: "Double-Slit and Crystal Shift",
+      plainText: `
+Double-slit interference comes from path difference. Bright spots satisfy d sin theta = n lambda and dark spots satisfy d sin theta = (n + 1/2) lambda. A crystal adds a phase constant difference, so the center can shift away from bright.
+      `.trim(),
+      sections: [
+        {
+          id: "quiz2-chapter-5-young",
+          title: "Young's Experiment",
+          html: `
+            <p>Two slits act like two coherent sources. The path difference from the slits to a point on the screen determines whether that point is bright or dark.</p>
+            <figure class="concept-figure">
+              <img src="./assets/figures/chapter10-huygens-hole.png" alt="Diffraction through a small opening using Huygens' principle" />
+              <figcaption>A small opening can behave like a new source. That is the key idea that lets the two slits interfere.</figcaption>
+            </figure>
+          `,
+        },
+        {
+          id: "quiz2-chapter-5-fringe-math",
+          title: "Path Difference and Fringe Conditions",
+          html: `
+            <div class="formula-inline">Δx = d sin θ</div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Pattern point</th>
+                  <th>Condition</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Bright fringe</td>
+                  <td>d sin θ = nλ</td>
+                </tr>
+                <tr>
+                  <td>Dark fringe</td>
+                  <td>d sin θ = (n + 1/2)λ</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="callout">
+              <strong>Small-angle shortcut:</strong> once the geometry is set up, use sin θ ≈ tan θ ≈ y/D to connect the angle to the screen position.
+            </div>
+            <figure class="concept-figure">
+              <img src="./assets/figures/chapter10-double-slit-geometry.png" alt="Double-slit geometry with path difference and screen spacing" />
+              <figcaption>This is the geometry you should sketch before you plug numbers into the bright or dark condition.</figcaption>
+            </figure>
+          `,
+        },
+        {
+          id: "quiz2-chapter-5-crystal",
+          title: "Crystal Phase Shift",
+          html: `
+            <p>A crystal in front of one slit delays one wave. That delay shows up as a source phase difference instead of a path difference.</p>
+            <div class="formula-inline">Δφ₀ = 2πΔt / T</div>
+            <div class="callout">
+              <strong>Important trap:</strong> once the crystal adds a phase shift, the center of the screen is not guaranteed to be bright anymore. Evaluate the total phase there first.
+            </div>
+            <figure class="concept-figure">
+              <img src="./assets/figures/chapter11-phase-shifted-slit.png" alt="Double-slit setup with a phase-shifting crystal in one slit" />
+              <figcaption>Treat the crystal delay as the Δφ₀ term in the total-phase checklist.</figcaption>
+            </figure>
+          `,
+        },
+      ],
+    },
+    {
+      id: "quiz2-chapter-6",
+      number: "06",
+      title: "Standing Waves",
+      plainText: `
+Standing waves come from two identical waves moving in opposite directions. Nodes stay at zero displacement. Antinodes reach maximum displacement. Boundary conditions decide the allowed wavelengths and harmonics.
+      `.trim(),
+      sections: [
+        {
+          id: "quiz2-chapter-6-boundaries",
+          title: "Nodes, Antinodes, and Boundaries",
+          html: `
+            <p>Before doing algebra, decide what each end must do. A fixed end is a node. An open end in the simple air-column model is an antinode.</p>
+            <div class="formula-inline">node to node = λ / 2 &nbsp;&nbsp;&nbsp; node to nearest antinode = λ / 4</div>
+            <figure class="concept-figure">
+              <img src="./assets/figures/quiz2-standing-waves.svg" alt="Standing-wave patterns for fixed-fixed, open-open, and fixed-open boundaries" />
+              <figcaption>Boundary conditions come first. The harmonic formula comes second.</figcaption>
+            </figure>
+          `,
+        },
+        {
+          id: "quiz2-chapter-6-harmonics",
+          title: "Allowed Harmonics",
+          html: `
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Configuration</th>
+                  <th>Allowed wavelengths</th>
+                  <th>Allowed harmonics</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Fixed-fixed / open-open</td>
+                  <td>λₙ = 2L / n</td>
+                  <td>n = 1, 2, 3, ...</td>
+                </tr>
+                <tr>
+                  <td>Fixed-open</td>
+                  <td>λₙ = 4L / (2n - 1)</td>
+                  <td>Odd harmonics only</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="callout">
+              <strong>Flute vs clarinet logic:</strong> a fixed-open instrument can reach a lower fundamental for the same length because the first allowed fit is a quarter-wave, not a half-wave.
+            </div>
+          `,
+        },
+      ],
+    },
+    {
+      id: "quiz2-chapter-7",
+      number: "07",
+      title: "Quantum Waves",
+      plainText: `
+Quantum particles behave like waves with wavelength lambda equals h over p. In a box, only standing-wave fits are allowed, so only certain wavelengths and energies are possible. Measuring which slit a particle used destroys the interference pattern.
+      `.trim(),
+      sections: [
+        {
+          id: "quiz2-chapter-7-slits",
+          title: "Particles Through Slits",
+          html: `
+            <p>The quantum version of the two-slit experiment says something wild but precise: even single particles can build up an interference pattern over time if you do not measure which path they take.</p>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>If you...</th>
+                  <th>What you get</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Let the particle travel without path measurement</td>
+                  <td>Interference pattern builds up</td>
+                </tr>
+                <tr>
+                  <td>Measure which slit it uses</td>
+                  <td>The interference pattern disappears</td>
+                </tr>
+              </tbody>
+            </table>
+          `,
+        },
+        {
+          id: "quiz2-chapter-7-debroglie",
+          title: "de Broglie and Particle in a Box",
+          html: `
+            <div class="formula-box">λ = h / p</div>
+            <p>Momentum sets wavelength. Shorter wavelength means larger momentum, so the higher-energy standing-wave patterns are the ones with more wiggles packed into the same box.</p>
+            <div class="formula-inline">E<sub>n</sub> = h²n² / (8mL²)</div>
+            <p>That formula says the allowed energies are quantized and scale like n², not just n.</p>
+            <figure class="concept-figure">
+              <img src="./assets/figures/quiz2-particle-box.svg" alt="Particle-in-a-box standing-wave idea with de Broglie wavelength" />
+              <figcaption>The box walls force nodes, so only certain standing waves fit. That is why the energies are quantized.</figcaption>
+            </figure>
+          `,
+        },
+      ],
+    },
+  ],
+  recap: {
+    id: "quiz2-formula-sheet",
+    title: "Quiz 2 Formula Sheet",
+    plainText: `
+Quiz 2 formula sheet.
+Wave speed v = lambda f.
+Total phase difference Delta Phi = -2pi Delta x / lambda + Delta phi zero.
+Doppler uses observer motion in the numerator and source motion in the denominator.
+Beat rate is absolute difference, heard pitch is the average.
+Double slit uses Delta x = d sin theta, bright d sin theta = n lambda, dark d sin theta = (n + one half) lambda.
+Standing waves depend on boundary conditions.
+de Broglie wavelength lambda = h / p.
+    `.trim(),
+    sections: [
+      {
+        id: "quiz2-formula-sheet-core",
+        title: "Core Formulas",
+        html: `
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Topic</th>
+                <th>Formula</th>
+                <th>Use it when...</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Wave speed</td>
+                <td>v = λf</td>
+                <td>You know any two of speed, wavelength, frequency</td>
+              </tr>
+              <tr>
+                <td>Total phase</td>
+                <td>ΔΦ = -2πΔx/λ + Δφ₀</td>
+                <td>You compare two waves at the same place and time</td>
+              </tr>
+              <tr>
+                <td>Doppler</td>
+                <td>f<sub>obs</sub> = f<sub>s</sub>((v ± v<sub>o</sub>)/(v ∓ v<sub>s</sub>))</td>
+                <td>Source or observer motion changes the heard frequency</td>
+              </tr>
+              <tr>
+                <td>Beat rate</td>
+                <td>f<sub>beat</sub> = |f₁ - f₂|</td>
+                <td>You need the loud-soft-loud pulse rate</td>
+              </tr>
+              <tr>
+                <td>Average pitch</td>
+                <td>f<sub>avg</sub> = (f₁ + f₂) / 2</td>
+                <td>You need the note heard under the beat envelope</td>
+              </tr>
+              <tr>
+                <td>Double slit path difference</td>
+                <td>Δx = d sin θ</td>
+                <td>You relate slit geometry to bright and dark spots</td>
+              </tr>
+              <tr>
+                <td>Bright fringe</td>
+                <td>d sin θ = nλ</td>
+                <td>You want constructive interference</td>
+              </tr>
+              <tr>
+                <td>Dark fringe</td>
+                <td>d sin θ = (n + 1/2)λ</td>
+                <td>You want destructive interference</td>
+              </tr>
+              <tr>
+                <td>Fixed-fixed standing waves</td>
+                <td>λₙ = 2L / n</td>
+                <td>Both ends have the same boundary type</td>
+              </tr>
+              <tr>
+                <td>Fixed-open standing waves</td>
+                <td>λₙ = 4L / (2n - 1)</td>
+                <td>One end is a node and the other is an antinode</td>
+              </tr>
+              <tr>
+                <td>de Broglie</td>
+                <td>λ = h / p</td>
+                <td>You connect particle momentum to wavelength</td>
+              </tr>
+              <tr>
+                <td>Particle in a box</td>
+                <td>E<sub>n</sub> = h²n² / (8mL²)</td>
+                <td>You need the allowed quantum energy levels in a 1D box</td>
+              </tr>
+            </tbody>
+          </table>
+        `,
+      },
+      {
+        id: "quiz2-formula-sheet-traps",
+        title: "Fast Trap Check",
+        html: `
+          <ul>
+            <li>Frequency stays with the source when a wave enters a new medium.</li>
+            <li>Beat rate and heard pitch are different quantities.</li>
+            <li>For double slit with a crystal, evaluate the center with the new Δφ₀ before assuming it is bright.</li>
+            <li>For standing waves, pick the boundary condition before writing a wavelength formula.</li>
+          </ul>
         `,
       },
     ],

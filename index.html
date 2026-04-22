@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Physics 7C Waves Study Guide</title>
+    <title>Physics 7C Study Guides</title>
     <meta
       name="description"
-      content="A full Physics 7C waves study guide for DL1 through DL5 with a draggable AI tutor."
+      content="Physics 7C study guides for Quiz 1 and Quiz 2 with clean document navigation."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -22,38 +22,41 @@
   </head>
   <body>
     <div class="page-shell">
-      <header class="hero">
-        <div class="hero-copy">
-          <p class="eyebrow">Physics 7C · Unit 8</p>
-          <h1>Waves: Complete Study Guide</h1>
-          <p class="hero-lede">
-            The full Physics 7C Unit 8 guide, covering DL1 through DL5. Use the outline
-            to jump by chapter, open the worked examples and formula references as needed,
-            and keep the AI tutor beside your notes while you study.
-          </p>
-          <div class="hero-actions">
-            <a class="primary-link" href="#chapter-1">Start with Chapter 1</a>
-            <button class="secondary-link" id="open-chat-hero" type="button">
-              Open the AI tutor
+      <header class="topbar">
+        <div class="topbar-copy">
+          <p class="eyebrow" id="guide-eyebrow">Physics 7C</p>
+          <h1 id="guide-title">Study Guides</h1>
+        </div>
+        <div class="topbar-actions">
+          <div class="guide-tabs" role="tablist" aria-label="Quiz study guides">
+            <button
+              class="guide-tab is-active"
+              id="guide-tab-quiz1"
+              type="button"
+              data-guide-tab="quiz1"
+              role="tab"
+              aria-selected="true"
+            >
+              Quiz 1
+            </button>
+            <button
+              class="guide-tab"
+              id="guide-tab-quiz2"
+              type="button"
+              data-guide-tab="quiz2"
+              role="tab"
+              aria-selected="false"
+            >
+              Quiz 2
             </button>
           </div>
         </div>
-
-        <aside class="hero-panel">
-          <p class="panel-label">Study mode</p>
-          <ul class="hero-points">
-            <li>Full chapter text spanning DL1 through DL5</li>
-            <li>Google Docs-style outline with nested section links</li>
-            <li>Floating tutor panel you can move and resize</li>
-          </ul>
-          <div class="formula-strip" id="formula-strip"></div>
-        </aside>
       </header>
 
       <section class="workspace" id="workspace">
         <aside class="doc-sidebar" id="doc-sidebar">
           <div class="sidebar-head">
-            <p class="sidebar-label">Document tabs</p>
+            <p class="sidebar-label" id="sidebar-label">Bookmarks</p>
             <button
               class="sidebar-collapse"
               id="sidebar-collapse"
@@ -73,20 +76,14 @@
             <header class="doc-paper-head">
               <div class="doc-paper-head-top">
                 <div>
-                  <p class="section-label">Curriculum</p>
-                  <h2>Read it like a real study document.</h2>
-                </div>
-                <div class="doc-head-controls">
-                  <label class="compact-toggle" for="auto-compact-toggle">
-                    <input id="auto-compact-toggle" type="checkbox" checked />
-                    <span>Auto compact</span>
-                  </label>
+                  <p class="section-label" id="doc-guide-label">Quiz 1</p>
+                  <h2 id="doc-guide-heading">Waves foundations and worked examples</h2>
                 </div>
               </div>
-              <p>
-                Every chapter from the combined Word guide is expanded in full, and each
-                subsection is linkable from the left-side outline.
+              <p id="doc-guide-summary">
+                Jump from the left-side bookmarks into a single clean reading sheet.
               </p>
+              <div class="formula-strip formula-strip-inline" id="formula-strip"></div>
             </header>
 
             <section id="document-root"></section>
@@ -129,28 +126,9 @@
         <span class="study-concepts-count" id="study-concepts-count">0</span>
       </button>
 
-      <button
-        class="chat-bubble"
-        id="chat-bubble"
-        type="button"
-        aria-expanded="false"
-        aria-controls="chat-shell"
-      >
-        <span class="chat-bubble-label">AI Tutor</span>
-        <span class="chat-bubble-ping" aria-hidden="true"></span>
-      </button>
     </div>
 
     <div class="selection-actions" id="selection-actions" aria-hidden="true">
-      <button
-        class="selection-action"
-        id="selection-action"
-        type="button"
-        aria-label="Ask the tutor about selected text"
-      >
-        ?
-      </button>
-
       <button
         class="selection-action selection-action-secondary"
         id="selection-study-action"
@@ -218,114 +196,6 @@
           <div class="notes-highlights-root" id="notes-highlights-root"></div>
         </div>
       </div>
-    </aside>
-
-    <aside class="chat-shell" id="chat-shell" aria-hidden="true">
-      <div class="resize-handle resize-n" data-resize="n"></div>
-      <div class="resize-handle resize-e" data-resize="e"></div>
-      <div class="resize-handle resize-s" data-resize="s"></div>
-      <div class="resize-handle resize-w" data-resize="w"></div>
-      <div class="resize-handle resize-ne" data-resize="ne"></div>
-      <div class="resize-handle resize-nw" data-resize="nw"></div>
-      <div class="resize-handle resize-se" data-resize="se"></div>
-      <div class="resize-handle resize-sw" data-resize="sw"></div>
-
-      <div class="chat-header" id="chat-drag-handle">
-        <div>
-          <p class="chat-kicker">Floating tutor</p>
-          <h2>Ask anything.</h2>
-        </div>
-        <div class="chat-actions">
-          <button class="chat-gear" id="chat-settings-toggle" type="button" aria-label="AI settings">
-            ⚙
-          </button>
-          <button class="chat-close" id="chat-close" type="button" aria-label="Close chat">
-            ×
-          </button>
-        </div>
-      </div>
-
-      <section class="chat-settings is-hidden" id="chat-settings">
-        <div class="settings-grid">
-          <label>
-            Provider
-            <select id="provider-select">
-              <option value="groq">Groq</option>
-              <option value="openrouter">OpenRouter</option>
-            </select>
-          </label>
-          <label>
-            Model
-            <input
-              id="model-input"
-              type="text"
-              placeholder="openai/gpt-oss-120b"
-              autocomplete="off"
-            />
-          </label>
-        </div>
-        <label>
-          API key
-          <input
-            id="api-key-input"
-            type="password"
-            placeholder="Hidden here inside settings"
-            autocomplete="off"
-          />
-        </label>
-        <div class="settings-toggles">
-          <label class="settings-toggle" for="web-lookup-toggle">
-            <input id="web-lookup-toggle" type="checkbox" checked />
-            <span>Enable live web lookup</span>
-          </label>
-          <label class="settings-toggle" for="image-search-toggle">
-            <input id="image-search-toggle" type="checkbox" checked />
-            <span>Enable internet images</span>
-          </label>
-        </div>
-        <p class="settings-note">
-          Groq can use live browser search with the GPT-OSS model, and the tutor can also pull
-          related web images into the chat. Settings live only in this browser unless you choose
-          to commit them. This hardcoded key should be rotated before any public deploy.
-        </p>
-      </section>
-
-      <div class="chat-messages" id="chat-messages">
-        <article class="message message-assistant">
-          <p>
-            I can explain full chapters, compare formulas, walk through worked examples,
-            quiz you using the site content first, and pull in live web context or related
-            images when you ask for them.
-          </p>
-        </article>
-      </div>
-
-      <form class="chat-form" id="chat-form">
-        <label class="sr-only" for="chat-input">Ask the tutor a question</label>
-        <div class="chat-composer">
-          <div class="chat-mode-switch" role="group" aria-label="Response depth">
-            <button class="mode-option is-active" id="mode-concise" type="button" data-mode="concise">
-              Concise
-            </button>
-            <button class="mode-option" id="mode-explained" type="button" data-mode="explained">
-              Explained
-            </button>
-          </div>
-          <textarea
-            id="chat-input"
-            rows="3"
-            placeholder="Why does the minus sign mean a wave moves to the right?"
-          ></textarea>
-          <button class="chat-send" type="submit" aria-label="Send message">
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <path
-                d="M3 20L21 12L3 4V11L15 12L3 13V20Z"
-                fill="currentColor"
-              />
-            </svg>
-          </button>
-        </div>
-      </form>
     </aside>
 
     <script
