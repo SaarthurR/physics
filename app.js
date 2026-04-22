@@ -2,6 +2,7 @@ import {
   FORMULA_STRIP,
   QUIZ_2_FORMULA_STRIP,
   QUIZ_2_GUIDE,
+  QUIZ_2_PW_GUIDE,
   QUIZ_BANK,
   STUDY_GUIDE,
 } from "./content.js";
@@ -102,6 +103,57 @@ const guideConfigs = {
     guide: STUDY_GUIDE,
     quizzesEnabled: true,
     unitQuizConfigs: quiz1UnitQuizConfigs,
+  },
+  pw: {
+    id: "pw",
+    label: "PW Quiz 2",
+    eyebrow: "Physics 7C · Physics Wallah",
+    title: "Physics Wallah Quiz 2",
+    heading: "Quiz 2 explained from scratch, in one long page",
+    summary:
+      "A Physics Wallah-style retelling of the official Quiz 2 scope: hook first, missing background filled in, formulas after intuition, and one scrollable page that teaches instead of assuming.",
+    sidebarLabel: "PW Quiz 2 roadmap",
+    outlineLegend: [
+      {
+        label: "Hook",
+        tone: "review",
+        description: "Starts with a real-world feeling before naming the concept.",
+      },
+      {
+        label: "Must know",
+        tone: "priority",
+        description: "Core idea that needs to feel natural before the formulas help.",
+      },
+      {
+        label: "Formula after idea",
+        tone: "method",
+        description: "Formal symbols only after the intuition is already built.",
+      },
+      {
+        label: "Think it through",
+        tone: "review",
+        description: "A slow, narrated reasoning pattern for a common question type.",
+      },
+      {
+        label: "Checklist",
+        tone: "method",
+        description: "Study order or decision steps to keep the topic from feeling scattered.",
+      },
+      {
+        label: "Recap",
+        tone: "review",
+        description: "The short friend-on-the-phone version to hold in your head.",
+      },
+      {
+        label: "Avoid",
+        tone: "trap",
+        description: "The mistake that usually flips the answer even when the algebra is fine.",
+      },
+    ],
+    formulaStrip: QUIZ_2_FORMULA_STRIP,
+    guide: QUIZ_2_PW_GUIDE,
+    quizzesEnabled: false,
+    unitQuizConfigs: [],
   },
   quiz2: {
     id: "quiz2",
@@ -335,7 +387,7 @@ if (document.fonts?.ready) {
 
 function loadActiveGuideId() {
   const saved = safeJsonParse(localStorage.getItem(activeGuideKey));
-  return saved?.id === "quiz2" ? "quiz2" : "quiz1";
+  return guideConfigs[saved?.id] ? saved.id : "quiz1";
 }
 
 function getActiveGuideConfig() {
@@ -355,7 +407,7 @@ function guideHasQuizzes() {
 }
 
 function setActiveGuide(guideId, options = {}) {
-  const nextGuideId = guideId === "quiz2" ? "quiz2" : "quiz1";
+  const nextGuideId = guideConfigs[guideId] ? guideId : "quiz1";
   if (nextGuideId === activeGuideId && !options.force) return;
 
   activeGuideId = nextGuideId;
@@ -2319,17 +2371,22 @@ ${internetSupport.webContext ? `Live web notes:\n${internetSupport.webContext}` 
 function buildContext(question) {
   const normalizedQuestion = normalize(question);
   const queryTokens = tokenSet(normalizedQuestion);
+  const activeGuide = getActiveStudyGuide();
   const sources = [
-    ...STUDY_GUIDE.chapters.map((chapter) => ({
+    ...activeGuide.chapters.map((chapter) => ({
       id: chapter.id,
       title: chapter.title,
       text: chapter.plainText,
     })),
-    {
-      id: STUDY_GUIDE.recap.id,
-      title: STUDY_GUIDE.recap.title,
-      text: STUDY_GUIDE.recap.plainText,
-    },
+    ...(activeGuide.recap
+      ? [
+          {
+            id: activeGuide.recap.id,
+            title: activeGuide.recap.title,
+            text: activeGuide.recap.plainText,
+          },
+        ]
+      : []),
   ];
 
   const ranked = sources

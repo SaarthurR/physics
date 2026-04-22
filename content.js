@@ -2282,14 +2282,14 @@ const QUIZ_2_SECTION_LOCATORS = {
   "quiz2-formula-sheet-traps": "Mixed recap • last-minute trap check across the official packet scope",
 };
 
-function withQuiz2Locators(guide) {
+function withSectionLocators(guide, locators = {}) {
   return {
     ...guide,
     chapters: guide.chapters.map((chapter) => ({
       ...chapter,
       sections: chapter.sections.map((section) => ({
         ...section,
-        locator: QUIZ_2_SECTION_LOCATORS[section.id] || section.locator || "",
+        locator: locators[section.id] || section.locator || "",
       })),
     })),
     recap: guide.recap
@@ -2297,14 +2297,14 @@ function withQuiz2Locators(guide) {
           ...guide.recap,
           sections: guide.recap.sections.map((section) => ({
             ...section,
-            locator: QUIZ_2_SECTION_LOCATORS[section.id] || section.locator || "",
+            locator: locators[section.id] || section.locator || "",
           })),
         }
       : null,
   };
 }
 
-export const QUIZ_2_GUIDE = withQuiz2Locators({
+export const QUIZ_2_GUIDE = withSectionLocators({
   title: "Quiz 2 Study Guide",
   subtitle: "Official scope: DL3 8.9-8.10, DL4, DL5, and DL6 Activity 8.16",
   chapters: [
@@ -3265,7 +3265,1143 @@ Crystal means add a source phase shift.
       },
     ],
   },
-});
+}, QUIZ_2_SECTION_LOCATORS);
+
+const QUIZ_2_PW_SECTION_LOCATORS = {
+  "quiz2-pw-chapter-1-hook": "Big picture • why Quiz 2 feels new the first time you study it",
+  "quiz2-pw-chapter-1-scope": "Official scope • DL3 8.9-8.10, all of DL4 and DL5, and DL6 Activity 8.16",
+  "quiz2-pw-chapter-1-background": "Bridge note • wavelength, path difference, phase, and source offset in plain English",
+  "quiz2-pw-chapter-1-order": "Study order • how to move through this page without getting lost",
+  "quiz2-pw-chapter-1-traps": "Trap check • the mistakes that waste time before the real physics starts",
+  "quiz2-pw-chapter-2-hook": "DL3 8.9-8.10 • first intuition for two-source interference",
+  "quiz2-pw-chapter-2-build": "DL3 8.9 • same-place same-time logic and total phase",
+  "quiz2-pw-chapter-2-analogy": "DL3 8.10 • path difference and source offset pictured in a beginner-friendly way",
+  "quiz2-pw-chapter-2-formula": "DL3 8.9 + DL4 8.11 • phase chart, total phase, and interference conditions",
+  "quiz2-pw-chapter-2-example": "Q2-3 Practice 1 and KDVS-style starters • where the signal disappears",
+  "quiz2-pw-chapter-2-recap": "Mixed recap • the short version of interference core",
+  "quiz2-pw-chapter-3-hook": "DL4 8.11-8.12 • same tone versus almost same tone",
+  "quiz2-pw-chapter-3-build": "DL4 8.11 • speaker scenarios, reversed leads, and lambda-over-two shifts",
+  "quiz2-pw-chapter-3-analogy": "DL4 8.12 • beats explained through drifting timing",
+  "quiz2-pw-chapter-3-formula": "DL4 8.12 and Q2-5(c) • beat rate, heard pitch, and Doppler-before-beats",
+  "quiz2-pw-chapter-3-example": "DL4 challenge • bagpipers, Doppler shift, and making beats disappear",
+  "quiz2-pw-chapter-3-recap": "Mixed recap • what to remember about speakers and beats",
+  "quiz2-pw-chapter-4-hook": "DL5 8.14 • why a tiny opening behaves like a source",
+  "quiz2-pw-chapter-4-build": "DL5 8.14-8.15 • why two slits interfere and what the stripes mean",
+  "quiz2-pw-chapter-4-analogy": "DL5 8.15 • double slit reduced to a normal two-source story",
+  "quiz2-pw-chapter-4-formula": "DL5 8.15 and Problem Starts 3-4 • d sin theta, bright, dark, and small-angle logic",
+  "quiz2-pw-chapter-4-example": "Problem Starts 3-4 • screen spacing and fringe-reading questions",
+  "quiz2-pw-chapter-4-recap": "Mixed recap • the short version of double-slit geometry",
+  "quiz2-pw-chapter-5-hook": "DL6 8.16 • why delaying one slit shifts the whole pattern",
+  "quiz2-pw-chapter-5-build": "DL6 8.16 • crystal delay, center-point logic, and source phase shift",
+  "quiz2-pw-chapter-5-analogy": "DL6 8.16 • one runner starts late, so the finish-line story changes",
+  "quiz2-pw-chapter-5-formula": "Q2-1 #2 and Q2-6 #1 • shortest delay or path-difference questions",
+  "quiz2-pw-chapter-5-example": "DL6 8.16 • center-point and first-bright-spot reasoning",
+  "quiz2-pw-chapter-5-white-light": "DL6 8.16 FNT 2 • zero order and color ordering through many slits",
+  "quiz2-pw-chapter-5-recap": "Tonight's drill • best final order for the crystal and white-light material",
+  "quiz2-pw-recap-core": "Chapter 12 style recap • core formulas for the official Quiz 2 scope",
+  "quiz2-pw-recap-translate": "Prompt translation • what the wording is secretly asking you to do",
+  "quiz2-pw-recap-traps": "Last check • the final mistakes to catch before the quiz",
+};
+
+export const QUIZ_2_PW_GUIDE = withSectionLocators(
+  {
+    title: "Physics Wallah Quiz 2",
+    subtitle: "Quiz 2 retaught from scratch: DL3 8.9-8.10, DL4, DL5, and DL6 Activity 8.16",
+    chapters: [
+      {
+        id: "quiz2-pw-chapter-1",
+        number: "01",
+        title: "Read This First",
+        plainText: `
+Quiz 2 feels hard because it asks you to care about tiny differences in path length, timing, and phase before those words feel natural. This chapter fixes that first. It shows the official scope, the tiny background you need, the best study order, and the traps to avoid before you start drilling the real topics.
+        `.trim(),
+        studyCard: [
+          {
+            label: "Official scope",
+            value: "DL3 8.9-8.10, all of DL4 and DL5, and DL6 Activity 8.16 only.",
+          },
+          {
+            label: "Why this tab exists",
+            value: "It keeps the friendlier PW-style teaching but fills in the missing background so the ideas do not feel half-explained.",
+          },
+          {
+            label: "Best order tonight",
+            value: "Read this chapter once, then Chapters 2 -> 5, then finish with the last-night recap sheet.",
+          },
+          {
+            label: "Biggest trap",
+            value: "Do not memorize formulas before asking what changed the relative phase of the two waves.",
+          },
+        ],
+        sections: [
+          {
+            id: "quiz2-pw-chapter-1-hook",
+            kicker: "Real-world hook",
+            badge: "Hook",
+            badgeTone: "review",
+            title: "Why Quiz 2 Feels New And Hard At First",
+            html: `
+              <p>Think about walking through a room with two speakers playing. At one spot the sound feels full. Two steps later it suddenly feels thin. Nothing visible changed. The speakers did not stop. You just moved.</p>
+              <p>That is why Quiz 2 can feel weird at first. It is built around tiny differences that your brain normally ignores: one path was a little longer, one source started a little earlier, one slit got delayed by a crystal. Those tiny differences decide everything.</p>
+              <p>So here is the question to keep in your head from the start: <strong>what changed the relative phase of the two waves?</strong> Once you keep asking that, the quiz stops feeling like random formulas.</p>
+              <div class="takeaway-line">
+                <strong>Big picture:</strong> Quiz 2 is not five unrelated topics. It is one phase story showing up as speakers, beats, double slits, and crystal shifts.
+              </div>
+            `,
+          },
+          {
+            id: "quiz2-pw-chapter-1-scope",
+            kicker: "Official scope",
+            badge: "Must know",
+            badgeTone: "priority",
+            title: "What Is Actually On The Quiz",
+            html: `
+              <p>Before we teach anything, we need to clean up the scope. This quiz is narrower than "all of waves," and that matters because it tells you what deserves your time.</p>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Packet</th>
+                    <th>What you need from it</th>
+                    <th>What that becomes on the quiz</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>DL3</td>
+                    <td>Activity 8.9 superposition and Activity 8.10 two-source geometry</td>
+                    <td>Total phase, path difference, constructive vs destructive interference</td>
+                  </tr>
+                  <tr>
+                    <td>DL4</td>
+                    <td>Speaker scenarios and beats</td>
+                    <td>Loud vs quiet, reversed leads, beat rate, heard pitch</td>
+                  </tr>
+                  <tr>
+                    <td>DL5</td>
+                    <td>Diffraction and Young's double slit</td>
+                    <td>Why light makes stripes, d sin theta, bright and dark conditions</td>
+                  </tr>
+                  <tr>
+                    <td>DL6</td>
+                    <td>Activity 8.16 only</td>
+                    <td>Crystal phase shift, center-point logic, and white-light color order</td>
+                  </tr>
+                  <tr>
+                    <td>Not the priority</td>
+                    <td>Later DL6 standing waves and de Broglie material</td>
+                    <td>Do not spend your best study time there for Quiz 2</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="callout callout-review">
+                <strong>Translation:</strong> the highest-payoff families are two-source interference, speaker setups, beats, double-slit geometry, and crystal-shift questions.
+              </div>
+            `,
+          },
+          {
+            id: "quiz2-pw-chapter-1-background",
+            kicker: "Mini background",
+            badge: "Must know",
+            badgeTone: "priority",
+            title: "The Tiny Background You Need Before The Physics Starts Working",
+            html: `
+              <p>You do not need a huge background for Quiz 2. You just need a few words to feel normal instead of scary. Let's make them normal now.</p>
+              <h4>Part 1 - Wavelength is just spacing.</h4>
+              <p><strong>What this means:</strong> wavelength tells you how far apart matching points on a wave are, like crest to crest or compression to compression.</p>
+              <p><strong>Think of it like this:</strong> if you painted every crest blue, wavelength is the distance from one blue crest to the next blue crest.</p>
+              <p><strong>Watch out:</strong> wavelength is not how far the wave travels in one second. That is wave speed.</p>
+
+              <h4>Part 2 - Path difference is just extra distance.</h4>
+              <p><strong>What this means:</strong> if one wave travels farther than the other before they meet at the same point, that extra distance creates a phase difference.</p>
+              <p><strong>Think of it like this:</strong> two runners can have the same speed, but if one has a longer route, they do not arrive together.</p>
+              <p><strong>Watch out:</strong> path difference is not "which source is stronger." It is only about distance traveled.</p>
+
+              <h4>Part 3 - Phase means where the wave is inside its cycle.</h4>
+              <p><strong>What this means:</strong> are you at a crest, a trough, or somewhere in between? That location inside the cycle is the phase.</p>
+              <p><strong>Think of it like this:</strong> phase is the hand position on a clock of oscillation.</p>
+              <p><strong>Watch out:</strong> saying two waves have the same frequency does <em>not</em> mean they have the same phase.</p>
+
+              <h4>Part 4 - Source phase difference means the sources did not start together.</h4>
+              <p><strong>What this means:</strong> even before geometry matters, one source might already be ahead because of reversed wiring, a timing lead, or a crystal delay.</p>
+              <p><strong>Think of it like this:</strong> two runners may have equal tracks, but if one starts late, the finish-line story changes immediately.</p>
+              <p><strong>Watch out:</strong> many students only look for path difference and completely miss the built-in source offset.</p>
+            `,
+          },
+          {
+            id: "quiz2-pw-chapter-1-order",
+            kicker: "Study order",
+            badge: "Checklist",
+            badgeTone: "method",
+            title: "How To Study This Page Without Getting Lost",
+            html: `
+              <p>If you jump around randomly, Quiz 2 starts to feel like disconnected packet pieces. If you move in the right order, each chapter unlocks the next one.</p>
+              <div class="study-map-grid">
+                <div class="study-map-card">
+                  <p class="quiz-kicker">Step 1</p>
+                  <h4>Read this chapter once</h4>
+                  <p>Lock the scope, vocabulary, and big idea before you try to solve anything.</p>
+                </div>
+                <div class="study-map-card">
+                  <p class="quiz-kicker">Step 2</p>
+                  <h4>Chapter 2 - Interference core</h4>
+                  <p>Learn total phase, path difference, and source phase difference first. This is the backbone.</p>
+                </div>
+                <div class="study-map-card">
+                  <p class="quiz-kicker">Step 3</p>
+                  <h4>Chapter 3 - Speakers and beats</h4>
+                  <p>Separate same-frequency interference from close-frequency beats so the sound questions stop blurring together.</p>
+                </div>
+                <div class="study-map-card">
+                  <p class="quiz-kicker">Step 4</p>
+                  <h4>Chapter 4 - Double slit</h4>
+                  <p>Turn the screen picture into normal interference plus geometry.</p>
+                </div>
+                <div class="study-map-card">
+                  <p class="quiz-kicker">Step 5</p>
+                  <h4>Chapter 5 - Crystal and white light</h4>
+                  <p>Finish by learning how a crystal adds source phase difference and why colors spread to different angles.</p>
+                </div>
+                <div class="study-map-card">
+                  <p class="quiz-kicker">Step 6</p>
+                  <h4>Last-night sheet</h4>
+                  <p>Use the recap at the end only after the ideas make sense. It is a reminder, not a replacement.</p>
+                </div>
+              </div>
+              <div class="takeaway-line">
+                <strong>If you are short on time,</strong> spend the most time on Chapters 2 and 5. Those topics show up everywhere and flip answers fast.
+              </div>
+            `,
+          },
+          {
+            id: "quiz2-pw-chapter-1-traps",
+            kicker: "Trap check",
+            badge: "Avoid",
+            badgeTone: "trap",
+            title: "What Usually Goes Wrong Before The Real Question Even Starts",
+            html: `
+              <ul>
+                <li>Students memorize "constructive" and "destructive" before deciding what created the phase difference in the first place.</li>
+                <li>They see two sound sources and assume beats, even when the sources have the <strong>same</strong> frequency and the question is really an interference question.</li>
+                <li>They assume the center of a double-slit pattern must be bright, even after a crystal adds a source phase shift.</li>
+                <li>They confuse beat rate with the pitch they hear underneath the beat envelope.</li>
+                <li>They study later DL6 material that is interesting but not the official Quiz 2 target list.</li>
+              </ul>
+            `,
+          },
+        ],
+      },
+      {
+        id: "quiz2-pw-chapter-2",
+        number: "02",
+        title: "Interference Without Panic",
+        plainText: `
+This chapter teaches the core idea of Quiz 2 slowly. Two waves reach one place. You compare their phases. The difference can come from extra distance, a built-in source offset, or both. Once that picture is clear, constructive and destructive interference stop feeling random.
+        `.trim(),
+        studyCard: [
+          {
+            label: "Core idea",
+            value: "Interference is not mysterious. It is just a timing comparison between two waves at the same place.",
+          },
+          {
+            label: "Study hardest",
+            value: "Path difference, source phase difference, and the same-place same-time shortcut.",
+          },
+          {
+            label: "Question to ask first",
+            value: "What changed the relative phase: extra distance, source offset, or both?",
+          },
+          {
+            label: "Most common confusion",
+            value: "Students see the formula before the picture and miss what each term is trying to say physically.",
+          },
+        ],
+        sections: [
+          {
+            id: "quiz2-pw-chapter-2-hook",
+            kicker: "Real-world hook",
+            badge: "Hook",
+            badgeTone: "review",
+            title: "When Two Speakers Do Not Agree",
+            html: `
+              <p>You stand in front of two speakers playing the same note. At one spot the sound feels strong. Take a few steps and suddenly it almost disappears. Take a few more and it comes back.</p>
+              <p>So what changed? The note did not change. The speakers did not change. <strong>Your location changed</strong>, which changed how the two waves reached you.</p>
+              <p>That is the heart of interference. Same two waves. Different phase relationship at different places.</p>
+            `,
+          },
+          {
+            id: "quiz2-pw-chapter-2-build",
+            kicker: "Build it slowly",
+            badge: "Must know",
+            badgeTone: "priority",
+            title: "Take The Idea One Piece At A Time",
+            html: `
+              <h4>Part 1 - Interference is a timing question.</h4>
+              <p><strong>What this means:</strong> when two waves meet, we only care about where each one is inside its cycle at that same place and that same moment.</p>
+              <p><strong>Think of it like this:</strong> are both hands of the oscillation clock pointing the same way, or is one ahead of the other?</p>
+              <p><strong>Watch out:</strong> same frequency does not automatically mean same phase.</p>
+
+              <h4>Part 2 - Extra distance creates phase difference.</h4>
+              <p><strong>What this means:</strong> if one wave had to travel farther, it arrives later in the cycle.</p>
+              <p><strong>Think of it like this:</strong> two runners can leave together, but the one on the longer route reaches the finish line later.</p>
+              <p><strong>Watch out:</strong> the important thing is the <strong>difference</strong> in distance, not the distances by themselves.</p>
+
+              <h4>Part 3 - The sources may already be out of step.</h4>
+              <p><strong>What this means:</strong> even before geometry matters, one source might start ahead because of wiring, timing, or a later crystal delay.</p>
+              <p><strong>Think of it like this:</strong> one runner got a head start or a late start before the race even began.</p>
+              <p><strong>Watch out:</strong> many quiz questions hide this in words like "out of phase," "opposite wiring," or "ahead by T/4."</p>
+
+              <h4>Part 4 - Constructive and destructive are just "together" and "opposite."</h4>
+              <p><strong>What this means:</strong> if the waves line up crest-with-crest, the result is larger. If crest meets trough, they cancel.</p>
+              <p><strong>Think of it like this:</strong> two pushes in the same direction help each other; opposite pushes fight each other.</p>
+              <p><strong>Watch out:</strong> do not choose constructive or destructive until you know the total phase difference.</p>
+            `,
+          },
+          {
+            id: "quiz2-pw-chapter-2-analogy",
+            kicker: "Full analogy",
+            badge: "Must know",
+            badgeTone: "priority",
+            title: "The Runner Analogy That Makes The Formula Feel Human",
+            html: `
+              <p>Imagine two runners trying to hit the same finish line at exactly the same instant.</p>
+              <ul class="long-list">
+                <li>The <strong>finish line</strong> is the observation point where you are checking the waves.</li>
+                <li>The <strong>route length</strong> is the path each wave travels.</li>
+                <li>A <strong>late start or early start</strong> is the source phase difference.</li>
+                <li>The <strong>arrival mismatch</strong> at the finish line is the total phase difference.</li>
+              </ul>
+              <p>If both runners start together and take equal routes, they arrive together. That is constructive interference. If one runner starts late or takes a longer route, they can reach the line out of sync. That is partial or destructive interference depending on how large the mismatch is.</p>
+              <p>Where does this analogy break down? Runners move in one clean straight story, while waves are oscillations and phase is cyclic. But for seeing why <strong>extra distance</strong> and <strong>starting offset</strong> both matter, the analogy is strong.</p>
+              <div class="concept-gallery">
+                <figure class="concept-figure">
+                  <img src="./assets/figures/chapter6-pond-problem.png" alt="Two-dimensional pond-source geometry for interference" />
+                  <figcaption>Once you know the point where the waves meet, the real job is just comparing the two travel distances.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/chapter8-kdvs-antennas.png" alt="KDVS antenna worksheet figure for two-source interference" />
+                  <figcaption>The KDVS antenna setup is the same story in worksheet form: one location, two routes, and a built-in source offset.</figcaption>
+                </figure>
+              </div>
+            `,
+          },
+          {
+            id: "quiz2-pw-chapter-2-formula",
+            kicker: "Formula after idea",
+            badge: "Formula after idea",
+            badgeTone: "method",
+            title: "Now The Total-Phase Formula Actually Means Something",
+            html: `
+              <div class="formula-box">ΔΦ = -2πΔx/λ + Δφ₀</div>
+              <p>Read that formula in plain English like this: <strong>total phase difference = phase from extra distance + phase already built into the sources.</strong></p>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Symbol</th>
+                    <th>Plain-English meaning</th>
+                    <th>What to ask yourself</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Δx</td>
+                    <td>The extra distance one wave traveled</td>
+                    <td>Which wave had the longer route to the same point?</td>
+                  </tr>
+                  <tr>
+                    <td>λ</td>
+                    <td>The spacing of the wave cycle</td>
+                    <td>How much distance equals one full cycle?</td>
+                  </tr>
+                  <tr>
+                    <td>Δφ₀</td>
+                    <td>The built-in source offset</td>
+                    <td>Did the sources begin out of step?</td>
+                  </tr>
+                  <tr>
+                    <td>ΔΦ</td>
+                    <td>The final phase mismatch at the observation point</td>
+                    <td>Do the waves arrive together or opposite each other?</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="callout callout-method">
+                <strong>Same-place same-time shortcut:</strong> in the most common Quiz 2 questions, you compare both waves at one location and one instant, so the time-difference term is already gone. That is why this shortened formula is the workhorse.
+              </div>
+              <div class="concept-gallery">
+                <figure class="concept-figure">
+                  <img src="./assets/figures/chapter8-simplified-phase-chart.png" alt="Simplified phase chart for comparing two interfering waves" />
+                  <figcaption>The phase chart is not a separate trick. It is just a clean way to keep the path part and source-offset part from getting mixed up.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/chapter6-speaker-paths.png" alt="Two-source path difference geometry for interference" />
+                  <figcaption>The geometry gives you Δx. The wording gives you Δφ0. Add them only at the end.</figcaption>
+                </figure>
+              </div>
+              <p>Once you know ΔΦ, the conditions are short:</p>
+              <div class="formula-inline">Constructive: ΔΦ = 2nπ</div>
+              <div class="formula-inline">Destructive: ΔΦ = (2n + 1)π</div>
+            `,
+          },
+          {
+            id: "quiz2-pw-chapter-2-example",
+            kicker: "Think it through",
+            badge: "Think it through",
+            badgeTone: "review",
+            title: "Take A Radio-Tower Question Step By Step",
+            html: `
+              <div class="problem-prompt">
+                <p><strong>Starter:</strong> two sources send waves of the same frequency toward one observation point. The prompt asks where the signal disappears, and it also tells you one source is already ahead by some phase amount.</p>
+              </div>
+              <div class="worked-example">
+                <div class="worked-example-head">
+                  <p class="quiz-kicker">Thinking out loud</p>
+                  <h4>We are not hunting for a formula first. We are hunting for the source of the phase difference.</h4>
+                </div>
+                <div class="worked-example-grid">
+                  <div class="worked-step">
+                    <strong>1. What is given? What is needed?</strong>
+                    <p>Same frequency sources, one observation point, and a built-in source offset. The target is zero signal, so we are aiming for destructive interference.</p>
+                  </div>
+                  <div class="worked-step">
+                    <strong>2. Which concept controls it?</strong>
+                    <p>This is a total-phase question, so the core relation is ΔΦ = -2πΔx/λ + Δφ0.</p>
+                  </div>
+                  <div class="worked-step">
+                    <strong>3. What do we do with the geometry?</strong>
+                    <p>Write the two travel distances to the point, subtract them carefully, and that gives Δx.</p>
+                  </div>
+                  <div class="worked-step">
+                    <strong>4. What condition are we matching?</strong>
+                    <p>Because the signal disappears, set the total phase equal to (2n + 1)π, not 2nπ.</p>
+                  </div>
+                  <div class="worked-step">
+                    <strong>5. What is the final check?</strong>
+                    <p>If your answer gives only a phase and not an actual location or distance, you probably stopped one step too early.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="callout callout-trap">
+                <strong>Most common miss:</strong> students spot the built-in source phase shift and then forget the path-difference part, or they do the opposite. You need both before deciding the interference type.
+              </div>
+            `,
+          },
+          {
+            id: "quiz2-pw-chapter-2-recap",
+            kicker: "Phone-friend recap",
+            badge: "Recap",
+            badgeTone: "review",
+            title: "So What Should You Remember From This Chapter",
+            html: `
+              <p>So here is the short version. Interference is just a timing comparison between two waves at the same place. The mismatch can come from extra path length, a built-in source offset, or both.</p>
+              <p>The main formula says exactly that: total phase difference equals the path part plus the source-offset part. After that, constructive means the waves arrive together and destructive means they arrive opposite each other.</p>
+              <p>Honestly, this is the chapter that makes the rest of Quiz 2 much easier. Once this part lands, later topics feel like variations instead of brand-new ideas.</p>
+            `,
+          },
+        ],
+      },
+      {
+        id: "quiz2-pw-chapter-3",
+        number: "03",
+        title: "Speakers, Beats, And Moving Sound",
+        plainText: `
+This chapter separates two ideas students often mix up. Same-frequency sound sources create interference patterns. Close but different frequencies create beats. If one source moves, Doppler can change the heard frequency before you even compute the beats.
+        `.trim(),
+        studyCard: [
+          {
+            label: "What this chapter fixes",
+            value: "It separates same-tone interference from almost-same-tone beats so the sound questions stop blurring together.",
+          },
+          {
+            label: "Study hardest",
+            value: "Reversed leads, lambda-over-two speaker shifts, beat rate versus pitch, and Doppler-before-beats.",
+          },
+          {
+            label: "Ask this first",
+            value: "Do the two sources have the same frequency or not?",
+          },
+          {
+            label: "Common confusion",
+            value: "Students hear 'two sources' and jump straight to beats even when the setup is a same-frequency interference problem.",
+          },
+        ],
+        sections: [
+          {
+            id: "quiz2-pw-chapter-3-hook",
+            kicker: "Real-world hook",
+            badge: "Hook",
+            badgeTone: "review",
+            title: "Why Musicians Listen For That Wobbling Sound",
+            html: `
+              <p>When two guitar strings are almost tuned together, you do not hear two clean notes fighting each other. You hear one note whose loudness swells and fades: loud, soft, loud, soft.</p>
+              <p>That wobble is useful because it tells you how far apart the frequencies still are. The slower the wobble, the closer the strings are to matching.</p>
+              <p>Now pause and ask the right question: if two speakers play the <strong>same</strong> note, should you expect that same wobble? No. That is where this chapter starts to separate ideas cleanly.</p>
+            `,
+          },
+          {
+            id: "quiz2-pw-chapter-3-build",
+            kicker: "Build it slowly",
+            badge: "Must know",
+            badgeTone: "priority",
+            title: "Same Tone And Almost Same Tone Are Not The Same Physics",
+            html: `
+              <h4>Part 1 - Same frequency means interference, not beats.</h4>
+              <p><strong>What this means:</strong> if the speakers play exactly the same frequency, you are back in the phase-difference world from Chapter 2.</p>
+              <p><strong>Think of it like this:</strong> the issue is where the waves line up in space, not whether they drift apart in time.</p>
+              <p><strong>Watch out:</strong> two sources does not automatically mean beats.</p>
+
+              <h4>Part 2 - Reversing one speaker's leads adds a built-in phase shift.</h4>
+              <p><strong>What this means:</strong> one speaker cone pushes when the other pulls, which acts like a source phase difference of pi.</p>
+              <p><strong>Think of it like this:</strong> one person pushes a swing forward while the other pushes backward.</p>
+              <p><strong>Watch out:</strong> this is a source-offset effect, not a path-difference effect.</p>
+
+              <h4>Part 3 - Moving one speaker by lambda-over-two also adds a phase mismatch.</h4>
+              <p><strong>What this means:</strong> a geometric shift of λ/2 produces a path-based phase shift of pi.</p>
+              <p><strong>Think of it like this:</strong> one runner took half a cycle more route than the other.</p>
+              <p><strong>Watch out:</strong> in some setups a path shift of pi can cancel a source shift of pi, so do not decide too early.</p>
+
+              <figure class="concept-figure">
+                <img src="./assets/figures/chapter8-speaker-scenario.png" alt="Speaker-interference worksheet scenario" />
+                <figcaption>The speaker scenarios are just Chapter 2's interference logic wearing headphones.</figcaption>
+              </figure>
+            `,
+          },
+          {
+            id: "quiz2-pw-chapter-3-analogy",
+            kicker: "Full analogy",
+            badge: "Must know",
+            badgeTone: "priority",
+            title: "The Clapping Analogy For Beats",
+            html: `
+              <p>Imagine two people clapping almost, but not quite, at the same rhythm.</p>
+              <ul class="long-list">
+                <li>The <strong>two clappers</strong> are the two sound sources.</li>
+                <li>Their <strong>slightly different clap rates</strong> are the two nearby frequencies.</li>
+                <li>The moments when the claps land together feel strong and loud.</li>
+                <li>The moments when they land out of step feel weak and messy.</li>
+              </ul>
+              <p>Because the rates are close, the alignment slowly drifts. Together... apart... together again. That slow drift creates the beat envelope.</p>
+              <p>Where does this analogy break down? Real beats are waves adding continuously, not hand claps hitting in isolated bursts. But for understanding why the loudness pulses slowly even while the note itself stays fairly high, it works really well.</p>
+              <div class="concept-gallery">
+                <figure class="concept-figure">
+                  <img src="./assets/figures/chapter9-beat-waveforms.png" alt="Two nearby frequencies producing beats" />
+                  <figcaption>The two source waves slide in and out of alignment because their frequencies are close, not equal.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/chapter9-beat-envelope.png" alt="Beat envelope and carrier oscillation" />
+                  <figcaption>The slow envelope is the beat pattern. The fast wiggle inside it is the carrier tone you still hear.</figcaption>
+                </figure>
+              </div>
+            `,
+          },
+          {
+            id: "quiz2-pw-chapter-3-formula",
+            kicker: "Formula after idea",
+            badge: "Formula after idea",
+            badgeTone: "method",
+            title: "Now The Sound Formulas Have Somewhere To Land",
+            html: `
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Question type</th>
+                    <th>Formula</th>
+                    <th>Plain-English meaning</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Beat rate</td>
+                    <td>f<sub>beat</sub> = |f<sub>1</sub> - f<sub>2</sub>|</td>
+                    <td>How many loud-soft-loud pulses happen each second</td>
+                  </tr>
+                  <tr>
+                    <td>Heard pitch inside the beats</td>
+                    <td>f<sub>avg</sub> = (f<sub>1</sub> + f<sub>2</sub>) / 2</td>
+                    <td>The note underneath the envelope</td>
+                  </tr>
+                  <tr>
+                    <td>Moving source or observer before beats</td>
+                    <td>f<sub>obs</sub> = f<sub>s</sub> ((v ± v<sub>o</sub>) / (v ∓ v<sub>s</sub>))</td>
+                    <td>First find the shifted heard frequency, then compare frequencies for beats</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="callout callout-trap">
+                <strong>Misconception correction:</strong> here is where most people go wrong with this. They answer a beat-rate question with the heard pitch, or they answer a pitch question with the beat rate. Beat rate tells you how fast the loudness pulses. Average pitch tells you the note you hear underneath.
+              </div>
+              <div class="callout callout-method">
+                <strong>Order matters:</strong> if one source moves, do the Doppler step first. The beat formula only comes after you know the two heard frequencies.
+              </div>
+            `,
+          },
+          {
+            id: "quiz2-pw-chapter-3-example",
+            kicker: "Think it through",
+            badge: "Think it through",
+            badgeTone: "review",
+            title: "Walk Through The Bagpiper Question Slowly",
+            html: `
+              <figure class="concept-figure">
+                <img src="./assets/figures/chapter9-bagpipers-doppler.svg" alt="Bagpiper problem combining beats and Doppler" />
+                <figcaption>The moment one source is moving relative to the listener, the frequencies you compare are the <em>heard</em> frequencies, not the original source frequencies.</figcaption>
+              </figure>
+              <div class="worked-example">
+                <div class="worked-example-head">
+                  <p class="quiz-kicker">Thinking out loud</p>
+                  <h4>We want the beats to disappear, so we want the two heard frequencies to become equal.</h4>
+                </div>
+                <div class="worked-example-grid">
+                  <div class="worked-step">
+                    <strong>1. What is the easy part?</strong>
+                    <p>Before anyone moves, the beat rate is just the absolute difference of the two source frequencies.</p>
+                  </div>
+                  <div class="worked-step">
+                    <strong>2. What changes when the listener runs?</strong>
+                    <p>The heard frequencies change by Doppler shift. One can move up while the other moves down.</p>
+                  </div>
+                  <div class="worked-step">
+                    <strong>3. Which direction should the listener run?</strong>
+                    <p>Toward the lower-frequency source and away from the higher-frequency source, so the gap between them shrinks.</p>
+                  </div>
+                  <div class="worked-step">
+                    <strong>4. What equation captures that goal?</strong>
+                    <p>Set the two <em>heard</em> frequencies equal. That is the condition for zero beat rate.</p>
+                  </div>
+                  <div class="worked-step">
+                    <strong>5. Final sanity check</strong>
+                    <p>If the beats disappear, the heard note should sit near the average of the original two notes, not somewhere wildly different.</p>
+                  </div>
+                </div>
+              </div>
+            `,
+          },
+          {
+            id: "quiz2-pw-chapter-3-recap",
+            kicker: "Phone-friend recap",
+            badge: "Recap",
+            badgeTone: "review",
+            title: "So What Do You Really Need To Remember Here",
+            html: `
+              <p>Short version: same-frequency sound sources are interference questions, not beat questions. Close-but-different frequencies create beats, and the beat rate is the difference of the frequencies while the heard pitch is their average.</p>
+              <p>If motion shows up, shift the heard frequency first with Doppler and only then do the beat comparison. That one order rule saves a lot of mistakes.</p>
+              <p>This chapter trips people up because it sounds like one topic, but it is really two: same-tone interference and almost-same-tone beats. Now that split should feel clear.</p>
+            `,
+          },
+        ],
+      },
+      {
+        id: "quiz2-pw-chapter-4",
+        number: "04",
+        title: "Double Slit Finally Makes Sense",
+        plainText: `
+This chapter turns the double-slit experiment into something less mystical. Each slit acts like a source. The screen is just a place where the two waves meet with different path lengths. After that, the bright and dark stripes are ordinary interference with special geometry.
+        `.trim(),
+        studyCard: [
+          {
+            label: "What this chapter is really saying",
+            value: "Double slit is normal two-source interference plus one geometry picture you need to read correctly.",
+          },
+          {
+            label: "Study hardest",
+            value: "Delta x = d sin theta, bright vs dark conditions, and the small-angle link to screen position.",
+          },
+          {
+            label: "Keep asking",
+            value: "Which point on the screen am I talking about, and what path difference belongs to that point?",
+          },
+          {
+            label: "Common confusion",
+            value: "Students memorize d sin theta = n lambda without first understanding why two slits act like two sources.",
+          },
+        ],
+        sections: [
+          {
+            id: "quiz2-pw-chapter-4-hook",
+            kicker: "Real-world hook",
+            badge: "Hook",
+            badgeTone: "review",
+            title: "Why Two Tiny Openings Make A Whole Stripe Pattern",
+            html: `
+              <p>If light were only a stream of tiny pellets, then two narrow slits should make two bright patches on the wall. That is the simple guess most of us would make the first time.</p>
+              <p>But the real experiment does something more interesting. It paints a whole pattern of bright and dark stripes. So pause for a second and ask the right question: what could make some places bright and other places dark if the light going in was the same?</p>
+              <p>The answer is wave interference. Each slit behaves like a source, and the wall becomes a map of places where the two outgoing waves either help or cancel each other.</p>
+            `,
+          },
+          {
+            id: "quiz2-pw-chapter-4-build",
+            kicker: "Build it slowly",
+            badge: "Must know",
+            badgeTone: "priority",
+            title: "Take The Double-Slit Story In The Right Order",
+            html: `
+              <h4>Part 1 - A tiny opening can behave like a source.</h4>
+              <p><strong>What this means:</strong> by Huygens' principle, each point on a wavefront can act like a tiny emitter, so a narrow slit sends out a fresh wave.</p>
+              <p><strong>Think of it like this:</strong> the slit is not just a hole. It is a doorway where the disturbance gets re-emitted.</p>
+              <p><strong>Watch out:</strong> if you skip this idea, the rest of the double-slit story feels magical for no reason.</p>
+
+              <h4>Part 2 - Two slits means two sources.</h4>
+              <p><strong>What this means:</strong> once the wave passes the barrier, you now have two outgoing waves reaching the screen.</p>
+              <p><strong>Think of it like this:</strong> one incoming wave became two synchronized messengers.</p>
+              <p><strong>Watch out:</strong> the screen is not making the pattern. The interference is already decided by how the waves arrive there.</p>
+
+              <h4>Part 3 - Different points on the screen have different path differences.</h4>
+              <p><strong>What this means:</strong> the center point has equal path lengths, but points above or below center do not.</p>
+              <p><strong>Think of it like this:</strong> each seat in the theater hears a slightly different route story from the two sources.</p>
+              <p><strong>Watch out:</strong> do not talk about "the pattern" as one thing. Every point on the screen has its own Δx.</p>
+
+              <h4>Part 4 - Bright and dark are just constructive and destructive.</h4>
+              <p><strong>What this means:</strong> bright stripes happen when the two slit waves arrive together. Dark stripes happen when they arrive opposite each other.</p>
+              <p><strong>Think of it like this:</strong> the stripes are just light's version of loud and quiet zones for sound.</p>
+              <p><strong>Watch out:</strong> bright and dark are not new laws. They are the old interference laws translated into a screen picture.</p>
+            `,
+          },
+          {
+            id: "quiz2-pw-chapter-4-analogy",
+            kicker: "Full analogy",
+            badge: "Must know",
+            badgeTone: "priority",
+            title: "The Best Analogy Is Actually A Sound Analogy",
+            html: `
+              <p>Imagine two identical speakers playing the same note toward a wall of seats.</p>
+              <ul class="long-list">
+                <li>The <strong>two speakers</strong> are the two slits.</li>
+                <li>The <strong>audience seats</strong> are the different points on the screen.</li>
+                <li>The <strong>distance from each speaker to one seat</strong> plays the role of the two path lengths.</li>
+                <li>A <strong>loud seat</strong> is the sound version of a bright fringe.</li>
+                <li>A <strong>quiet seat</strong> is the sound version of a dark fringe.</li>
+              </ul>
+              <p>So the double-slit experiment is not a brand-new species of physics. It is the same two-source interference story from sound, but now the sources are slits and the output is brightness on a screen.</p>
+              <p>Where does this analogy break down? Sound is mechanical and light is electromagnetic. But for understanding why different positions give different interference results, it is almost perfect.</p>
+            `,
+          },
+          {
+            id: "quiz2-pw-chapter-4-formula",
+            kicker: "Formula after idea",
+            badge: "Formula after idea",
+            badgeTone: "method",
+            title: "Now The Geometry Equations Are Easy To Read",
+            html: `
+              <div class="concept-gallery">
+                <figure class="concept-figure">
+                  <img src="./assets/figures/chapter10-huygens-hole.png" alt="Huygens principle and diffraction through a small opening" />
+                  <figcaption>Diffraction is the doorway idea: a narrow opening behaves like a source.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/chapter10-double-slit-geometry.png" alt="Young's double-slit geometry with screen distance and fringe spacing" />
+                  <figcaption>This picture is the one you translate into path difference and screen position.</figcaption>
+                </figure>
+              </div>
+              <div class="formula-inline">Δx = d sin θ</div>
+              <p>This says the path difference depends on slit spacing <strong>d</strong> and the angle <strong>θ</strong> of the point on the screen.</p>
+              <div class="formula-inline">Bright: d sin θ = nλ</div>
+              <div class="formula-inline">Dark: d sin θ = (n + 1/2)λ</div>
+              <p>That is just constructive and destructive interference rewritten for slit geometry.</p>
+              <div class="formula-inline">tan θ = y / D</div>
+              <p>So if a question gives you screen distance <strong>D</strong> and a vertical location <strong>y</strong>, you can turn the wall picture into an angle and then into path difference.</p>
+              <div class="callout callout-method">
+                <strong>Small-angle shortcut:</strong> when the screen is far away, use sin θ ≈ tan θ ≈ y/D. That is what turns a messy-looking picture into quick algebra.
+              </div>
+            `,
+          },
+          {
+            id: "quiz2-pw-chapter-4-example",
+            kicker: "Think it through",
+            badge: "Think it through",
+            badgeTone: "review",
+            title: "Read A Screen-Spacing Question Like A Calm Person",
+            html: `
+              <div class="worked-example">
+                <div class="worked-example-head">
+                  <p class="quiz-kicker">Thinking out loud</p>
+                  <h4>The question usually gives you a point on the screen and asks whether it is bright, dark, or useful for finding d or lambda.</h4>
+                </div>
+                <div class="worked-example-grid">
+                  <div class="worked-step">
+                    <strong>1. What is the point on the screen?</strong>
+                    <p>Mark its position relative to the center. That tells you which y-value and angle you care about.</p>
+                  </div>
+                  <div class="worked-step">
+                    <strong>2. What kind of fringe is it?</strong>
+                    <p>If the prompt says bright, use the bright condition. If it says dark, use the dark condition. Do not switch them out of habit.</p>
+                  </div>
+                  <div class="worked-step">
+                    <strong>3. How do we connect the picture to the formula?</strong>
+                    <p>Use y and D to get the angle information, then use Δx = d sin θ or the small-angle shortcut.</p>
+                  </div>
+                  <div class="worked-step">
+                    <strong>4. What are we actually solving for?</strong>
+                    <p>Sometimes it is d. Sometimes it is lambda. Sometimes it is the fringe index. Say that clearly before you substitute.</p>
+                  </div>
+                  <div class="worked-step">
+                    <strong>5. Final check</strong>
+                    <p>If the answer says a dark fringe but your algebra used the bright condition, the setup was wrong no matter how clean the arithmetic looks.</p>
+                  </div>
+                </div>
+              </div>
+            `,
+          },
+          {
+            id: "quiz2-pw-chapter-4-recap",
+            kicker: "Phone-friend recap",
+            badge: "Recap",
+            badgeTone: "review",
+            title: "So What Is The Double-Slit Story In One Breath",
+            html: `
+              <p>Two slits behave like two sources. Different points on the screen give different path differences. Bright means the waves arrive together, dark means they arrive opposite each other.</p>
+              <p>The geometry line you keep coming back to is Δx = d sin theta, and the screen-position shortcut is y over D for small angles. That is really the whole machine.</p>
+              <p>If this chapter felt more manageable than the packet, that is a good sign. It means the picture is finally supporting the formulas instead of fighting them.</p>
+            `,
+          },
+        ],
+      },
+      {
+        id: "quiz2-pw-chapter-5",
+        number: "05",
+        title: "Crystal Shift And White-Light Questions",
+        plainText: `
+This chapter keeps the double-slit picture but adds one twist that changes everything: one slit can be delayed by a crystal. That creates a source phase difference, which means even the center of the screen may no longer be bright. The chapter also covers the white-light color-ordering idea from DL6 Activity 8.16.
+        `.trim(),
+        studyCard: [
+          {
+            label: "What this chapter changes",
+            value: "It keeps the same double-slit geometry but adds a built-in source phase shift before the waves race to the screen.",
+          },
+          {
+            label: "Study hardest",
+            value: "Center-point logic, shortest extra delay or path difference, and why blue stays closer to the center than red.",
+          },
+          {
+            label: "Question to ask first",
+            value: "At this point on the screen, is the geometry doing the work, or is the crystal doing the work, or both?",
+          },
+          {
+            label: "Common confusion",
+            value: "Students assume the center must still be bright even after the crystal changes the source phase difference.",
+          },
+        ],
+        sections: [
+          {
+            id: "quiz2-pw-chapter-5-hook",
+            kicker: "Real-world hook",
+            badge: "Hook",
+            badgeTone: "review",
+            title: "If One Runner Starts Late, The Finish-Line Story Changes",
+            html: `
+              <p>Picture two runners heading toward the same finish line at the same speed. If they start together and take equal routes, they arrive together. Simple.</p>
+              <p>Now change one thing only: make one runner start a little late. Suddenly the finish line no longer feels symmetric, even though the track lengths are still equal.</p>
+              <p>That is exactly what a crystal does in this chapter. It does not move the slits. It changes the starting phase of one wave before the normal double-slit geometry even begins.</p>
+            `,
+          },
+          {
+            id: "quiz2-pw-chapter-5-build",
+            kicker: "Build it slowly",
+            badge: "Must know",
+            badgeTone: "priority",
+            title: "Take The Crystal Idea One Piece At A Time",
+            html: `
+              <h4>Part 1 - The crystal adds source phase difference.</h4>
+              <p><strong>What this means:</strong> one wave gets delayed before leaving its slit, so the two outgoing waves are no longer starting together.</p>
+              <p><strong>Think of it like this:</strong> the race begins with one runner already behind in timing.</p>
+              <p><strong>Watch out:</strong> the crystal does not change the slit spacing. It changes the starting phase.</p>
+
+              <h4>Part 2 - The center is no longer automatically bright.</h4>
+              <p><strong>What this means:</strong> at the center of the screen, the path lengths are equal, so the geometry contribution is zero. If the crystal added a source offset, that offset decides the result there.</p>
+              <p><strong>Think of it like this:</strong> equal routes do not guarantee equal arrival if one runner started late.</p>
+              <p><strong>Watch out:</strong> this is the most repeated DL6 trap.</p>
+
+              <h4>Part 3 - Shortest-delay questions are really phase-balance questions.</h4>
+              <p><strong>What this means:</strong> the question is usually asking how much extra path or delay is needed to cancel or complete the built-in source offset.</p>
+              <p><strong>Think of it like this:</strong> if one runner started late, how much shorter must their route be to tie at the finish line?</p>
+              <p><strong>Watch out:</strong> the smallest allowed answer usually comes from the smallest integer choice, not from the first number that drops out of your algebra.</p>
+            `,
+          },
+          {
+            id: "quiz2-pw-chapter-5-analogy",
+            kicker: "Full analogy",
+            badge: "Must know",
+            badgeTone: "priority",
+            title: "The Late-Start Analogy Is Almost The Whole Chapter",
+            html: `
+              <p>Use the runner picture again, but now be very explicit.</p>
+              <ul class="long-list">
+                <li>The <strong>finish line</strong> is the observation point on the screen.</li>
+                <li>The <strong>equal routes from the slits to the center</strong> mean Δx = 0 at the center.</li>
+                <li>The <strong>late start</strong> is the crystal's source phase difference.</li>
+                <li>The <strong>question "bright or dark?"</strong> becomes a question about whether the total mismatch is a constructive or destructive condition.</li>
+              </ul>
+              <p>Where does the analogy break down? Real waves wrap around cyclic phase, while runner arrival is a one-time event. But for the center-point logic and the idea of "compensating" a built-in delay with path difference, this analogy is excellent.</p>
+            `,
+          },
+          {
+            id: "quiz2-pw-chapter-5-formula",
+            kicker: "Formula after idea",
+            badge: "Formula after idea",
+            badgeTone: "method",
+            title: "Now The Crystal Formulas Read Like Sentences",
+            html: `
+              <figure class="concept-figure">
+                <img src="./assets/figures/chapter11-phase-shifted-slit.png" alt="Double slit with a phase-shifting crystal in front of one slit" />
+                <figcaption>The crystal shifts the whole pattern because it changes the source phase difference before the waves travel to the screen.</figcaption>
+              </figure>
+              <div class="formula-inline">Δφ<sub>0</sub> = 2πΔt / T</div>
+              <p>This turns a time delay into a phase difference.</p>
+              <div class="formula-inline">ΔΦ = -2πΔx/λ + Δφ<sub>0</sub></div>
+              <p>This is the same total-phase formula from Chapter 2, but now the crystal is the reason Δφ0 is not zero.</p>
+              <div class="callout callout-method">
+                <strong>Center-point rule:</strong> at the center, Δx = 0. So the total phase there is just Δφ0. That means the center is only bright if the crystal's phase shift lands on a constructive condition.
+              </div>
+              <p>If a question asks for the shortest extra path difference that makes a point bright, you are solving for the path part that balances the existing source-phase part.</p>
+            `,
+          },
+          {
+            id: "quiz2-pw-chapter-5-example",
+            kicker: "Think it through",
+            badge: "Think it through",
+            badgeTone: "review",
+            title: "Handle A Center-Point Or First-Bright-Spot Question Calmly",
+            html: `
+              <div class="worked-example">
+                <div class="worked-example-head">
+                  <p class="quiz-kicker">Thinking out loud</p>
+                  <h4>The question usually asks whether the center is bright or dark, or what extra delay or path difference is needed to make a point bright.</h4>
+                </div>
+                <div class="worked-example-grid">
+                  <div class="worked-step">
+                    <strong>1. Start at the point itself</strong>
+                    <p>If the point is the center, say out loud that Δx = 0 before doing anything else.</p>
+                  </div>
+                  <div class="worked-step">
+                    <strong>2. Name the source of phase difference</strong>
+                    <p>At the center, the crystal is doing the whole job. Away from the center, the crystal and geometry both contribute.</p>
+                  </div>
+                  <div class="worked-step">
+                    <strong>3. Pick the target condition</strong>
+                    <p>Bright means 2nπ. Dark means (2n + 1)π. The algebra only makes sense after that choice is made.</p>
+                  </div>
+                  <div class="worked-step">
+                    <strong>4. Solve for the missing piece</strong>
+                    <p>If the crystal already gives part of the phase mismatch, solve for the extra path or delay that completes the condition.</p>
+                  </div>
+                  <div class="worked-step">
+                    <strong>5. Final check</strong>
+                    <p>A tiny phase delay should usually lead to a small fraction of a wavelength, not some giant multi-wavelength correction.</p>
+                  </div>
+                </div>
+              </div>
+            `,
+          },
+          {
+            id: "quiz2-pw-chapter-5-white-light",
+            kicker: "DL6 white light",
+            badge: "Must know",
+            badgeTone: "priority",
+            title: "Why Blue Stays Closer To The Center Than Red",
+            html: `
+              <figure class="concept-figure">
+                <img src="./assets/figures/chapter11-multislit-maxima.png" alt="Diffraction grating maxima and color spread" />
+                <figcaption>All colors overlap at zero order, but once you move away from the center the longer wavelengths spread farther out.</figcaption>
+              </figure>
+              <p>White light is many wavelengths together. Through many slits or a grating, each wavelength satisfies the bright condition at a different angle.</p>
+              <div class="formula-inline">d sin θ = nλ</div>
+              <p>For the same order <strong>n</strong> and the same slit or grating spacing <strong>d</strong>, a longer wavelength needs a larger angle.</p>
+              <ul>
+                <li><strong>Zero order:</strong> straight through the center, all colors overlap, so it looks white.</li>
+                <li><strong>Away from center:</strong> blue is closer to the middle because blue has a shorter wavelength.</li>
+                <li><strong>Farther out:</strong> red spreads more because red has a longer wavelength.</li>
+              </ul>
+              <div class="callout callout-review">
+                <strong>Memory trick:</strong> shorter wavelength means smaller angle for the same order. So blue stays closer in than red.
+              </div>
+            `,
+          },
+          {
+            id: "quiz2-pw-chapter-5-recap",
+            kicker: "Phone-friend recap",
+            badge: "Recap",
+            badgeTone: "review",
+            title: "So What Is The Short Version Of DL6 Activity 8.16",
+            html: `
+              <p>Short version: a crystal adds source phase difference, which means the center of the double-slit pattern is no longer automatically bright. The total phase formula is still the same, but now Δφ0 matters a lot.</p>
+              <p>For white light, the zero-order center stays white because every wavelength goes straight through together. Away from the center, shorter wavelengths stay closer in and longer wavelengths spread farther out.</p>
+              <div class="study-map-grid">
+                <div class="study-map-card">
+                  <p class="quiz-kicker">Drill 1</p>
+                  <h4>Center-point crystal questions</h4>
+                  <p>Say "Δx = 0 at the center" out loud until it feels automatic.</p>
+                </div>
+                <div class="study-map-card">
+                  <p class="quiz-kicker">Drill 2</p>
+                  <h4>Shortest extra delay or path difference</h4>
+                  <p>Practice balancing the crystal's phase shift with the geometry term.</p>
+                </div>
+                <div class="study-map-card">
+                  <p class="quiz-kicker">Drill 3</p>
+                  <h4>White-light color order</h4>
+                  <p>Know why the center is white and why blue sits closer than red.</p>
+                </div>
+              </div>
+            `,
+          },
+        ],
+      },
+    ],
+    recap: {
+      id: "quiz2-pw-recap",
+      title: "Last-Night Quiz 2 Sheet",
+      plainText: `
+Last-night Quiz 2 sheet.
+Two-source same-frequency questions are phase questions.
+Close-frequency sound questions are beat questions.
+Double slit is just two-source interference with special geometry.
+Crystal questions are the same total-phase story with a source phase shift.
+White-light ordering comes from d sin theta = n lambda.
+      `.trim(),
+      sections: [
+        {
+          id: "quiz2-pw-recap-core",
+          kicker: "Core formulas",
+          badge: "Recap",
+          badgeTone: "review",
+          title: "What You Reach For After The Idea Is Already Clear",
+          html: `
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Topic</th>
+                  <th>Formula</th>
+                  <th>Use it when</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Total phase</td>
+                  <td>ΔΦ = -2πΔx/λ + Δφ<sub>0</sub></td>
+                  <td>You compare two same-frequency waves at one place</td>
+                </tr>
+                <tr>
+                  <td>Constructive</td>
+                  <td>ΔΦ = 2nπ</td>
+                  <td>You need loud or bright</td>
+                </tr>
+                <tr>
+                  <td>Destructive</td>
+                  <td>ΔΦ = (2n + 1)π</td>
+                  <td>You need quiet, dark, or zero signal</td>
+                </tr>
+                <tr>
+                  <td>Beat rate</td>
+                  <td>f<sub>beat</sub> = |f<sub>1</sub> - f<sub>2</sub>|</td>
+                  <td>You need the pulse rate of loud-soft-loud</td>
+                </tr>
+                <tr>
+                  <td>Heard pitch</td>
+                  <td>f<sub>avg</sub> = (f<sub>1</sub> + f<sub>2</sub>) / 2</td>
+                  <td>You need the note under the beat envelope</td>
+                </tr>
+                <tr>
+                  <td>Doppler</td>
+                  <td>f<sub>obs</sub> = f<sub>s</sub> ((v ± v<sub>o</sub>) / (v ∓ v<sub>s</sub>))</td>
+                  <td>Motion changes the heard frequency before a beat comparison</td>
+                </tr>
+                <tr>
+                  <td>Double-slit path difference</td>
+                  <td>Δx = d sin θ</td>
+                  <td>You connect slit geometry to the interference condition</td>
+                </tr>
+                <tr>
+                  <td>Bright fringe</td>
+                  <td>d sin θ = nλ</td>
+                  <td>You are on a bright line</td>
+                </tr>
+                <tr>
+                  <td>Dark fringe</td>
+                  <td>d sin θ = (n + 1/2)λ</td>
+                  <td>You are on a dark line</td>
+                </tr>
+                <tr>
+                  <td>Crystal delay</td>
+                  <td>Δφ<sub>0</sub> = 2πΔt / T</td>
+                  <td>You must turn time delay into phase shift</td>
+                </tr>
+              </tbody>
+            </table>
+          `,
+        },
+        {
+          id: "quiz2-pw-recap-translate",
+          kicker: "Prompt translation",
+          badge: "Checklist",
+          badgeTone: "method",
+          title: "If The Question Says This, Your Brain Should Translate It Like This",
+          html: `
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>If the prompt says...</th>
+                  <th>Your translation</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Silence, zero signal, dark spot</td>
+                  <td>This is a destructive condition</td>
+                </tr>
+                <tr>
+                  <td>Loudest, brightest, maximum</td>
+                  <td>This is a constructive condition</td>
+                </tr>
+                <tr>
+                  <td>Out of phase, reversed leads, one source ahead</td>
+                  <td>There is a nonzero Δφ0</td>
+                </tr>
+                <tr>
+                  <td>Two sources with the same frequency</td>
+                  <td>Think phase and interference, not beats</td>
+                </tr>
+                <tr>
+                  <td>Throbbing loudness or wobbling sound</td>
+                  <td>Think beats</td>
+                </tr>
+                <tr>
+                  <td>One source moves before the beat question</td>
+                  <td>Do Doppler first, beats second</td>
+                </tr>
+                <tr>
+                  <td>Crystal in one slit</td>
+                  <td>Check the center using Δx = 0 before assuming anything</td>
+                </tr>
+                <tr>
+                  <td>Blue closer to center than red</td>
+                  <td>Shorter wavelength means smaller angle for the same order</td>
+                </tr>
+              </tbody>
+            </table>
+          `,
+        },
+        {
+          id: "quiz2-pw-recap-traps",
+          kicker: "Final trap check",
+          badge: "Avoid",
+          badgeTone: "trap",
+          title: "Last Mistakes To Catch Before You Walk Into The Quiz",
+          html: `
+            <ul>
+              <li>Do not answer a beat-rate question with the average pitch, or an average-pitch question with the beat rate.</li>
+              <li>Do not forget that the center of a crystal-shifted double-slit pattern can be dark or partially bright.</li>
+              <li>Do not use the constructive condition just because the algebra looks cleaner. The wording decides the condition.</li>
+              <li>Do not treat every two-source sound question as beats. Same frequency means interference.</li>
+              <li>Do not let later DL6 standing-wave content steal time from the actual Quiz 2 scope.</li>
+            </ul>
+            <div class="callout callout-review">
+              <strong>Motivational close:</strong> this material is genuinely not obvious the first time. If you made it through this page carefully, the second pass through the packets will feel much more readable.
+            </div>
+          `,
+        },
+      ],
+    },
+  },
+  QUIZ_2_PW_SECTION_LOCATORS,
+);
 
 export const QUIZ_BANK = {
   "chapter-1": [
