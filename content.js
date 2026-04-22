@@ -28,6 +28,16 @@ export const QUIZ_2_FORMULA_STRIP = [
   { label: "Crystal", value: "Δφ₀ = 2πΔt / T" },
 ];
 
+export const QUIZ_22_FORMULA_STRIP = [
+  { label: "Superposition", value: "y_tot = y₁ + y₂" },
+  { label: "Total phase", value: "ΔΦ = -2πΔx / λ + Δφ₀" },
+  { label: "Beats", value: "f_beat = |f₁ - f₂|" },
+  { label: "Doppler", value: "f_obs = ((v ± v_o) / (v ∓ v_s)) f_s" },
+  { label: "Bright", value: "d sin θ = nλ" },
+  { label: "Crystal", value: "y = Δφ₀λD / (2πd)" },
+  { label: "Thin film", value: "2d = nλ" },
+];
+
 export const STUDY_GUIDE = {
   title: "Waves: Complete Study Guide",
   subtitle: "PW-Style | DL 1 - DL 5 | Acts 8.1 through 8.15",
@@ -4707,6 +4717,572 @@ A crystal in one slit adds a source phase shift, so the center is not automatica
   },
   QUIZ_2_CLASSIC_SECTION_LOCATORS,
   QUIZ_2_CLASSIC_CHAPTER_LOCATORS,
+);
+
+const QUIZ_22_CHAPTER_LOCATORS = {
+  "quiz22-chapter-1": "Physics7C_WaveQuizGuide.docx • 1. Superposition & Interference (Act 8.9)",
+  "quiz22-chapter-2": "Physics7C_WaveQuizGuide.docx • 2. Superposition in Two Dimensions (Act 8.10)",
+  "quiz22-chapter-3": "Physics7C_WaveQuizGuide.docx • 3. Interference with Speakers (Act 8.11)",
+  "quiz22-chapter-4": "Physics7C_WaveQuizGuide.docx • 4. Beats (Act 8.12)",
+  "quiz22-chapter-5": "Physics7C_WaveQuizGuide.docx • 5. Beats + Doppler Combined",
+  "quiz22-chapter-6": "Physics7C_WaveQuizGuide.docx • 6. Diffraction & Two-Slit Interference",
+  "quiz22-chapter-7": "Physics7C_WaveQuizGuide.docx • 7. Double Slit with Crystal Phase Shift (Act 8.16)",
+  "quiz22-chapter-8": "Physics7C_WaveQuizGuide.docx • 8. Thin Film Interference",
+  "quiz22-recap": "Physics7C_WaveQuizGuide.docx • Master formula sheet and final traps",
+};
+
+const QUIZ_22_SECTION_LOCATORS = {
+  "quiz22-ch1-hook": "Physics7C_WaveQuizGuide.docx • Superposition hook and rule",
+  "quiz22-ch1-types": "Physics7C_WaveQuizGuide.docx • The three types of interference",
+  "quiz22-ch1-phase": "Physics7C_WaveQuizGuide.docx • The phase chart and simplified rule",
+  "quiz22-ch1-path": "Physics7C_WaveQuizGuide.docx • The path length difference rule",
+  "quiz22-ch2-core": "Physics7C_WaveQuizGuide.docx • Everything still works in 2D",
+  "quiz22-ch2-wavefront": "Physics7C_WaveQuizGuide.docx • Wavefront representation and terms",
+  "quiz22-ch2-example": "Physics7C_WaveQuizGuide.docx • The Bob-An-Carla problem",
+  "quiz22-ch3-core": "Physics7C_WaveQuizGuide.docx • Speaker setup and wiring logic",
+  "quiz22-ch3-scenarios": "Physics7C_WaveQuizGuide.docx • The five speaker scenarios",
+  "quiz22-ch3-trap": "Physics7C_WaveQuizGuide.docx • Set 5 trap explanation",
+  "quiz22-ch4-why": "Physics7C_WaveQuizGuide.docx • Why beats happen",
+  "quiz22-ch4-derivation": "Physics7C_WaveQuizGuide.docx • Beat-period derivation",
+  "quiz22-ch4-graphs": "Physics7C_WaveQuizGuide.docx • Reading the beats graph",
+  "quiz22-ch5-doppler": "Physics7C_WaveQuizGuide.docx • Quick Doppler refresher",
+  "quiz22-ch5-example": "Physics7C_WaveQuizGuide.docx • The Angharad bagpiper problem",
+  "quiz22-ch6-source": "Physics7C_WaveQuizGuide.docx • Why slits act like sources",
+  "quiz22-ch6-geometry": "Physics7C_WaveQuizGuide.docx • Young's double slit geometry",
+  "quiz22-ch6-color": "Physics7C_WaveQuizGuide.docx • Wavelength, white light, and gratings",
+  "quiz22-ch7-core": "Physics7C_WaveQuizGuide.docx • Phase difference with a crystal",
+  "quiz22-ch7-strategy": "Physics7C_WaveQuizGuide.docx • Crystal problem strategy",
+  "quiz22-ch7-example": "Physics7C_WaveQuizGuide.docx • Crystal double slit solution template",
+  "quiz22-ch8-core": "Physics7C_WaveQuizGuide.docx • Thin-film setup and constructive condition",
+  "quiz22-ch8-blue": "Physics7C_WaveQuizGuide.docx • Why the wing looks blue",
+  "quiz22-recap-formulas": "Physics7C_WaveQuizGuide.docx • Master formula and concept sheet",
+  "quiz22-recap-traps": "Physics7C_WaveQuizGuide.docx • 7 things that will trip you up",
+};
+
+export const QUIZ_22_GUIDE = withSectionLocators(
+  {
+    title: "Quiz 2.2 Study Guide",
+    subtitle: "Built from Physics7C_WaveQuizGuide.docx",
+    chapters: [
+      {
+        id: "quiz22-chapter-1",
+        number: "01",
+        title: "Chapter 1 - Superposition and Interference",
+        plainText: `
+Chapter 1 in the docx guide introduces superposition, the three kinds of interference, the phase chart, and the path-length rules for in-phase and out-of-phase sources.
+        `.trim(),
+        studyCard: [
+          { label: "Start with", value: "What superposition means at one point in space" },
+          { label: "Core formula", value: "ΔΦ = -2πΔx/λ + Δφ₀" },
+          { label: "Trap", value: "Total phase difference includes both path and source phase" },
+        ],
+        sections: [
+          {
+            id: "quiz22-ch1-hook",
+            title: "Hook and the Superposition Rule",
+            html: `
+              <p>Two people can talk at the same time, and the air does not "pick" one sound. The air simply carries both disturbances at once, and your ear receives the combined result. That is the idea behind superposition.</p>
+              <p>When two waves exist at the same place at the same time, the total displacement is the algebraic sum of what each wave would have done by itself.</p>
+              <div class="formula-box">y<sub>tot</sub>(x, t) = y₁(x, t) + y₂(x, t)</div>
+              <p><strong>Meaning of the symbols:</strong> <code>y_tot</code> is the actual displacement of the medium, <code>y₁</code> is wave 1's contribution, and <code>y₂</code> is wave 2's contribution. These are signed values, so a positive displacement and a negative displacement can cancel.</p>
+            `,
+          },
+          {
+            id: "quiz22-ch1-types",
+            title: "Constructive, Destructive, and Partial Interference",
+            html: `
+              <p>Interference just means the result of superposition. The type depends on how lined up the two waves are at the instant they meet.</p>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>What it looks like</th>
+                    <th>Phase condition</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Constructive</td>
+                    <td>Crest meets crest, so the total amplitude gets bigger.</td>
+                    <td>ΔΦ = 0, 2π, 4π, ...</td>
+                  </tr>
+                  <tr>
+                    <td>Destructive</td>
+                    <td>Crest meets trough, so equal waves can cancel to zero.</td>
+                    <td>ΔΦ = π, 3π, 5π, ...</td>
+                  </tr>
+                  <tr>
+                    <td>Partial</td>
+                    <td>The waves are offset by some other phase, so the result sits between the two extremes.</td>
+                    <td>Anything else</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="callout">
+                <strong>Watch out:</strong> ΔΦ is the total phase difference at the point where the waves meet. It is not just a position story and it is not just a timing story.
+              </div>
+            `,
+          },
+          {
+            id: "quiz22-ch1-phase",
+            title: "The Phase Chart and the Simplified Rule",
+            html: `
+              <p>The phase chart is the bookkeeping tool for interference. It adds every reason two waves might be out of step.</p>
+              <div class="formula-box">Φ = (2πt / T) - (2πx / λ) + φ₀</div>
+              <ul>
+                <li><strong>2πt/T:</strong> the time contribution.</li>
+                <li><strong>-2πx/λ:</strong> the position contribution. The sign is negative because greater travel distance means more phase lag.</li>
+                <li><strong>φ₀:</strong> the fixed phase constant from the source or wiring.</li>
+              </ul>
+              <p>The difference between two waves is <code>ΔΦ = Φ₁ - Φ₂</code>. In most interference problems the waves are being compared at the same time, so the time column cancels out and you get the simplified rule:</p>
+              <div class="formula-inline">ΔΦ = -(2πΔx/λ) + Δφ₀</div>
+              <p>If the result is a multiple of <code>2π</code>, the interference is constructive. If it is an odd multiple of <code>π</code>, the interference is destructive.</p>
+            `,
+          },
+          {
+            id: "quiz22-ch1-path",
+            title: "The Path-Length Difference Rules",
+            html: `
+              <p>The most-used shortcut comes from the simplified phase formula.</p>
+              <p><strong>For in-phase sources</strong> (<code>Δφ₀ = 0</code>):</p>
+              <div class="formula-inline">Constructive: Δx = nλ</div>
+              <div class="formula-inline">Destructive: Δx = (n + 1/2)λ</div>
+              <p><strong>For out-of-phase sources</strong> (<code>Δφ₀ = π</code>), those conditions flip:</p>
+              <div class="formula-inline">Constructive: Δx = (n + 1/2)λ</div>
+              <div class="formula-inline">Destructive: Δx = nλ</div>
+              <p>That flip is one of the easiest places to lose points, so always check the source phase before doing the rest of the math.</p>
+            `,
+          },
+        ],
+      },
+      {
+        id: "quiz22-chapter-2",
+        number: "02",
+        title: "Chapter 2 - Superposition in Two Dimensions",
+        plainText: `
+Chapter 2 extends the same interference story into a 2D geometry picture, adds wavefront language, and walks through the Bob-An-Carla problem.
+        `.trim(),
+        studyCard: [
+          { label: "Same idea", value: "Only the geometry changes in 2D" },
+          { label: "Main move", value: "Compute x₁, x₂, then Δx" },
+          { label: "Look for", value: "Crest-crest vs crest-trough intersections" },
+        ],
+        sections: [
+          {
+            id: "quiz22-ch2-core",
+            title: "Everything Still Works in 2D",
+            html: `
+              <p>Dropping two pebbles in a pond creates a permanent map of loud-type and quiet-type locations. Some points always get reinforced, and some points always cancel.</p>
+              <p>The physics is the same as in 1D. The only difference is that the path lengths now come from distances across a two-dimensional picture.</p>
+              <ol class="long-list">
+                <li>Find the distance from source 1 to the point: <code>x₁</code>.</li>
+                <li>Find the distance from source 2 to the point: <code>x₂</code>.</li>
+                <li>Compute <code>Δx = x₁ - x₂</code>.</li>
+                <li>Apply the same constructive or destructive rule as before.</li>
+              </ol>
+            `,
+          },
+          {
+            id: "quiz22-ch2-wavefront",
+            title: "Wavefront Representation",
+            html: `
+              <p>A wavefront is a line connecting points that all have the same phase. For a point source in 2D, those wavefronts are circles spreading outward.</p>
+              <ul>
+                <li><strong>Crest:</strong> a high point in the cycle.</li>
+                <li><strong>Trough:</strong> a low point in the cycle.</li>
+                <li><strong>Consecutive crests from one source:</strong> one wavelength apart.</li>
+                <li><strong>Crest meeting crest:</strong> constructive interference.</li>
+                <li><strong>Crest meeting trough:</strong> destructive interference.</li>
+              </ul>
+            `,
+          },
+          {
+            id: "quiz22-ch2-example",
+            title: "The Bob-An-Carla Problem",
+            html: `
+              <p>An is 3 m from Bob, Carla is 2 m from Bob, and both sources bob with the same frequency and the same phase. Bob wants constructive interference.</p>
+              <p><strong>Step 1:</strong> <code>Δx = 3 - 2 = 1 m</code>.</p>
+              <p><strong>Step 2:</strong> Same-phase constructive interference means <code>Δx = nλ</code>.</p>
+              <p><strong>Step 3:</strong> So possible wavelengths are <code>1 m</code>, <code>0.5 m</code>, <code>1/3 m</code>, and so on.</p>
+              <p><strong>Step 4:</strong> With wave speed <code>v = 3 m/s</code>, the matching frequencies are <code>3 Hz</code>, <code>6 Hz</code>, <code>9 Hz</code>, and so on because <code>f = v/λ</code>.</p>
+              <div class="callout">
+                <strong>Result:</strong> Bob is at a constructive point, so equal-amplitude sources would make his oscillation amplitude double.
+              </div>
+            `,
+          },
+        ],
+      },
+      {
+        id: "quiz22-chapter-3",
+        number: "03",
+        title: "Chapter 3 - Interference with Speakers",
+        plainText: `
+Chapter 3 applies interference to speaker setups, focusing on path difference, source wiring, and the five scenario logic from the guide.
+        `.trim(),
+        studyCard: [
+          { label: "Two ingredients", value: "Path difference and wiring phase" },
+          { label: "Same wiring", value: "Constructive at Δx = nλ" },
+          { label: "Trap", value: "Two out-of-phase effects can cancel each other" },
+        ],
+        sections: [
+          {
+            id: "quiz22-ch3-core",
+            title: "What Matters in a Two-Speaker Setup",
+            html: `
+              <p>When two speakers play the same note, the total phase difference depends on two things: the difference in path length to your ears and any source phase offset from the wiring.</p>
+              <p><strong>Same wiring</strong> (<code>Δφ₀ = 0</code>): constructive at <code>Δx = nλ</code>, destructive at <code>Δx = (n + 1/2)λ</code>.</p>
+              <p><strong>Opposite wiring</strong> (<code>Δφ₀ = π</code>): those conditions flip.</p>
+              <p>That means two physically similar speaker setups can behave differently if one speaker is wired backward.</p>
+            `,
+          },
+          {
+            id: "quiz22-ch3-scenarios",
+            title: "The Five Speaker Scenarios",
+            html: `
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Set</th>
+                    <th>Physical meaning</th>
+                    <th>Result</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td><code>x₁ = x</code>, <code>x₂ = x + λ</code>, same wiring</td>
+                    <td>Constructive, because one extra wavelength changes phase by <code>2π</code>.</td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>Same position, opposite wiring</td>
+                    <td>Destructive, because <code>ΔΦ = π</code>.</td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td>Same wiring, one speaker is <code>λ/2</code> farther</td>
+                    <td>Destructive, because the path difference gives <code>π</code>.</td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td>Same position, same wiring</td>
+                    <td>Constructive, because <code>ΔΦ = 0</code>.</td>
+                  </tr>
+                  <tr>
+                    <td>5</td>
+                    <td>Opposite wiring, but one speaker is <code>λ/2</code> farther</td>
+                    <td>Constructive, because the path term and wiring term cancel.</td>
+                  </tr>
+                </tbody>
+              </table>
+            `,
+          },
+          {
+            id: "quiz22-ch3-trap",
+            title: "Why Set 5 Is the Classic Trap",
+            html: `
+              <p>Set 5 looks like it should be "double destructive" because there is both opposite wiring and a half-wavelength offset. But the math says otherwise.</p>
+              <div class="formula-box">ΔΦ = -(2π(λ/2)/λ) + π = -π + π = 0</div>
+              <p>So the two out-of-phase effects cancel each other, and the result is constructive interference. This is exactly why writing the total phase is safer than guessing from intuition alone.</p>
+            `,
+          },
+        ],
+      },
+      {
+        id: "quiz22-chapter-4",
+        number: "04",
+        title: "Chapter 4 - Beats",
+        plainText: `
+Chapter 4 explains why beats happen, derives the beat period and frequency, and shows how to read beats from graphs.
+        `.trim(),
+        studyCard: [
+          { label: "Beats happen in", value: "Time, not space" },
+          { label: "Rate", value: "f_beat = |f₁ - f₂|" },
+          { label: "Pitch inside", value: "f_carrier = (f₁ + f₂)/2" },
+        ],
+        sections: [
+          {
+            id: "quiz22-ch4-why",
+            title: "Why Beats Happen",
+            html: `
+              <p>If two nearby frequencies are played at the same location, the waves drift in and out of sync over time. Sometimes they reinforce and sometimes they cancel, which creates the loud-quiet-loud pulsing sound called beats.</p>
+              <p>The beat frequency tells you how fast that pulsing happens. The carrier frequency tells you the average pitch you hear underneath the pulse.</p>
+              <div class="formula-inline">f<sub>beat</sub> = |f₁ - f₂|</div>
+              <div class="formula-inline">f<sub>carrier</sub> = (f₁ + f₂)/2</div>
+            `,
+          },
+          {
+            id: "quiz22-ch4-derivation",
+            title: "Beat-Period Derivation",
+            html: `
+              <p>Suppose two sources start in sync at the same location. The next time they line up, the faster wave has completed exactly one extra cycle.</p>
+              <div class="formula-box">2πT_b/T₁ - 2πT_b/T₂ = 2π</div>
+              <p>Divide through by <code>2π</code> and use <code>f = 1/T</code>:</p>
+              <div class="formula-box">T_b(f₁ - f₂) = 1</div>
+              <div class="formula-inline">T_b = 1 / |f₁ - f₂|</div>
+              <p>So the beat frequency is the reciprocal of the beat period.</p>
+            `,
+          },
+          {
+            id: "quiz22-ch4-graphs",
+            title: "Beats vs. Normal Interference and How to Read the Graphs",
+            html: `
+              <p><strong>Normal interference</strong> makes different places stay loud or quiet in space. <strong>Beats</strong> make one place alternate between loud and quiet in time.</p>
+              <p>When a graph shows the two original waves, count cycles to find each frequency. Then subtract to get <code>f_beat</code>.</p>
+              <p>When a graph shows the sum, measure the time from one large envelope peak to the next. That distance is the beat period <code>T_beat</code>.</p>
+              <div class="callout">
+                <strong>Important:</strong> the fast wiggles inside the envelope are tied to the carrier frequency, not the beat frequency.
+              </div>
+            `,
+          },
+        ],
+      },
+      {
+        id: "quiz22-chapter-5",
+        number: "05",
+        title: "Chapter 5 - Beats Plus Doppler",
+        plainText: `
+Chapter 5 combines Doppler and beats in the Angharad bagpiper problem, where motion changes the heard frequencies before the beat calculation.
+        `.trim(),
+        studyCard: [
+          { label: "Order matters", value: "Doppler first, beats second" },
+          { label: "Goal", value: "Make the heard frequencies match" },
+          { label: "Accuracy note", value: "Use the full Doppler formula, then simplify only if allowed" },
+        ],
+        sections: [
+          {
+            id: "quiz22-ch5-doppler",
+            title: "Quick Doppler Refresher",
+            html: `
+              <p>Doppler changes the frequency you hear when either the observer or the source is moving. For the most general sign-safe version, use the full formula:</p>
+              <div class="formula-box">f<sub>obs</sub> = ((v ± v<sub>o</sub>) / (v ∓ v<sub>s</sub>)) f<sub>s</sub></div>
+              <ul>
+                <li>If observer and source move toward each other, the heard frequency goes up.</li>
+                <li>If they move away from each other, the heard frequency goes down.</li>
+                <li>If the source is stationary, this reduces to the moving-observer shortcut from class.</li>
+              </ul>
+            `,
+          },
+          {
+            id: "quiz22-ch5-example",
+            title: "The Angharad Bagpiper Problem",
+            html: `
+              <p>Angharad hears 258 Hz from one bagpiper and 262 Hz from the other. Standing still, the beat frequency is simply <code>|262 - 258| = 4 Hz</code>, and the carrier pitch is <code>260 Hz</code>.</p>
+              <p>If she runs toward the higher-pitched player, the sound from that side shifts upward while the sound from the opposite side shifts downward. To kill the beats, she wants the two heard frequencies to become equal.</p>
+              <div class="formula-box">258(340 - u) = 262(340 + u)</div>
+              <p>Solving gives <code>u ≈ 2.615 m/s</code>, directed toward the 262 Hz player.</p>
+              <p>After that motion, the matched heard frequency is about <code>256 Hz</code>. The lesson is the important part: adjust the heard frequencies with Doppler first, then compare them with the beat formula.</p>
+            `,
+          },
+        ],
+      },
+      {
+        id: "quiz22-chapter-6",
+        number: "06",
+        title: "Chapter 6 - Diffraction and Two-Slit Interference",
+        plainText: `
+Chapter 6 explains why slits behave like wave sources, introduces the geometry of Young's double slit, and connects wavelength to fringe spacing and color ordering.
+        `.trim(),
+        studyCard: [
+          { label: "Mental model", value: "Two slits behave like two coherent sources" },
+          { label: "Geometry", value: "Δx = d sin θ ≈ dΔy/D" },
+          { label: "Color rule", value: "Longer wavelength means wider spacing" },
+        ],
+        sections: [
+          {
+            id: "quiz22-ch6-source",
+            title: "Why Slits Behave Like Sources",
+            html: `
+              <p>When a wave passes through a narrow slit, the slit becomes a new source of spreading waves. This is the Huygens idea behind diffraction.</p>
+              <p>With two slits, you effectively create two sources that have the same frequency and phase, so all of the earlier interference rules apply again. The only new piece is the screen geometry.</p>
+            `,
+          },
+          {
+            id: "quiz22-ch6-geometry",
+            title: "Young's Double Slit Geometry",
+            html: `
+              <div class="formula-box">Δx = d sin θ ≈ d tan θ = d(Δy / D)</div>
+              <div class="formula-inline">Bright: d sin θ = nλ</div>
+              <div class="formula-inline">Dark: d sin θ = (n + 1/2)λ</div>
+              <div class="formula-inline">Fringe spacing: Δy = λD / d</div>
+              <p>Here <code>d</code> is slit separation, <code>D</code> is screen distance, <code>Δy</code> is spacing on the screen, and the small-angle approximation works when the screen is far away compared with the slit spacing.</p>
+              <p>If the problem gives you measured screen spacing and wavelength, you can rearrange to solve for the slit spacing.</p>
+            `,
+          },
+          {
+            id: "quiz22-ch6-color",
+            title: "Wavelength, White Light, and Diffraction Gratings",
+            html: `
+              <p>Longer wavelengths spread the pattern farther because they need a larger angle to reach the same fringe order. That is why red light gives a wider pattern than blue light.</p>
+              <p>At the center of a white-light pattern, <code>θ = 0</code>, so every wavelength has <code>Δx = 0</code> and all colors overlap into white.</p>
+              <p>Away from the center, shorter wavelengths like blue stay closer in and longer wavelengths like red move farther out.</p>
+              <p>A diffraction grating works on the same angle rule as a double slit, but many slits make the bright regions much sharper and the dark regions much darker.</p>
+            `,
+          },
+        ],
+      },
+      {
+        id: "quiz22-chapter-7",
+        number: "07",
+        title: "Chapter 7 - Double Slit with Crystal Phase Shift",
+        plainText: `
+Chapter 7 adds a crystal to one slit, creating a nonzero source phase difference that shifts the whole pattern without changing fringe spacing.
+        `.trim(),
+        studyCard: [
+          { label: "New ingredient", value: "Δφ₀ is no longer zero" },
+          { label: "Main effect", value: "Pattern shifts, spacing stays the same" },
+          { label: "Center point", value: "No longer automatically bright" },
+        ],
+        sections: [
+          {
+            id: "quiz22-ch7-core",
+            title: "What Changes When a Crystal Is Added",
+            html: `
+              <p>Putting a crystal in one slit changes the phase constant of that path, so the total phase difference becomes:</p>
+              <div class="formula-box">ΔΦ = -(2πΔx/λ) + Δφ₀</div>
+              <p>Without the crystal, the center of the screen has <code>Δx = 0</code> and is bright because <code>ΔΦ = 0</code>. With the crystal, the center instead has <code>ΔΦ = Δφ₀</code>, so the whole pattern can slide upward or downward.</p>
+            `,
+          },
+          {
+            id: "quiz22-ch7-strategy",
+            title: "Step-by-Step Crystal Strategy",
+            html: `
+              <ol class="long-list">
+                <li>At the screen center, set <code>Δx = 0</code> and check what the crystal alone does to the phase.</li>
+                <li>For the nearest bright spot, set the total phase equal to the correct constructive value.</li>
+                <li>Use <code>Δx = d sin θ ≈ dy/D</code> to convert that phase condition into a screen position.</li>
+              </ol>
+              <div class="formula-inline">y = Δφ₀λD / (2πd)</div>
+              <p>This gives the shift of the pattern. The spacing between adjacent bright fringes still remains <code>Δy = λD/d</code>.</p>
+            `,
+          },
+          {
+            id: "quiz22-ch7-example",
+            title: "Crystal Double Slit Solution Template",
+            html: `
+              <p>For the first bright spot above the center, choose the constructive condition closest to the center and solve:</p>
+              <div class="formula-box">-2π(dy/λD) + Δφ₀ = 0</div>
+              <div class="formula-box">y = Δφ₀λD / (2πd)</div>
+              <p>The big idea is more important than the algebra: the crystal shifts the whole interference pattern but does not stretch it out or squeeze it together.</p>
+            `,
+          },
+        ],
+      },
+      {
+        id: "quiz22-chapter-8",
+        number: "08",
+        title: "Chapter 8 - Thin Film Interference",
+        plainText: `
+Chapter 8 uses the butterfly example to explain how path difference between reflected rays can select one color and cancel others.
+        `.trim(),
+        studyCard: [
+          { label: "Picture", value: "One ray reflects off the top, one travels down and back" },
+          { label: "Extra path", value: "2d" },
+          { label: "Constructive rule", value: "2d = nλ" },
+        ],
+        sections: [
+          {
+            id: "quiz22-ch8-core",
+            title: "How Thin-Film Interference Works",
+            html: `
+              <p>In the butterfly example, one ray reflects from the top surface while another enters the layer, reflects from below, and then returns. The second ray travels an extra distance of <code>2d</code>.</p>
+              <p>If that extra distance matches a whole number of wavelengths, the reflected light reinforces:</p>
+              <div class="formula-inline">2d = nλ</div>
+              <p>For the first constructive case, <code>n = 1</code>, so <code>d = λ/2</code>.</p>
+            `,
+          },
+          {
+            id: "quiz22-ch8-blue",
+            title: "Why the Blue Morpho Looks Blue",
+            html: `
+              <p>If the spacing in the wing layers matches blue light well but not red light, blue reflects constructively while red is weakened. That is why the wing can look vividly blue without relying on blue pigment.</p>
+              <p>The butterfly chapter is still the same interference story as the rest of the guide: path difference chooses which wavelengths survive strongly.</p>
+            `,
+          },
+        ],
+      },
+    ],
+    recap: {
+      id: "quiz22-recap",
+      title: "Final Recap - Formula Sheet and Trap Check",
+      plainText: `
+The recap for Quiz 2.2 contains a master concept and formula table plus seven final mistakes to avoid before the quiz.
+      `.trim(),
+      sections: [
+        {
+          id: "quiz22-recap-formulas",
+          title: "Master Formula and Concept Sheet",
+          html: `
+            <p>This section condenses the big rules from the doc into one page for final review.</p>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Topic</th>
+                  <th>Formula or rule</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Superposition</td>
+                  <td><code>y_tot = y₁ + y₂</code>; constructive at even multiples of <code>π</code>, destructive at odd multiples.</td>
+                </tr>
+                <tr>
+                  <td>Phase difference</td>
+                  <td><code>ΔΦ = -2πΔx/λ + Δφ₀</code></td>
+                </tr>
+                <tr>
+                  <td>In-phase sources</td>
+                  <td>Constructive at <code>Δx = nλ</code>, destructive at <code>Δx = (n + 1/2)λ</code></td>
+                </tr>
+                <tr>
+                  <td>Out-of-phase sources</td>
+                  <td>Those two conditions flip.</td>
+                </tr>
+                <tr>
+                  <td>Beats</td>
+                  <td><code>f_beat = |f₁ - f₂|</code>, <code>f_carrier = (f₁ + f₂)/2</code>, <code>T_beat = 1/f_beat</code></td>
+                </tr>
+                <tr>
+                  <td>Doppler</td>
+                  <td><code>f_obs = ((v ± v_o)/(v ∓ v_s)) f_s</code>; use this before the beat formula in mixed problems.</td>
+                </tr>
+                <tr>
+                  <td>Young's double slit</td>
+                  <td><code>d sin θ = nλ</code> for bright, <code>d sin θ = (n + 1/2)λ</code> for dark, and <code>Δy = λD/d</code></td>
+                </tr>
+                <tr>
+                  <td>Crystal double slit</td>
+                  <td><code>y_bright = Δφ₀λD / (2πd)</code>; the pattern shifts but the spacing does not change.</td>
+                </tr>
+                <tr>
+                  <td>Thin film</td>
+                  <td><code>2d = nλ</code> when the reflected rays interfere constructively in the simplified no-phase-flip version.</td>
+                </tr>
+              </tbody>
+            </table>
+          `,
+        },
+        {
+          id: "quiz22-recap-traps",
+          title: "7 Things That Will Trip You Up",
+          html: `
+            <ol class="long-list">
+              <li>Check whether the sources are in phase or out of phase before doing anything else, because that flips the path-difference rules.</li>
+              <li>Keep the negative sign on the path term in <code>ΔΦ = -2πΔx/λ + Δφ₀</code>.</li>
+              <li>Beats happen in time, while ordinary interference patterns live in space.</li>
+              <li>In double slit, a bigger wavelength means wider fringe spacing.</li>
+              <li>Adding a crystal changes the pattern position, not the spacing between neighboring fringes.</li>
+              <li>For 2D problems, compute the actual two distances first and only then take their difference.</li>
+              <li>When using a phase chart, the difference row is always row 1 minus row 2, so the sign bookkeeping matters.</li>
+            </ol>
+            <p>The math in this unit usually becomes manageable once the physical story is clear. If a problem feels messy, slow down and ask: what is creating the phase difference here?</p>
+          `,
+        },
+      ],
+    },
+  },
+  QUIZ_22_SECTION_LOCATORS,
+  QUIZ_22_CHAPTER_LOCATORS,
 );
 
 export const QUIZ_BANK = {

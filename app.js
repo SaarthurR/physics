@@ -3,6 +3,8 @@ import {
   QUIZ_1_GUIDE,
   QUIZ_2_FORMULA_STRIP,
   QUIZ_2_CLASSIC_GUIDE,
+  QUIZ_22_FORMULA_STRIP,
+  QUIZ_22_GUIDE,
   QUIZ_BANK,
 } from "./content.js";
 
@@ -114,6 +116,20 @@ const guideConfigs = {
     sidebarLabel: "Quiz 2 bookmarks",
     formulaStrip: QUIZ_2_FORMULA_STRIP,
     guide: QUIZ_2_CLASSIC_GUIDE,
+    quizzesEnabled: false,
+    unitQuizConfigs: [],
+  },
+  quiz22: {
+    id: "quiz22",
+    label: "Quiz 2.2",
+    eyebrow: "Physics 7C · Quiz 2.2",
+    title: "Quiz 2.2 Study Guide",
+    heading: "Docx-based Quiz 2 guide, rebuilt into the site format",
+    summary:
+      "A chapter-by-chapter version of Physics7C_WaveQuizGuide.docx, keeping its hooks, worked logic, formula sheet, and final trap list in the same one-page format as the other guides.",
+    sidebarLabel: "Quiz 2.2 bookmarks",
+    formulaStrip: QUIZ_22_FORMULA_STRIP,
+    guide: QUIZ_22_GUIDE,
     quizzesEnabled: false,
     unitQuizConfigs: [],
   },
