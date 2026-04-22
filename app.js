@@ -108,10 +108,10 @@ const guideConfigs = {
     label: "Quiz 2",
     eyebrow: "Physics 7C · Quiz 2",
     title: "Quiz 2 Study Guide",
-    heading: "Interference, beats, and double-slit review",
+    heading: "What to study for Quiz 2, in the right order",
     summary:
-      "A study map built around the official Quiz 2 scope: DL3 8.9-8.10, all of DL4 and DL5, and DL6 Activity 8.16.",
-    sidebarLabel: "Quiz 2 study map",
+      "Start with the overview and study order, then work Topic 1 through Topic 4 so the official Quiz 2 material feels like one connected set instead of a pile of packets.",
+    sidebarLabel: "Quiz 2 study plan",
     outlineLegend: [
       {
         label: "Study hardest",

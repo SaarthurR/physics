@@ -2254,10 +2254,10 @@ de Broglie wavelength lambda = h / p.
 };
 
 const QUIZ_2_SECTION_LOCATORS = {
-  "quiz2-chapter-1-hook": "Packet overview • DL3 Activities 8.9-8.10, DL4, DL5, and DL6 Activity 8.16",
+  "quiz2-chapter-1-hook": "Big picture • one interference story across DL3, DL4, DL5, and DL6 Activity 8.16",
   "quiz2-chapter-1-coverage": "Official scope • DL3 Activities 8.9-8.10, all of DL4 and DL5, and DL6 Activity 8.16",
   "quiz2-chapter-1-patterns": "Practice scan • Q2-1 through Q2-6 plus Problem Starts",
-  "quiz2-chapter-1-roadmap": "Cross-packet method • use on every Quiz 2 problem family",
+  "quiz2-chapter-1-roadmap": "Guide order • use this sequence to study the official Quiz 2 topics",
   "quiz2-chapter-1-mistakes": "Cross-packet traps • pulled from repeated Quiz 2 practice mistakes",
   "quiz2-chapter-2-hook": "DL3 • Activity 8.9 superposition intuition",
   "quiz2-chapter-2-total-phase": "DL3 • Activity 8.9 total phase and interference conditions",
@@ -2311,48 +2311,37 @@ export const QUIZ_2_GUIDE = withQuiz2Locators({
     {
       id: "quiz2-chapter-1",
       number: "01",
-      title: "Start Here",
+      title: "Overview and Study Order",
       plainText: `
-Quiz 2 is mainly an interference quiz. The official scope is DL3 Activities 8.9 and 8.10, all of DL4 and DL5, and DL6 Activity 8.16 only. The highest-yield skills are phase bookkeeping, beats, double-slit geometry, and crystal-shifted fringe logic.
+Quiz 2 is mainly an interference quiz. Start by locking the official scope, then study the guide in this order: interference core, speakers and beats, double-slit geometry, and crystal-shifted DL6 review. The highest-yield skills are phase bookkeeping, beats, double-slit geometry, and crystal-shifted fringe logic.
       `.trim(),
       studyCard: [
         {
-          label: "Official scope",
+          label: "What to study",
           value: "DL3 Activities 8.9 and 8.10, all of DL4 and DL5, and DL6 Activity 8.16 only.",
+        },
+        {
+          label: "Best order",
+          value: "Interference core first, then speakers and beats, then double-slit geometry, then crystal-shifted DL6 review.",
         },
         {
           label: "Study hardest",
           value: "Phase bookkeeping, speaker or tower interference, crystal-shifted double slit, and beats.",
         },
         {
-          label: "First move",
-          value: "Sketch the geometry and decide whether the question is about Δx, Δφ₀, or both.",
-        },
-        {
-          label: "Skip for now",
+          label: "Lower priority",
           value: "Standing waves and de Broglie are later DL6 topics, not the official Quiz 2 target list.",
         },
       ],
       sections: [
         {
-          id: "quiz2-chapter-1-hook",
-          kicker: "Real-world hook",
-          badge: "Hook",
-          badgeTone: "review",
-          title: "The Hook - Why One Step Can Change Everything",
-          html: `
-            <p>You've probably had this happen at a concert, in a car, or with two speakers in a room: you take one step and the sound suddenly gets louder. Take another step and it weirdly drops off again. The speakers did not change. <em>Your location</em> changed.</p>
-            <p>That is the whole spirit of Quiz 2. Tiny changes in path length and timing can completely change what you hear or see. Once that feels normal, the formulas stop feeling random and start feeling like bookkeeping.</p>
-          `,
-        },
-        {
           id: "quiz2-chapter-1-coverage",
-          kicker: "Quiz map",
-          badge: "Start",
-          badgeTone: "method",
-          title: "What Is Actually In Scope",
+          kicker: "Overview",
+          badge: "Must know",
+          badgeTone: "priority",
+          title: "What You Actually Need To Study",
           html: `
-            <p>The packet matters more than the site history here. Quiz 2 is narrower than “all of DL6,” so this guide is now centered on the material that keeps repeating in the worksheets and practice sets.</p>
+            <p>If you are wondering what counts for Quiz 2, use this section as the answer key. The packet matters more than the rest of the site history here.</p>
             <table class="data-table">
               <thead>
                 <tr>
@@ -2385,7 +2374,42 @@ Quiz 2 is mainly an interference quiz. The official scope is DL3 Activities 8.9 
               </tbody>
             </table>
             <div class="callout callout-review">
-              <strong>Important correction:</strong> standing waves and quantum ideas may appear elsewhere on the site, but they are not the official Quiz 2 focus based on the documents you attached.
+              <strong>Translation:</strong> this quiz is really about interference, beats, double-slit geometry, and crystal-shift questions, not the later standing-wave or quantum material.
+            </div>
+          `,
+        },
+        {
+          id: "quiz2-chapter-1-roadmap",
+          kicker: "Study order",
+          badge: "Checklist",
+          badgeTone: "method",
+          title: "What To Work Through First",
+          html: `
+            <p>If you want the guide to feel less scattered, move through it in this order instead of bouncing between packets.</p>
+            <div class="study-map-grid">
+              <div class="study-map-card">
+                <p class="quiz-kicker">1</p>
+                <h4>Topic 1 - Interference core</h4>
+                <p>Start with total phase, path difference, and built-in source phase shift. This is the backbone for the rest.</p>
+              </div>
+              <div class="study-map-card">
+                <p class="quiz-kicker">2</p>
+                <h4>Topic 2 - Speakers, beats, and Doppler</h4>
+                <p>Next, separate same-frequency speaker interference from different-frequency beat questions.</p>
+              </div>
+              <div class="study-map-card">
+                <p class="quiz-kicker">3</p>
+                <h4>Topic 3 - Double-slit geometry</h4>
+                <p>Then switch to the screen picture: path difference, bright and dark conditions, and fringe geometry.</p>
+              </div>
+              <div class="study-map-card">
+                <p class="quiz-kicker">4</p>
+                <h4>Topic 4 - Crystal shift and DL6 review</h4>
+                <p>Finish with crystal-delay questions and the short white-light grating ideas from DL6 Activity 8.16.</p>
+              </div>
+            </div>
+            <div class="takeaway-line">
+              <strong>If you are short on time,</strong> spend the biggest chunk on Topic 1 and Topic 4, then make sure Topic 2 feels clean before you do a quick Topic 3 pass.
             </div>
           `,
         },
@@ -2394,7 +2418,7 @@ Quiz 2 is mainly an interference quiz. The official scope is DL3 Activities 8.9 
           kicker: "Study hardest",
           badge: "High yield",
           badgeTone: "priority",
-          title: "What The Practice Sets Repeat",
+          title: "What To Drill Hardest",
           html: `
             <table class="data-table">
               <thead>
@@ -2438,26 +2462,21 @@ Quiz 2 is mainly an interference quiz. The official scope is DL3 Activities 8.9 
               </tbody>
             </table>
             <div class="callout callout-priority">
-              <strong>Translation:</strong> if you are short on time, drill total phase, speaker or tower geometry, and crystal-shifted double slit before anything else.
+              <strong>Best payoff:</strong> if you are short on time, drill total phase, speaker or tower geometry, and crystal-shifted double slit before anything else.
             </div>
           `,
         },
         {
-          id: "quiz2-chapter-1-roadmap",
-          kicker: "Universal method",
-          badge: "Checklist",
-          badgeTone: "method",
-          title: "The Quiz-Start Attack Plan",
+          id: "quiz2-chapter-1-hook",
+          kicker: "Big idea",
+          badge: "Hook",
+          badgeTone: "review",
+          title: "Why All Of Quiz 2 Feels Like The Same Story",
           html: `
-            <ol class="long-list">
-              <li><strong>Name the family first.</strong> Is this a same-frequency interference question, a beats question, or a double-slit question?</li>
-              <li><strong>Mark the geometry.</strong> Label the two travel distances. If there is a crystal or reversed wiring, mark the built-in phase shift too.</li>
-              <li><strong>Write the one rule that controls the problem.</strong> Usually this is ΔΦ = -2πΔx/λ + Δφ₀, f<sub>beat</sub> = |f₁ - f₂|, or Δx = d sin θ.</li>
-              <li><strong>Decide the condition.</strong> Are you aiming for constructive, destructive, bright, dark, louder, quieter, or zero beat rate?</li>
-              <li><strong>Only then do algebra.</strong> Most quiz mistakes happen because students start plugging numbers in before deciding which condition they need.</li>
-            </ol>
+            <p>You've probably had this happen at a concert, in a car, or with two speakers in a room: you take one step and the sound suddenly gets louder. Take another step and it weirdly drops off again. The sources did not change. <em>Your location</em> changed.</p>
+            <p>That is the whole spirit of Quiz 2. Tiny changes in path length, timing, or built-in phase can completely change what you hear or see. Once that feels normal, the formulas stop feeling random and start feeling like bookkeeping.</p>
             <div class="takeaway-line">
-              <strong>If you see two sources and one observation point,</strong> think “path difference plus phase offset,” not “which random formula do I remember?”
+              <strong>Across almost the whole quiz,</strong> the real question is “what changed the relative phase?” not “which random formula do I remember?”
             </div>
           `,
         },
@@ -2482,7 +2501,7 @@ Quiz 2 is mainly an interference quiz. The official scope is DL3 Activities 8.9 
     {
       id: "quiz2-chapter-2",
       number: "02",
-      title: "Interference Core",
+      title: "Topic 1 - Interference Core",
       plainText: `
 This is the backbone of Quiz 2. Two waves meet. You compare their total phases. If the total phase difference lands on an even multiple of π, you get constructive interference. If it lands on an odd multiple of π, you get destructive interference.
       `.trim(),
@@ -2507,10 +2526,10 @@ This is the backbone of Quiz 2. Two waves meet. You compare their total phases. 
       sections: [
         {
           id: "quiz2-chapter-2-hook",
-          kicker: "Real-world hook",
+          kicker: "Topic preview",
           badge: "Hook",
           badgeTone: "review",
-          title: "The Hook - Noise-Canceling Headphones Are Doing This",
+          title: "Topic Preview - Same-Place Same-Time Interference",
           html: `
             <p>Noise-canceling headphones work because they do not just block sound. They create another sound wave designed to line up in the opposite phase, so the two waves cancel as they reach your ear.</p>
             <p>That is interference in one sentence: same place, same time, but different phase relationship. Quiz 2 just asks you to track that phase relationship more carefully than your headphones do automatically.</p>
@@ -2657,7 +2676,7 @@ This is the backbone of Quiz 2. Two waves meet. You compare their total phases. 
     {
       id: "quiz2-chapter-3",
       number: "03",
-      title: "Speakers, Beats, and Doppler",
+      title: "Topic 2 - Speakers, Beats, and Doppler",
       plainText: `
 Once the basic interference logic is clear, DL4 and the practice sets ask a more physical version: what do you hear? The answer may be louder or quieter because of same-frequency interference, or it may be a wobbling loud-soft-loud pattern because of beats.
       `.trim(),
@@ -2682,10 +2701,10 @@ Once the basic interference logic is clear, DL4 and the practice sets ask a more
       sections: [
         {
           id: "quiz2-chapter-3-hook",
-          kicker: "Real-world hook",
+          kicker: "Topic preview",
           badge: "Hook",
           badgeTone: "review",
-          title: "The Hook - That Wobbling Sound When Two Notes Almost Match",
+          title: "Topic Preview - Same Tone Vs Almost Same Tone",
           html: `
             <p>Imagine two guitars trying to tune to the same note, but one string is still a tiny bit off. You do not hear two clean notes fighting each other. You hear one note whose volume swells and fades: wah... wah... wah.</p>
             <p>That pulsing is beats. If one source also moves, like a siren or player walking relative to you, the heard frequency changes first and the beat pattern changes after that. This chapter is about keeping those two effects separate in your head.</p>
@@ -2694,8 +2713,8 @@ Once the basic interference logic is clear, DL4 and the practice sets ask a more
         {
           id: "quiz2-chapter-3-checklist",
           kicker: "DL4 Activity 8.11",
-          badge: "Core",
-          badgeTone: "method",
+          badge: "Must know",
+          badgeTone: "priority",
           title: "Same-Frequency Speaker Logic",
           html: `
             <p>If the speakers play the same tone, this is still a phase problem, not a beats problem. The physical setup decides Δx and Δφ₀, and that decides what you hear.</p>
@@ -2822,7 +2841,7 @@ Once the basic interference logic is clear, DL4 and the practice sets ask a more
     {
       id: "quiz2-chapter-4",
       number: "04",
-      title: "Double-Slit Geometry",
+      title: "Topic 3 - Double-Slit Geometry",
       plainText: `
 DL5 and the problem starters keep coming back to the same picture: two coherent slits, a screen far away, and a point somewhere above or below the center line. Your job is to turn the picture into path difference, then match that to bright or dark conditions.
       `.trim(),
@@ -2847,10 +2866,10 @@ DL5 and the problem starters keep coming back to the same picture: two coherent 
       sections: [
         {
           id: "quiz2-chapter-4-hook",
-          kicker: "Real-world hook",
+          kicker: "Topic preview",
           badge: "Hook",
           badgeTone: "review",
-          title: "The Hook - Light Through Tiny Gaps Does Not Behave Like Pebbles",
+          title: "Topic Preview - Why Two Slits Make A Pattern",
           html: `
             <p>If light were just little pellets fired through two narrow openings, you would expect two bright patches on the wall. But in the real experiment, you get a whole striped pattern of bright and dark bands.</p>
             <p>That is why the double-slit experiment matters so much. The pattern forces you to think of each slit as sending out a wave, and the rest is geometry: which points on the wall get matched-up waves, and which points get cancellation.</p>
@@ -2953,7 +2972,7 @@ DL5 and the problem starters keep coming back to the same picture: two coherent 
     {
       id: "quiz2-chapter-5",
       number: "05",
-      title: "Crystal Shift and DL6 Review",
+      title: "Topic 4 - Crystal Shift and DL6 Review",
       plainText: `
 DL6 Activity 8.16 keeps the double-slit picture but adds two twists: a crystal can insert a phase shift, and white light through many slits spreads different colors to different angles.
       `.trim(),
@@ -2978,10 +2997,10 @@ DL6 Activity 8.16 keeps the double-slit picture but adds two twists: a crystal c
       sections: [
         {
           id: "quiz2-chapter-5-hook",
-          kicker: "Real-world hook",
+          kicker: "Topic preview",
           badge: "Hook",
           badgeTone: "review",
-          title: "The Hook - If One Runner Starts Late, The Finish-Line Story Changes",
+          title: "Topic Preview - Why A Crystal Changes The Center",
           html: `
             <p>Picture two runners moving at the same speed toward the same finish line. If they start together, the middle of the race feels perfectly symmetric. But if one runner starts a fraction of a second late, that symmetry is gone even though their speeds are still identical.</p>
             <p>That is exactly what the crystal does in the double-slit setup. It does not change the slit geometry. It just delays one wave before the race to the screen begins, and suddenly even the center point can change from bright to dark.</p>
@@ -3076,8 +3095,8 @@ DL6 Activity 8.16 keeps the double-slit picture but adds two twists: a crystal c
         {
           id: "quiz2-chapter-5-review",
           kicker: "Tonight's plan",
-          badge: "Priority order",
-          badgeTone: "priority",
+          badge: "Checklist",
+          badgeTone: "method",
           title: "What To Drill Before The Quiz",
           html: `
             <div class="study-map-grid">
@@ -3112,7 +3131,7 @@ DL6 Activity 8.16 keeps the double-slit picture but adds two twists: a crystal c
   ],
   recap: {
     id: "quiz2-formula-sheet",
-    title: "Quiz 2 Rapid Sheet",
+    title: "Last-Minute Quiz 2 Sheet",
     plainText: `
 Quiz 2 rapid sheet.
 Same-frequency interference means use total phase.
