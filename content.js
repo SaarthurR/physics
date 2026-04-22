@@ -2284,6 +2284,17 @@ Quiz 2 is mainly an interference quiz. The official scope is DL3 Activities 8.9 
       ],
       sections: [
         {
+          id: "quiz2-chapter-1-hook",
+          kicker: "Real-world hook",
+          badge: "Hook",
+          badgeTone: "review",
+          title: "The Hook - Why One Step Can Change Everything",
+          html: `
+            <p>You've probably had this happen at a concert, in a car, or with two speakers in a room: you take one step and the sound suddenly gets louder. Take another step and it weirdly drops off again. The speakers did not change. <em>Your location</em> changed.</p>
+            <p>That is the whole spirit of Quiz 2. Tiny changes in path length and timing can completely change what you hear or see. Once that feels normal, the formulas stop feeling random and start feeling like bookkeeping.</p>
+          `,
+        },
+        {
           id: "quiz2-chapter-1-coverage",
           kicker: "Quiz map",
           badge: "Start",
@@ -2443,6 +2454,17 @@ This is the backbone of Quiz 2. Two waves meet. You compare their total phases. 
         },
       ],
       sections: [
+        {
+          id: "quiz2-chapter-2-hook",
+          kicker: "Real-world hook",
+          badge: "Hook",
+          badgeTone: "review",
+          title: "The Hook - Noise-Canceling Headphones Are Doing This",
+          html: `
+            <p>Noise-canceling headphones work because they do not just block sound. They create another sound wave designed to line up in the opposite phase, so the two waves cancel as they reach your ear.</p>
+            <p>That is interference in one sentence: same place, same time, but different phase relationship. Quiz 2 just asks you to track that phase relationship more carefully than your headphones do automatically.</p>
+          `,
+        },
         {
           id: "quiz2-chapter-2-total-phase",
           kicker: "Core idea",
@@ -2608,6 +2630,17 @@ Once the basic interference logic is clear, DL4 and the practice sets ask a more
       ],
       sections: [
         {
+          id: "quiz2-chapter-3-hook",
+          kicker: "Real-world hook",
+          badge: "Hook",
+          badgeTone: "review",
+          title: "The Hook - That Wobbling Sound When Two Notes Almost Match",
+          html: `
+            <p>Imagine two guitars trying to tune to the same note, but one string is still a tiny bit off. You do not hear two clean notes fighting each other. You hear one note whose volume swells and fades: wah... wah... wah.</p>
+            <p>That pulsing is beats. If one source also moves, like a siren or player walking relative to you, the heard frequency changes first and the beat pattern changes after that. This chapter is about keeping those two effects separate in your head.</p>
+          `,
+        },
+        {
           id: "quiz2-chapter-3-checklist",
           kicker: "DL4 Activity 8.11",
           badge: "Core",
@@ -2762,6 +2795,17 @@ DL5 and the problem starters keep coming back to the same picture: two coherent 
       ],
       sections: [
         {
+          id: "quiz2-chapter-4-hook",
+          kicker: "Real-world hook",
+          badge: "Hook",
+          badgeTone: "review",
+          title: "The Hook - Light Through Tiny Gaps Does Not Behave Like Pebbles",
+          html: `
+            <p>If light were just little pellets fired through two narrow openings, you would expect two bright patches on the wall. But in the real experiment, you get a whole striped pattern of bright and dark bands.</p>
+            <p>That is why the double-slit experiment matters so much. The pattern forces you to think of each slit as sending out a wave, and the rest is geometry: which points on the wall get matched-up waves, and which points get cancellation.</p>
+          `,
+        },
+        {
           id: "quiz2-chapter-4-huygens",
           kicker: "DL5 Activity 8.14",
           badge: "Big idea",
@@ -2881,6 +2925,17 @@ DL6 Activity 8.16 keeps the double-slit picture but adds two twists: a crystal c
         },
       ],
       sections: [
+        {
+          id: "quiz2-chapter-5-hook",
+          kicker: "Real-world hook",
+          badge: "Hook",
+          badgeTone: "review",
+          title: "The Hook - If One Runner Starts Late, The Finish-Line Story Changes",
+          html: `
+            <p>Picture two runners moving at the same speed toward the same finish line. If they start together, the middle of the race feels perfectly symmetric. But if one runner starts a fraction of a second late, that symmetry is gone even though their speeds are still identical.</p>
+            <p>That is exactly what the crystal does in the double-slit setup. It does not change the slit geometry. It just delays one wave before the race to the screen begins, and suddenly even the center point can change from bright to dark.</p>
+          `,
+        },
         {
           id: "quiz2-chapter-5-young",
           kicker: "DL6 Activity 8.16",
