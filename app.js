@@ -112,6 +112,43 @@ const guideConfigs = {
     summary:
       "A study map built around the official Quiz 2 scope: DL3 8.9-8.10, all of DL4 and DL5, and DL6 Activity 8.16.",
     sidebarLabel: "Quiz 2 study map",
+    outlineLegend: [
+      {
+        label: "Study hardest",
+        tone: "priority",
+        description: "Most repeated and highest-payoff material to drill first.",
+      },
+      {
+        label: "Must know",
+        tone: "priority",
+        description: "Core rule that unlocks multiple problem types.",
+      },
+      {
+        label: "Checklist",
+        tone: "method",
+        description: "Step-by-step setup to use when the prompt gets messy.",
+      },
+      {
+        label: "High yield",
+        tone: "priority",
+        description: "Shows up often enough that it is worth extra reps.",
+      },
+      {
+        label: "Model answer",
+        tone: "review",
+        description: "A worked pattern that shows how the reasoning should sound.",
+      },
+      {
+        label: "Avoid",
+        tone: "trap",
+        description: "Common mistakes that flip the answer even with good algebra.",
+      },
+      {
+        label: "Hook",
+        tone: "review",
+        description: "Real-world intuition that makes the physics easier to picture.",
+      },
+    ],
     formulaStrip: QUIZ_2_FORMULA_STRIP,
     guide: QUIZ_2_GUIDE,
     quizzesEnabled: false,
@@ -253,7 +290,7 @@ const annotationsKey = "waves-study-annotations";
 const notesKey = "waves-study-notes";
 const chatState = { messages: [] };
 const quizStates = new Map();
-let scrollSpyObserver = null;
+const scrollSpyFocusLine = 0.3;
 let pendingShowDocQuery = null;
 let selectedDocumentText = "";
 let selectedDocumentSource = null;
@@ -265,6 +302,9 @@ let studyLaterSession = null;
 let annotationItems = [];
 let notesText = "";
 let lastOpenedSectionId = "";
+let scrollSpyTargets = [];
+let scrollSpyTicking = false;
+let activeOutlineLinkId = "";
 let activeGuideId = loadActiveGuideId();
 
 renderActiveGuide();
@@ -281,6 +321,17 @@ wireChatEvents();
 wireStudyConceptsShell();
 wireNotesShell();
 wireSelectionAssist();
+window.addEventListener("scroll", scheduleScrollSpySync, { passive: true });
+window.addEventListener("resize", () => {
+  scheduleScrollSpySync();
+  positionOutlineHighlighter();
+});
+
+if (document.fonts?.ready) {
+  document.fonts.ready.then(() => {
+    syncActiveOutlineLink({ force: true, center: false, behavior: "auto" });
+  });
+}
 
 function loadActiveGuideId() {
   const saved = safeJsonParse(localStorage.getItem(activeGuideKey));
@@ -357,16 +408,58 @@ function renderFormulaStrip() {
     .join("");
 }
 
-function renderOutlineLabel(text, badge, tone) {
+function renderOutlineLabel(text, badge, tone, locator = "") {
   const badgeMarkup = badge
     ? `<span class="outline-badge${tone ? ` tone-${escapeHtml(tone)}` : ""}">${escapeHtml(badge)}</span>`
     : "";
+  const locatorMarkup = locator ? `<span class="outline-link-meta">${escapeHtml(locator)}</span>` : "";
 
   return `
-    <span class="outline-link-row">
-      <span>${escapeHtml(text)}</span>
-      ${badgeMarkup}
+    <span class="outline-link-shell">
+      <span class="outline-link-row">
+        <span class="outline-link-title">${escapeHtml(text)}</span>
+        ${badgeMarkup}
+      </span>
+      ${locatorMarkup}
     </span>
+  `;
+}
+
+function renderOutlineLegend(items = []) {
+  if (!items.length) return "";
+
+  return `
+    <section class="outline-legend" aria-label="Study map legend">
+      <p class="outline-legend-kicker">Legend</p>
+      <p class="outline-legend-note">Each section shows its packet locator underneath so you can jump back to the right DL fast.</p>
+      <div class="outline-legend-list">
+        ${items
+          .map(
+            (item) => `
+              <div class="outline-legend-item">
+                <div class="outline-legend-row">
+                  <span class="outline-badge${item.tone ? ` tone-${escapeHtml(item.tone)}` : ""}">${escapeHtml(
+                    item.label,
+                  )}</span>
+                </div>
+                <p class="outline-legend-copy">${escapeHtml(item.description || "")}</p>
+              </div>
+            `,
+          )
+          .join("")}
+      </div>
+    </section>
+  `;
+}
+
+function renderSectionLocator(locator) {
+  if (!locator) return "";
+
+  return `
+    <p class="doc-section-locator">
+      <strong>Packet locator:</strong>
+      <span>${escapeHtml(locator)}</span>
+    </p>
   `;
 }
 
@@ -387,6 +480,7 @@ function renderSectionHeading(section) {
         <span class="doc-section-title">${escapeHtml(section.title)}</span>
         ${badgeMarkup}
       </div>
+      ${renderSectionLocator(section.locator)}
     </div>
   `;
 }
@@ -414,12 +508,18 @@ function renderChapterIntro(chapter) {
 
 function renderOutline() {
   const studyGuide = getActiveStudyGuide();
+  const config = getActiveGuideConfig();
   const chapterLinks = studyGuide.chapters
     .map(
       (chapter) => `
         <li class="outline-item">
-          <a class="outline-link outline-link-chapter" href="#${chapter.id}" data-outline-link="${chapter.id}">
-            ${renderOutlineLabel(chapter.title, chapter.badge, chapter.badgeTone)}
+          <a
+            class="outline-link outline-link-chapter"
+            href="#${chapter.id}"
+            data-outline-link="${chapter.id}"
+            data-outline-kind="chapter"
+          >
+            ${renderOutlineLabel(chapter.title, chapter.badge, chapter.badgeTone, chapter.locator)}
           </a>
           <ul class="outline-sublist">
             ${chapter.sections
@@ -430,8 +530,10 @@ function renderOutline() {
                       class="outline-link outline-link-section"
                       href="#${section.id}"
                       data-outline-link="${section.id}"
+                      data-outline-kind="section"
+                      data-outline-parent="${chapter.id}"
                     >
-                      ${renderOutlineLabel(section.title, section.badge, section.badgeTone)}
+                      ${renderOutlineLabel(section.title, section.badge, section.badgeTone, section.locator)}
                     </a>
                   </li>
                 `,
@@ -445,6 +547,8 @@ function renderOutline() {
                       class="outline-link outline-link-section outline-link-quiz"
                       href="#${chapter.id}-quiz"
                       data-outline-link="${chapter.id}-quiz"
+                      data-outline-kind="section"
+                      data-outline-parent="${chapter.id}"
                     >
                       ${renderOutlineLabel(`Chapter ${String(Number(chapter.number))} Quiz`)}
                     </a>
@@ -461,7 +565,12 @@ function renderOutline() {
   const recapLinks = studyGuide.recap
     ? `
       <li class="outline-item">
-        <a class="outline-link outline-link-chapter" href="#${studyGuide.recap.id}" data-outline-link="${studyGuide.recap.id}">
+        <a
+          class="outline-link outline-link-chapter"
+          href="#${studyGuide.recap.id}"
+          data-outline-link="${studyGuide.recap.id}"
+          data-outline-kind="chapter"
+        >
           ${renderOutlineLabel(studyGuide.recap.title, studyGuide.recap.badge, studyGuide.recap.badgeTone)}
         </a>
         <ul class="outline-sublist">
@@ -473,8 +582,10 @@ function renderOutline() {
                     class="outline-link outline-link-section"
                     href="#${section.id}"
                     data-outline-link="${section.id}"
+                    data-outline-kind="section"
+                    data-outline-parent="${studyGuide.recap.id}"
                   >
-                    ${renderOutlineLabel(section.title, section.badge, section.badgeTone)}
+                    ${renderOutlineLabel(section.title, section.badge, section.badgeTone, section.locator)}
                   </a>
                 </li>
               `,
@@ -490,7 +601,12 @@ function renderOutline() {
     guideHasQuizzes() && unitQuizConfigs.length
       ? `
         <li class="outline-item">
-          <a class="outline-link outline-link-chapter" href="#unit-quizzes" data-outline-link="unit-quizzes">
+          <a
+            class="outline-link outline-link-chapter"
+            href="#unit-quizzes"
+            data-outline-link="unit-quizzes"
+            data-outline-kind="chapter"
+          >
             ${renderOutlineLabel("Full Unit Quizzes")}
           </a>
           <ul class="outline-sublist">
@@ -502,6 +618,8 @@ function renderOutline() {
                       class="outline-link outline-link-section outline-link-quiz"
                       href="#${quiz.id}"
                       data-outline-link="${quiz.id}"
+                      data-outline-kind="section"
+                      data-outline-parent="unit-quizzes"
                     >
                       ${renderOutlineLabel(quiz.sectionTitle)}
                     </a>
@@ -514,7 +632,13 @@ function renderOutline() {
       `
       : "";
 
-  outlineNav.innerHTML = `<ul class="outline-list">${chapterLinks}${recapLinks}${unitQuizLinks}</ul>`;
+  outlineNav.innerHTML = `
+    ${renderOutlineLegend(config.outlineLegend || [])}
+    <div class="outline-scroll-shell" data-outline-shell>
+      <div class="outline-active-pill" data-outline-pill aria-hidden="true"></div>
+      <ul class="outline-list">${chapterLinks}${recapLinks}${unitQuizLinks}</ul>
+    </div>
+  `;
 }
 
 function renderDocument() {
@@ -736,12 +860,8 @@ function wireResponsivePanels() {
 }
 
 function wireScrollSpy() {
-  if (scrollSpyObserver) {
-    scrollSpyObserver.disconnect();
-  }
-
   const studyGuide = getActiveStudyGuide();
-  const targets = [
+  scrollSpyTargets = [
     ...studyGuide.chapters.flatMap((chapter) => [
       chapter.id,
       ...chapter.sections.map((section) => section.id),
@@ -753,26 +873,126 @@ function wireScrollSpy() {
     .map((id) => document.getElementById(id))
     .filter(Boolean);
 
-  scrollSpyObserver = new IntersectionObserver(
-    (entries) => {
-      const visible = entries
-        .filter((entry) => entry.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+  syncActiveOutlineLink({ force: true, center: false, behavior: "auto" });
+}
 
-      if (!visible) return;
+function scheduleScrollSpySync() {
+  if (scrollSpyTicking) return;
 
-      const id = visible.target.id;
-      document.querySelectorAll("[data-outline-link]").forEach((link) => {
-        link.classList.toggle("is-active", link.getAttribute("data-outline-link") === id);
-      });
-    },
-    {
-      rootMargin: "-15% 0px -70% 0px",
-      threshold: [0.1, 0.35, 0.65],
-    },
-  );
+  scrollSpyTicking = true;
+  requestAnimationFrame(() => {
+    scrollSpyTicking = false;
+    syncActiveOutlineLink();
+  });
+}
 
-  targets.forEach((target) => scrollSpyObserver.observe(target));
+function syncActiveOutlineLink(options = {}) {
+  const nextId = getActiveScrollSpyId();
+  if (!nextId) {
+    hideOutlineHighlighter();
+    return;
+  }
+
+  setActiveOutlineLink(nextId, options);
+}
+
+function getActiveScrollSpyId() {
+  if (!scrollSpyTargets.length) return "";
+
+  const focusLine = window.innerHeight * scrollSpyFocusLine;
+  let activeTarget = scrollSpyTargets[0];
+
+  for (const target of scrollSpyTargets) {
+    if (target.getBoundingClientRect().top <= focusLine) {
+      activeTarget = target;
+      continue;
+    }
+
+    break;
+  }
+
+  return activeTarget?.id || "";
+}
+
+function setActiveOutlineLink(id, options = {}) {
+  if (!id) return;
+
+  const links = [...document.querySelectorAll("[data-outline-link]")];
+  let activeLink = null;
+
+  links.forEach((link) => {
+    const isActive = link.getAttribute("data-outline-link") === id;
+    link.classList.toggle("is-active", isActive);
+    link.classList.remove("is-parent-active");
+    if (isActive) activeLink = link;
+  });
+
+  if (!activeLink) {
+    activeOutlineLinkId = "";
+    hideOutlineHighlighter();
+    return;
+  }
+
+  const parentId = activeLink.getAttribute("data-outline-parent");
+  if (parentId && parentId !== id) {
+    const parentLink = outlineNav.querySelector(`[data-outline-link="${parentId}"]`);
+    parentLink?.classList.add("is-parent-active");
+  }
+
+  const shouldCenter = options.center ?? id !== activeOutlineLinkId;
+  activeOutlineLinkId = id;
+  positionOutlineHighlighter(activeLink);
+
+  if (shouldCenter) {
+    centerOutlineOnLink(activeLink, options.behavior || "smooth");
+  }
+}
+
+function positionOutlineHighlighter(activeLink) {
+  const pill = outlineNav.querySelector("[data-outline-pill]");
+  const shell = outlineNav.querySelector("[data-outline-shell]");
+  const target =
+    activeLink ||
+    (activeOutlineLinkId ? outlineNav.querySelector(`[data-outline-link="${activeOutlineLinkId}"]`) : null);
+
+  if (!pill || !shell || !target || docSidebar.classList.contains("is-collapsed")) {
+    hideOutlineHighlighter();
+    return;
+  }
+
+  const shellRect = shell.getBoundingClientRect();
+  const linkRect = target.getBoundingClientRect();
+  const insetX = 6;
+  const insetY = 4;
+
+  pill.style.opacity = "1";
+  pill.style.transform = `translate3d(${Math.round(linkRect.left - shellRect.left - insetX)}px, ${Math.round(
+    linkRect.top - shellRect.top - insetY,
+  )}px, 0)`;
+  pill.style.width = `${Math.round(linkRect.width + insetX * 2)}px`;
+  pill.style.height = `${Math.round(linkRect.height + insetY * 2)}px`;
+}
+
+function hideOutlineHighlighter() {
+  const pill = outlineNav.querySelector("[data-outline-pill]");
+  if (!pill) return;
+  pill.style.opacity = "0";
+}
+
+function centerOutlineOnLink(activeLink, behavior = "smooth") {
+  if (!activeLink || docSidebar.classList.contains("is-collapsed")) return;
+
+  const sidebarRect = docSidebar.getBoundingClientRect();
+  const linkRect = activeLink.getBoundingClientRect();
+  const nextTop =
+    docSidebar.scrollTop + (linkRect.top - sidebarRect.top) - (docSidebar.clientHeight - linkRect.height) / 2;
+
+  if (Math.abs(docSidebar.scrollTop - nextTop) < 10) return;
+
+  docSidebar.scrollTo({
+    top: Math.max(0, nextTop),
+    behavior,
+  });
 }
 
 function wireChatEvents() {
@@ -783,12 +1003,21 @@ function wireChatEvents() {
     sidebarCollapse.setAttribute("aria-expanded", String(!nextCollapsed));
     sidebarCollapse.textContent = nextCollapsed ? "›" : "‹";
     localStorage.setItem(sidebarStateKey, JSON.stringify({ collapsed: nextCollapsed }));
+    requestAnimationFrame(() => {
+      syncActiveOutlineLink({ force: true, center: !nextCollapsed, behavior: "auto" });
+    });
   });
 
   guideTabs.forEach((tab) => {
     tab.addEventListener("click", () => {
       setActiveGuide(tab.getAttribute("data-guide-tab"));
     });
+  });
+
+  outlineNav.addEventListener("click", (event) => {
+    const link = event.target.closest("[data-outline-link]");
+    if (!link) return;
+    setActiveOutlineLink(link.getAttribute("data-outline-link"), { center: true });
   });
 
   studyConceptsButton.addEventListener("click", () => {
@@ -903,6 +1132,9 @@ function loadSidebarState() {
   workspace.classList.toggle("sidebar-collapsed", collapsed);
   sidebarCollapse.setAttribute("aria-expanded", String(!collapsed));
   sidebarCollapse.textContent = collapsed ? "›" : "‹";
+  requestAnimationFrame(() => {
+    syncActiveOutlineLink({ force: true, center: !collapsed, behavior: "auto" });
+  });
 }
 
 function loadResponseMode() {

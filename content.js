@@ -2253,7 +2253,58 @@ de Broglie wavelength lambda = h / p.
   },
 };
 
-export const QUIZ_2_GUIDE = {
+const QUIZ_2_SECTION_LOCATORS = {
+  "quiz2-chapter-1-hook": "Packet overview • DL3 Activities 8.9-8.10, DL4, DL5, and DL6 Activity 8.16",
+  "quiz2-chapter-1-coverage": "Official scope • DL3 Activities 8.9-8.10, all of DL4 and DL5, and DL6 Activity 8.16",
+  "quiz2-chapter-1-patterns": "Practice scan • Q2-1 through Q2-6 plus Problem Starts",
+  "quiz2-chapter-1-roadmap": "Cross-packet method • use on every Quiz 2 problem family",
+  "quiz2-chapter-1-mistakes": "Cross-packet traps • pulled from repeated Quiz 2 practice mistakes",
+  "quiz2-chapter-2-hook": "DL3 • Activity 8.9 superposition intuition",
+  "quiz2-chapter-2-total-phase": "DL3 • Activity 8.9 total phase and interference conditions",
+  "quiz2-chapter-2-phase-chart": "DL4 • Activity 8.11 simplified phase chart; see DL3 Activity 8.10 geometry",
+  "quiz2-chapter-2-2d": "DL3 • Activity 8.10 two-dimensional interference; see Problem Starts 1",
+  "quiz2-chapter-2-worked": "Q2-3 Practice 1 • two-radio-tower destructive interference",
+  "quiz2-chapter-3-hook": "DL4-DL5 • beats and sound-motion intuition from Activities 8.12-8.13",
+  "quiz2-chapter-3-checklist": "DL4 • Activity 8.11 speaker scenarios 1-4",
+  "quiz2-chapter-3-beats": "DL4 • Activity 8.12 beats, carrier pitch, and envelope",
+  "quiz2-chapter-3-combined": "DL4 • Activity 8.12 Angharad setup; see Q2-5(c) moving-speaker beats",
+  "quiz2-chapter-4-hook": "DL5 • Activities 8.14-8.15 why the double-slit pattern matters",
+  "quiz2-chapter-4-huygens": "DL5 • Activity 8.14 diffraction and Huygens principle",
+  "quiz2-chapter-4-geometry": "DL5 • Activity 8.15 double-slit fringe geometry; see Problem Starts 3-4",
+  "quiz2-chapter-4-worked": "Problem Starts • Problems 3-4 standard screen-spacing setup",
+  "quiz2-chapter-5-hook": "DL6 • Activity 8.16 crystal-delay intuition",
+  "quiz2-chapter-5-young": "DL6 • Activity 8.16 crystal-in-one-slit setup",
+  "quiz2-chapter-5-fringe-math": "DL6 • Activity 8.16 crystal phase shift; see Q2-1 #2 and Q2-6 #1",
+  "quiz2-chapter-5-crystal": "DL6 • Activity 8.16 white-light grating questions 1-2",
+  "quiz2-chapter-5-review": "Cross-packet drill order • based on repeated Quiz 2 practice patterns",
+  "quiz2-formula-sheet-core": "Mixed recap • DL3 8.9-8.10, DL4 8.11-8.12, DL5 8.14-8.15, and DL6 8.16",
+  "quiz2-formula-sheet-translate": "Mixed recap • packet wording translated into the right move",
+  "quiz2-formula-sheet-traps": "Mixed recap • last-minute trap check across the official packet scope",
+};
+
+function withQuiz2Locators(guide) {
+  return {
+    ...guide,
+    chapters: guide.chapters.map((chapter) => ({
+      ...chapter,
+      sections: chapter.sections.map((section) => ({
+        ...section,
+        locator: QUIZ_2_SECTION_LOCATORS[section.id] || section.locator || "",
+      })),
+    })),
+    recap: guide.recap
+      ? {
+          ...guide.recap,
+          sections: guide.recap.sections.map((section) => ({
+            ...section,
+            locator: QUIZ_2_SECTION_LOCATORS[section.id] || section.locator || "",
+          })),
+        }
+      : null,
+  };
+}
+
+export const QUIZ_2_GUIDE = withQuiz2Locators({
   title: "Quiz 2 Study Guide",
   subtitle: "Official scope: DL3 8.9-8.10, DL4, DL5, and DL6 Activity 8.16",
   chapters: [
@@ -3195,7 +3246,7 @@ Crystal means add a source phase shift.
       },
     ],
   },
-};
+});
 
 export const QUIZ_BANK = {
   "chapter-1": [
