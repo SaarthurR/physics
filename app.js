@@ -108,9 +108,10 @@ const guideConfigs = {
     label: "Quiz 2",
     eyebrow: "Physics 7C · Quiz 2",
     title: "Quiz 2 Study Guide",
-    heading: "Interference, diffraction, standing waves, and quantum basics",
+    heading: "Interference, beats, and double-slit review",
     summary:
-      "A cleaner quiz-focused guide built from the DL3 through DL6 topics and the new study-guide outline.",
+      "A study map built around the official Quiz 2 scope: DL3 8.9-8.10, all of DL4 and DL5, and DL6 Activity 8.16.",
+    sidebarLabel: "Quiz 2 study map",
     formulaStrip: QUIZ_2_FORMULA_STRIP,
     guide: QUIZ_2_GUIDE,
     quizzesEnabled: false,
@@ -334,7 +335,7 @@ function renderGuideChrome() {
   if (docGuideLabel) docGuideLabel.textContent = config.label;
   if (docGuideHeading) docGuideHeading.textContent = config.heading;
   if (docGuideSummary) docGuideSummary.textContent = config.summary;
-  if (sidebarLabel) sidebarLabel.textContent = `${config.label} bookmarks`;
+  if (sidebarLabel) sidebarLabel.textContent = config.sidebarLabel || `${config.label} bookmarks`;
 
   guideTabs.forEach((tab) => {
     const isActive = tab.getAttribute("data-guide-tab") === activeGuideId;
@@ -356,6 +357,61 @@ function renderFormulaStrip() {
     .join("");
 }
 
+function renderOutlineLabel(text, badge, tone) {
+  const badgeMarkup = badge
+    ? `<span class="outline-badge${tone ? ` tone-${escapeHtml(tone)}` : ""}">${escapeHtml(badge)}</span>`
+    : "";
+
+  return `
+    <span class="outline-link-row">
+      <span>${escapeHtml(text)}</span>
+      ${badgeMarkup}
+    </span>
+  `;
+}
+
+function renderSectionHeading(section) {
+  const kickerMarkup = section.kicker
+    ? `<p class="doc-section-kicker">${escapeHtml(section.kicker)}</p>`
+    : "";
+  const badgeMarkup = section.badge
+    ? `<span class="section-badge${section.badgeTone ? ` tone-${escapeHtml(section.badgeTone)}` : ""}">${escapeHtml(
+        section.badge,
+      )}</span>`
+    : "";
+
+  return `
+    <div class="doc-section-heading">
+      ${kickerMarkup}
+      <div class="doc-section-title-row">
+        <span class="doc-section-title">${escapeHtml(section.title)}</span>
+        ${badgeMarkup}
+      </div>
+    </div>
+  `;
+}
+
+function renderChapterIntro(chapter) {
+  if (!Array.isArray(chapter.studyCard) || !chapter.studyCard.length) return "";
+
+  return `
+    <div class="doc-chapter-intro">
+      <div class="chapter-intro-grid">
+        ${chapter.studyCard
+          .map(
+            (item) => `
+              <div class="chapter-intro-card">
+                <p class="chapter-intro-label">${escapeHtml(item.label || "Note")}</p>
+                <p class="chapter-intro-value">${escapeHtml(item.value || "")}</p>
+              </div>
+            `,
+          )
+          .join("")}
+      </div>
+    </div>
+  `;
+}
+
 function renderOutline() {
   const studyGuide = getActiveStudyGuide();
   const chapterLinks = studyGuide.chapters
@@ -363,7 +419,7 @@ function renderOutline() {
       (chapter) => `
         <li class="outline-item">
           <a class="outline-link outline-link-chapter" href="#${chapter.id}" data-outline-link="${chapter.id}">
-            ${escapeHtml(chapter.title)}
+            ${renderOutlineLabel(chapter.title, chapter.badge, chapter.badgeTone)}
           </a>
           <ul class="outline-sublist">
             ${chapter.sections
@@ -375,7 +431,7 @@ function renderOutline() {
                       href="#${section.id}"
                       data-outline-link="${section.id}"
                     >
-                      ${escapeHtml(section.title)}
+                      ${renderOutlineLabel(section.title, section.badge, section.badgeTone)}
                     </a>
                   </li>
                 `,
@@ -390,7 +446,7 @@ function renderOutline() {
                       href="#${chapter.id}-quiz"
                       data-outline-link="${chapter.id}-quiz"
                     >
-                      Chapter ${escapeHtml(String(Number(chapter.number)))} Quiz
+                      ${renderOutlineLabel(`Chapter ${String(Number(chapter.number))} Quiz`)}
                     </a>
                   </li>
                 `
@@ -406,7 +462,7 @@ function renderOutline() {
     ? `
       <li class="outline-item">
         <a class="outline-link outline-link-chapter" href="#${studyGuide.recap.id}" data-outline-link="${studyGuide.recap.id}">
-          ${escapeHtml(studyGuide.recap.title)}
+          ${renderOutlineLabel(studyGuide.recap.title, studyGuide.recap.badge, studyGuide.recap.badgeTone)}
         </a>
         <ul class="outline-sublist">
           ${studyGuide.recap.sections
@@ -418,7 +474,7 @@ function renderOutline() {
                     href="#${section.id}"
                     data-outline-link="${section.id}"
                   >
-                    ${escapeHtml(section.title)}
+                    ${renderOutlineLabel(section.title, section.badge, section.badgeTone)}
                   </a>
                 </li>
               `,
@@ -435,7 +491,7 @@ function renderOutline() {
       ? `
         <li class="outline-item">
           <a class="outline-link outline-link-chapter" href="#unit-quizzes" data-outline-link="unit-quizzes">
-            Full Unit Quizzes
+            ${renderOutlineLabel("Full Unit Quizzes")}
           </a>
           <ul class="outline-sublist">
             ${unitQuizConfigs
@@ -447,7 +503,7 @@ function renderOutline() {
                       href="#${quiz.id}"
                       data-outline-link="${quiz.id}"
                     >
-                      ${escapeHtml(quiz.sectionTitle)}
+                      ${renderOutlineLabel(quiz.sectionTitle)}
                     </a>
                   </li>
                 `,
@@ -471,14 +527,13 @@ function renderDocument() {
             <p class="chapter-eyebrow">Chapter ${chapter.number}</p>
             <h3>${escapeHtml(chapter.title.replace(/^Chapter \d+ - /, ""))}</h3>
           </div>
+          ${renderChapterIntro(chapter)}
           <div class="doc-section-stack">
             ${chapter.sections
               .map(
                 (section) => `
                   <article class="doc-section" id="${section.id}">
-                    <div class="doc-section-heading">
-                      <span class="doc-section-title">${escapeHtml(section.title)}</span>
-                    </div>
+                    ${renderSectionHeading(section)}
                     <div class="doc-section-body">
                       ${renderSectionBody(section)}
                     </div>
@@ -505,9 +560,7 @@ function renderDocument() {
             .map(
               (section) => `
                 <article class="doc-section" id="${section.id}">
-                  <div class="doc-section-heading">
-                    <span class="doc-section-title">${escapeHtml(section.title)}</span>
-                  </div>
+                  ${renderSectionHeading(section)}
                   <div class="doc-section-body">
                     ${renderSectionBody(section)}
                   </div>

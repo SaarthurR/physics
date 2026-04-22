@@ -424,6 +424,13 @@ textarea:focus-visible {
   border-radius: 10px;
 }
 
+.outline-link-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
 .outline-link-chapter {
   font-weight: 600;
   color: var(--ink);
@@ -431,6 +438,25 @@ textarea:focus-visible {
 
 .outline-link-section {
   font-size: 0.95rem;
+}
+
+.outline-badge,
+.section-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 9px;
+  border-radius: 999px;
+  font-size: 0.69rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.outline-badge {
+  background: rgba(95, 129, 195, 0.12);
+  color: var(--accent-deep);
 }
 
 .outline-link.is-active {
@@ -536,6 +562,59 @@ textarea:focus-visible {
   line-height: 1.03;
 }
 
+.doc-chapter-intro {
+  margin-top: 18px;
+}
+
+.chapter-intro-grid,
+.study-map-grid,
+.worked-example-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.chapter-intro-card,
+.study-map-card,
+.worked-step {
+  min-width: 0;
+  padding: 16px 18px;
+  border: 1px solid rgba(95, 129, 195, 0.12);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.76);
+}
+
+.chapter-intro-label {
+  margin: 0 0 8px;
+  color: var(--accent-deep);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.chapter-intro-value,
+.study-map-card p,
+.worked-step p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.72;
+}
+
+.study-map-card h4,
+.worked-example-head h4 {
+  margin: 0 0 8px;
+  font-family: "Fraunces", serif;
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.study-map-card .quiz-kicker,
+.worked-example-head .quiz-kicker {
+  margin: 0 0 6px;
+}
+
 .doc-section-stack {
   display: grid;
   gap: 22px;
@@ -551,6 +630,22 @@ textarea:focus-visible {
 
 .doc-section-heading {
   padding: 22px 24px 0;
+}
+
+.doc-section-kicker {
+  margin: 0 0 10px;
+  color: var(--accent-deep);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.doc-section-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .doc-section-trigger {
@@ -822,6 +917,84 @@ textarea:focus-visible {
 
 .callout {
   color: var(--ink);
+}
+
+.outline-badge.tone-priority,
+.section-badge.tone-priority {
+  background: rgba(237, 149, 52, 0.16);
+  color: #955018;
+}
+
+.outline-badge.tone-trap,
+.section-badge.tone-trap {
+  background: rgba(177, 72, 72, 0.14);
+  color: #8d2b2b;
+}
+
+.outline-badge.tone-method,
+.section-badge.tone-method {
+  background: rgba(69, 122, 101, 0.14);
+  color: #24604a;
+}
+
+.outline-badge.tone-review,
+.section-badge.tone-review {
+  background: rgba(95, 129, 195, 0.12);
+  color: var(--accent-deep);
+}
+
+.callout.callout-priority {
+  border-color: rgba(237, 149, 52, 0.16);
+  background: rgba(250, 186, 120, 0.14);
+}
+
+.callout.callout-trap {
+  border-color: rgba(177, 72, 72, 0.18);
+  background: rgba(192, 96, 96, 0.1);
+}
+
+.callout.callout-method {
+  border-color: rgba(69, 122, 101, 0.16);
+  background: rgba(104, 166, 142, 0.1);
+}
+
+.callout.callout-review {
+  border-color: rgba(95, 129, 195, 0.14);
+  background: rgba(95, 129, 195, 0.08);
+}
+
+.worked-example {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+  padding: 18px;
+  border: 1px solid rgba(95, 129, 195, 0.14);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.worked-example-head {
+  display: grid;
+  gap: 8px;
+}
+
+.worked-step strong {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+
+.takeaway-line {
+  margin-top: 16px;
+  padding: 16px 18px;
+  border-left: 3px solid rgba(95, 129, 195, 0.4);
+  background: rgba(95, 129, 195, 0.06);
+  border-radius: 0 18px 18px 0;
+  color: var(--ink);
+}
+
+.takeaway-line strong {
+  color: var(--accent-deep);
 }
 
 .concept-figure {
@@ -1832,6 +2005,12 @@ textarea:focus-visible {
 
   .concept-gallery {
     grid-template-columns: 1fr;
+  }
+
+  .doc-section-title-row,
+  .outline-link-row {
+    flex-wrap: wrap;
+    align-items: flex-start;
   }
 
   .doc-section-heading {
