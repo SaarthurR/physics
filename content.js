@@ -1754,10 +1754,16 @@ Use the wave equation to read amplitude, period, wavelength, direction, and phas
                 </tr>
               </tbody>
             </table>
-            <figure class="concept-figure">
-              <img src="./assets/figures/chapter3-position-time-comparison.png" alt="Position and time wave graphs for reading wavelength and period" />
-              <figcaption>Use the position graph to read λ and the time graph to read T. They answer different questions.</figcaption>
-            </figure>
+            <div class="concept-gallery">
+              <figure class="concept-figure">
+                <img src="./assets/figures/quiz2-chapter2-snapshot-graph-dl1.png" alt="DL1 snapshot graph y versus x at a fixed time t sub 0" />
+                <figcaption>Worksheet snapshot graph: at fixed time <em>t₀</em>, use the shape across space to read amplitude and wavelength.</figcaption>
+              </figure>
+              <figure class="concept-figure">
+                <img src="./assets/figures/quiz2-chapter2-history-graph-dl1.png" alt="DL1 history graph y versus t at a fixed position x sub 0" />
+                <figcaption>Worksheet history graph: at fixed position <em>x₀</em>, use the motion over time to read amplitude and period.</figcaption>
+              </figure>
+            </div>
           `,
         },
         {
@@ -1772,6 +1778,10 @@ Use the wave equation to read amplitude, period, wavelength, direction, and phas
             <div class="callout">
               <strong>Fast check:</strong> if the same crest shows up at a larger x-value a little later, the disturbance is moving to the right.
             </div>
+            <figure class="concept-figure">
+              <img src="./assets/figures/quiz2-chapter2-direction-graphs-dl3.png" alt="DL3 time graphs at x equals 1.0 meters and x equals 1.1 meters showing the crest arrives later at the larger position" />
+              <figcaption>DL3 comparison: the crest reaches <em>x = 1.1 m</em> after it reaches <em>x = 1.0 m</em>, so the wave is moving to the right and the x-term takes the minus sign.</figcaption>
+            </figure>
           `,
         },
       ],
