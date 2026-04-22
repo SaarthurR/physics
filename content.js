@@ -2282,22 +2282,24 @@ const QUIZ_2_SECTION_LOCATORS = {
   "quiz2-formula-sheet-traps": "Mixed recap • last-minute trap check across the official packet scope",
 };
 
-function withSectionLocators(guide, locators = {}) {
+function withSectionLocators(guide, locators = {}, chapterLocators = {}) {
   return {
     ...guide,
     chapters: guide.chapters.map((chapter) => ({
       ...chapter,
+      locator: chapterLocators[chapter.id] || chapter.locator || "",
       sections: chapter.sections.map((section) => ({
         ...section,
-        locator: locators[section.id] || section.locator || "",
+        locator: locators[section.id] || chapterLocators[chapter.id] || section.locator || "",
       })),
     })),
     recap: guide.recap
       ? {
           ...guide.recap,
+          locator: chapterLocators[guide.recap.id] || guide.recap.locator || "",
           sections: guide.recap.sections.map((section) => ({
             ...section,
-            locator: locators[section.id] || section.locator || "",
+            locator: locators[section.id] || chapterLocators[guide.recap.id] || section.locator || "",
           })),
         }
       : null,
@@ -4401,6 +4403,310 @@ White-light ordering comes from d sin theta = n lambda.
     },
   },
   QUIZ_2_PW_SECTION_LOCATORS,
+);
+
+const QUIZ_1_CHAPTER_LOCATORS = {
+  "chapter-1": "DL1 • Activity 8.1 what is a wave",
+  "chapter-2": "DL1 • Activity 8.2 1-D sinusoidal continuous waves",
+  "chapter-3": "DL2 • Activities 8.3-8.4 wave graphs and wave-equation reading",
+  "chapter-4": "DL2 • Activity 8.5 higher-dimensional waves",
+  "chapter-5": "DL3 • Activity 8.8 Doppler effect",
+  "chapter-6": "DL3 • Activity 8.9 superposition of waves",
+  "chapter-7": "Core reference • DL1-DL3 formulas",
+  "chapter-8": "DL4 • Activity 8.11 interference in 1D and 2D",
+  "chapter-9": "DL4 • Activity 8.12 beats",
+  "chapter-10": "DL5 • Activities 8.14-8.15 diffraction and Young's double slit",
+  "chapter-11": "DL5 • Activity 8.15 diffraction gratings and wave behavior of light",
+  "chapter-12": "Complete reference • DL1-DL5 formulas",
+  "chapter-13": "Textbook supplement • Sections 8.1-8.6",
+  "final-recap": "Mixed recap • DL1-DL5 plus textbook supplement 8.1-8.6",
+};
+
+const QUIZ_1_SECTION_LOCATORS = {
+  "chapter-3-tricky": "DL3 • Activity 8.7 wave equation wrap-up mock quiz",
+  "chapter-4-decibels": "DL2 • Activity 8.6 human hearing and decibels",
+  "chapter-4-two-speakers": "DL2 • Activity 8.6 decibel combination example",
+  "chapter-6-pond-problem": "DL3 • Activity 8.10 superposition of waves in two dimensions",
+  "chapter-8-kdvs": "DL5 • Activity 8.13 KDVS radio antennas wrap-up",
+  "chapter-9-challenge": "DL5 • Activity 8.13 beats + Doppler combined",
+  "chapter-11-phase-shift": "DL6 • Activity 8.16 crystal phase-shift extension",
+  "chapter-13-8-1": "Textbook supplement • Section 8.1 introduction to waves",
+  "chapter-13-8-2": "Textbook supplement • Section 8.2 wave representation",
+  "chapter-13-8-3": "Textbook supplement • Section 8.3 multi-dimensional waves",
+  "chapter-13-8-4": "Textbook supplement • Section 8.4 Doppler effect",
+  "chapter-13-8-5": "Textbook supplement • Section 8.5 superposition and interference",
+  "chapter-13-8-6": "Textbook supplement • Section 8.6 beats",
+  "chapter-13-summary": "Textbook supplement • Sections 8.1-8.6 big-picture add-ons",
+  "final-recap-10": "Mixed recap • all of Unit 8 in 15 sentences",
+};
+
+export const QUIZ_1_GUIDE = withSectionLocators(STUDY_GUIDE, QUIZ_1_SECTION_LOCATORS, QUIZ_1_CHAPTER_LOCATORS);
+
+const STUDY_GUIDE_SECTION_INDEX = Object.fromEntries(
+  [
+    ...STUDY_GUIDE.chapters.flatMap((chapter) => chapter.sections),
+    ...(STUDY_GUIDE.recap?.sections || []),
+  ].map((section) => [section.id, section]),
+);
+
+function cloneStudyGuideSection(sourceId, id, overrides = {}) {
+  const source = STUDY_GUIDE_SECTION_INDEX[sourceId];
+  if (!source) {
+    throw new Error(`Unknown study-guide section: ${sourceId}`);
+  }
+
+  return {
+    ...source,
+    id,
+    ...overrides,
+  };
+}
+
+const QUIZ_2_CLASSIC_CHAPTER_LOCATORS = {
+  "quiz2-classic-chapter-1": "DL3 • Activities 8.9-8.10 superposition and two-dimensional interference",
+  "quiz2-classic-chapter-2": "DL4 • Activity 8.11 same-frequency interference scenarios",
+  "quiz2-classic-chapter-3": "DL4-DL5 • beats plus wrap-up applications",
+  "quiz2-classic-chapter-4": "DL5 • Activities 8.14-8.15 diffraction and Young's double slit",
+  "quiz2-classic-chapter-5": "DL6 • Activity 8.16 plus the grating ideas it reviews",
+  "quiz2-classic-chapter-6": "Mixed reference • official Quiz 2 formulas from DL3 through DL6 Activity 8.16",
+  "quiz2-classic-recap": "Mixed recap • official Quiz 2 scope in one last pass",
+};
+
+const QUIZ_2_CLASSIC_SECTION_LOCATORS = {
+  "quiz2-classic-ch1-pond": "DL3 • Activity 8.10 superposition of waves in two dimensions",
+  "quiz2-classic-ch2-kdvs": "DL5 • Activity 8.13 KDVS radio antennas wrap-up",
+  "quiz2-classic-ch3-challenge": "DL5 • Activity 8.13 beats + Doppler combined",
+  "quiz2-classic-ch4-hook": "DL5 • Activity 8.14 diffraction and two-slit interference",
+  "quiz2-classic-ch4-wavefront-ray": "DL5 • Activity 8.14 diffraction and two-slit interference",
+  "quiz2-classic-ch4-young": "DL5 • Activity 8.15 why do we think light is a wave",
+  "quiz2-classic-ch4-geometry": "DL5 • Activity 8.15 double-slit geometry and bright or dark conditions",
+  "quiz2-classic-ch4-small-angle": "DL5 • Activity 8.15 small-angle fringe spacing",
+  "quiz2-classic-ch4-worked": "DL5 • Activity 8.15 red-versus-blue fringe spacing application",
+  "quiz2-classic-ch5-hook": "DL5 • Activity 8.15 diffraction grating intuition",
+  "quiz2-classic-ch5-multislit": "DL5 • Activity 8.15 many-slit diffraction and sharper maxima",
+  "quiz2-classic-ch5-grating-formula": "DL5 • Activity 8.15 diffraction grating formula",
+  "quiz2-classic-ch5-white-light": "DL6 • Activity 8.16 white light through a diffraction grating",
+  "quiz2-classic-ch5-phase-shift": "DL6 • Activity 8.16 crystal phase-shift mock quiz",
+  "quiz2-classic-ch6-reference": "Mixed reference • official Quiz 2 formulas from DL3 8.9-8.10, DL4, DL5, and DL6 8.16",
+  "quiz2-classic-recap-12": "Mixed recap • Quiz 2 in 12 sentences",
+};
+
+export const QUIZ_2_CLASSIC_GUIDE = withSectionLocators(
+  {
+    title: "Quiz 2 Study Guide",
+    subtitle: "Quiz 1-style guide | DL3 8.9-8.10, DL4, DL5, and DL6 Activity 8.16",
+    chapters: [
+      {
+        id: "quiz2-classic-chapter-1",
+        number: "01",
+        title: "Chapter 1 - Superposition and Interference",
+        plainText: `
+Chapter 1 Superposition and Interference for Quiz 2.
+This chapter teaches the official DL3 core for Quiz 2: Act 8.9 and Act 8.10.
+The key ideas are superposition, constructive and destructive interference, total phase difference, and two-dimensional path-difference geometry.
+        `.trim(),
+        sections: [
+          cloneStudyGuideSection("chapter-6-hook", "quiz2-classic-ch1-hook"),
+          cloneStudyGuideSection("chapter-6-superposition", "quiz2-classic-ch1-superposition"),
+          cloneStudyGuideSection("chapter-6-types", "quiz2-classic-ch1-types"),
+          cloneStudyGuideSection("chapter-6-phase-chart", "quiz2-classic-ch1-phase-chart"),
+          cloneStudyGuideSection("chapter-6-conditions", "quiz2-classic-ch1-conditions"),
+          cloneStudyGuideSection("chapter-6-pond-problem", "quiz2-classic-ch1-pond"),
+        ],
+      },
+      {
+        id: "quiz2-classic-chapter-2",
+        number: "02",
+        title: "Chapter 2 - Interference Scenarios and Simplified Phase Charts",
+        plainText: `
+Chapter 2 Interference Scenarios and Simplified Phase Charts for Quiz 2.
+This chapter covers the same-frequency interference setups from DL4 Activity 8.11 and keeps the KDVS-style wrap-up application that connects fixed phase offsets to path difference.
+        `.trim(),
+        sections: [
+          cloneStudyGuideSection("chapter-8-hook", "quiz2-classic-ch2-hook"),
+          cloneStudyGuideSection("chapter-8-simplified-phase-chart", "quiz2-classic-ch2-phase-chart"),
+          cloneStudyGuideSection("chapter-8-four-scenarios", "quiz2-classic-ch2-scenarios"),
+          cloneStudyGuideSection("chapter-8-walking-around", "quiz2-classic-ch2-walking"),
+          cloneStudyGuideSection("chapter-8-kdvs", "quiz2-classic-ch2-kdvs"),
+        ],
+      },
+      {
+        id: "quiz2-classic-chapter-3",
+        number: "03",
+        title: "Chapter 3 - Beats and Moving Sound",
+        plainText: `
+Chapter 3 Beats and Moving Sound for Quiz 2.
+This chapter covers DL4 Activity 8.12 and the DL5 wrap-up application where Doppler shift changes the heard frequencies before you compute the beats.
+        `.trim(),
+        sections: [
+          cloneStudyGuideSection("chapter-9-hook", "quiz2-classic-ch3-hook"),
+          cloneStudyGuideSection("chapter-9-what-happening", "quiz2-classic-ch3-what-happening"),
+          cloneStudyGuideSection("chapter-9-derivation", "quiz2-classic-ch3-derivation"),
+          cloneStudyGuideSection("chapter-9-reading-graphs", "quiz2-classic-ch3-reading-graphs"),
+          cloneStudyGuideSection("chapter-9-challenge", "quiz2-classic-ch3-challenge"),
+        ],
+      },
+      {
+        id: "quiz2-classic-chapter-4",
+        number: "04",
+        title: "Chapter 4 - Diffraction and Young's Double Slit Interference",
+        plainText: `
+Chapter 4 Diffraction and Young's Double Slit Interference for Quiz 2.
+This chapter covers the DL5 material on diffraction, two-slit interference, the wave behavior of light, and the geometry that turns path difference into bright and dark fringes.
+        `.trim(),
+        sections: [
+          cloneStudyGuideSection("chapter-10-hook", "quiz2-classic-ch4-hook"),
+          cloneStudyGuideSection("chapter-10-wavefront-ray", "quiz2-classic-ch4-wavefront-ray"),
+          cloneStudyGuideSection("chapter-10-young", "quiz2-classic-ch4-young"),
+          cloneStudyGuideSection("chapter-10-geometry", "quiz2-classic-ch4-geometry"),
+          cloneStudyGuideSection("chapter-10-small-angle", "quiz2-classic-ch4-small-angle"),
+          cloneStudyGuideSection("chapter-10-worked-example", "quiz2-classic-ch4-worked"),
+        ],
+      },
+      {
+        id: "quiz2-classic-chapter-5",
+        number: "05",
+        title: "Chapter 5 - Gratings, White Light, and Crystal Phase Shifts",
+        plainText: `
+Chapter 5 Gratings, White Light, and Crystal Phase Shifts for Quiz 2.
+This chapter keeps only the parts you need from the later light material: many-slit intuition, the grating formula, white-light color ordering, and the crystal-shifted double-slit setup from DL6 Activity 8.16.
+        `.trim(),
+        sections: [
+          cloneStudyGuideSection("chapter-11-hook", "quiz2-classic-ch5-hook"),
+          cloneStudyGuideSection("chapter-11-multislit", "quiz2-classic-ch5-multislit"),
+          cloneStudyGuideSection("chapter-11-grating-formula", "quiz2-classic-ch5-grating-formula"),
+          cloneStudyGuideSection("chapter-11-white-light", "quiz2-classic-ch5-white-light"),
+          cloneStudyGuideSection("chapter-11-phase-shift", "quiz2-classic-ch5-phase-shift"),
+        ],
+      },
+      {
+        id: "quiz2-classic-chapter-6",
+        number: "06",
+        title: "Chapter 6 - Quiz 2 Formula Reference",
+        plainText: `
+Chapter 6 Quiz 2 Formula Reference.
+This reference keeps only the formulas that actually matter for the official Quiz 2 scope: total phase, beats, Doppler before beats, double-slit geometry, and crystal phase shifts.
+        `.trim(),
+        sections: [
+          {
+            id: "quiz2-classic-ch6-reference",
+            title: "Quiz 2 Formula Reference",
+            html: `
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Formula</th>
+                    <th>What it means</th>
+                    <th>Watch out</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>ΔΦ = -2πΔx/λ + Δφ₀</td>
+                    <td>Core two-source phase-difference formula</td>
+                    <td>This is the backbone for same-frequency interference questions</td>
+                  </tr>
+                  <tr>
+                    <td>Constructive: ΔΦ = 2nπ</td>
+                    <td>In-phase condition</td>
+                    <td>Use it for loud or bright results</td>
+                  </tr>
+                  <tr>
+                    <td>Destructive: ΔΦ = (2n+1)π</td>
+                    <td>Anti-phase condition</td>
+                    <td>Use it for quiet, dark, or zero-signal results</td>
+                  </tr>
+                  <tr>
+                    <td>f<sub>beat</sub> = |f₁ - f₂|</td>
+                    <td>Beat frequency</td>
+                    <td>Always take the absolute value</td>
+                  </tr>
+                  <tr>
+                    <td>f<sub>carrier</sub> = (f₁ + f₂)/2</td>
+                    <td>Carrier or heard pitch inside the beat envelope</td>
+                    <td>This is not the same thing as the beat rate</td>
+                  </tr>
+                  <tr>
+                    <td>f<sub>obs</sub> = (v ± v<sub>o</sub>) / (v ∓ v<sub>s</sub>) × f<sub>s</sub></td>
+                    <td>Full Doppler formula</td>
+                    <td>For mixed Doppler-and-beats problems, use this before the beat formula</td>
+                  </tr>
+                  <tr>
+                    <td>Δx = d sin θ</td>
+                    <td>Double-slit path-length difference</td>
+                    <td>d is slit spacing, not screen distance</td>
+                  </tr>
+                  <tr>
+                    <td>nλ = d sin θ</td>
+                    <td>Bright-fringe condition</td>
+                    <td>n = 0 is the center only when there is no extra phase shift</td>
+                  </tr>
+                  <tr>
+                    <td>(n + 1/2)λ = d sin θ</td>
+                    <td>Dark-fringe condition</td>
+                    <td>Use this when the prompt asks for dark, quiet, or cancellation</td>
+                  </tr>
+                  <tr>
+                    <td>d = λD / Δy</td>
+                    <td>Small-angle fringe-spacing result</td>
+                    <td>Use only when the screen is far away compared with the slit spacing</td>
+                  </tr>
+                  <tr>
+                    <td>Δφ₀ = 2πΔt/T</td>
+                    <td>Convert a crystal time delay into a phase shift</td>
+                    <td>At the center of the screen, this term can decide the whole answer</td>
+                  </tr>
+                </tbody>
+              </table>
+            `,
+          },
+        ],
+      },
+    ],
+    recap: {
+      id: "quiz2-classic-recap",
+      title: "Final Recap - Quiz 2 in 12 Sentences",
+      plainText: `
+Quiz 2 in 12 sentences.
+Interference compares the phases of two waves at the same place.
+Path difference and source phase difference are the main causes of a total phase mismatch.
+Same-frequency sound questions are interference questions.
+Different-frequency sound questions are beat questions.
+Beat rate is the absolute frequency difference and carrier pitch is the average.
+Doppler can change a heard frequency before you compute the beat rate.
+Two slits act like two sources.
+Bright fringes satisfy d sin theta equals n lambda and dark fringes satisfy d sin theta equals n plus one-half lambda.
+A diffraction grating keeps the same basic angle rule but makes the peaks sharper.
+White light stays white straight through because all wavelengths share the zero-order direction.
+Blue stays closer to the center than red because shorter wavelength needs a smaller angle for the same order.
+A crystal in one slit adds a source phase shift, so the center is not automatically bright.
+        `.trim(),
+      sections: [
+        {
+          id: "quiz2-classic-recap-12",
+          title: "Quiz 2 in 12 Sentences",
+          html: `
+            <ol class="long-list">
+              <li>Interference compares the phases of two waves at the same place and time.</li>
+              <li>The most important formula is ΔΦ = -2πΔx/λ + Δφ₀, which says total phase difference comes from path difference and source phase difference.</li>
+              <li>Constructive interference means ΔΦ = 2nπ, while destructive interference means ΔΦ = (2n + 1)π.</li>
+              <li>DL3 Activity 8.10 is not a new kind of physics; it is the same interference story in a two-dimensional geometry picture.</li>
+              <li>Same-frequency speaker questions are interference questions, not beat questions.</li>
+              <li>Beats happen only when the two frequencies are close but not equal, and the beat rate is |f₁ - f₂|.</li>
+              <li>The carrier pitch inside the beat envelope is (f₁ + f₂)/2, so beat rate and heard pitch are different quantities.</li>
+              <li>If motion changes one of the sounds first, do the Doppler step before you do the beat step.</li>
+              <li>In the double-slit experiment, each slit acts like a source and the screen pattern is just constructive and destructive interference laid out in space.</li>
+              <li>For bright fringes use d sin θ = nλ, and for dark fringes use d sin θ = (n + 1/2)λ.</li>
+              <li>White light through a grating stays white straight through, but away from the center blue is closer in and red is farther out.</li>
+              <li>A crystal in one slit adds Δφ₀, so even the center of the pattern can change from bright to dark or partial interference.</li>
+            </ol>
+          `,
+        },
+      ],
+    },
+  },
+  QUIZ_2_CLASSIC_SECTION_LOCATORS,
+  QUIZ_2_CLASSIC_CHAPTER_LOCATORS,
 );
 
 export const QUIZ_BANK = {

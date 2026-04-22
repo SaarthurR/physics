@@ -1,10 +1,9 @@
 import {
   FORMULA_STRIP,
+  QUIZ_1_GUIDE,
   QUIZ_2_FORMULA_STRIP,
-  QUIZ_2_GUIDE,
-  QUIZ_2_PW_GUIDE,
+  QUIZ_2_CLASSIC_GUIDE,
   QUIZ_BANK,
-  STUDY_GUIDE,
 } from "./content.js";
 
 const HARDCODED_GROQ_KEY =
@@ -76,7 +75,7 @@ const quiz1UnitQuizConfigs = [
     cardTitle: "DL1 to DL5 comprehensive check",
     completeTitle: "Finished the DL-only round",
     summaryText: "Restart to get a fresh pass through the full DL1-DL5 guide.",
-    chapterIds: STUDY_GUIDE.chapters.filter((chapter) => chapter.id !== "chapter-13").map((chapter) => chapter.id),
+    chapterIds: QUIZ_1_GUIDE.chapters.filter((chapter) => chapter.id !== "chapter-13").map((chapter) => chapter.id),
   },
   {
     id: "unit-complete-quiz",
@@ -86,7 +85,7 @@ const quiz1UnitQuizConfigs = [
     cardTitle: "Complete unit mastery check",
     completeTitle: "Finished the full-unit round",
     summaryText: "Restart to quiz the entire unit again, including the textbook supplement.",
-    chapterIds: STUDY_GUIDE.chapters.map((chapter) => chapter.id),
+    chapterIds: QUIZ_1_GUIDE.chapters.map((chapter) => chapter.id),
   },
 ];
 
@@ -100,109 +99,21 @@ const guideConfigs = {
     summary:
       "The original DL1 through DL5 guide, cleaned up into one scrollable sheet with bookmarks, notes, and quick checks.",
     formulaStrip: FORMULA_STRIP,
-    guide: STUDY_GUIDE,
+    guide: QUIZ_1_GUIDE,
     quizzesEnabled: true,
     unitQuizConfigs: quiz1UnitQuizConfigs,
-  },
-  pw: {
-    id: "pw",
-    label: "PW Quiz 2",
-    eyebrow: "Physics 7C · Physics Wallah",
-    title: "Physics Wallah Quiz 2",
-    heading: "Quiz 2 explained from scratch, in one long page",
-    summary:
-      "A Physics Wallah-style retelling of the official Quiz 2 scope: hook first, missing background filled in, formulas after intuition, and one scrollable page that teaches instead of assuming.",
-    sidebarLabel: "PW Quiz 2 roadmap",
-    outlineLegend: [
-      {
-        label: "Hook",
-        tone: "review",
-        description: "Starts with a real-world feeling before naming the concept.",
-      },
-      {
-        label: "Must know",
-        tone: "priority",
-        description: "Core idea that needs to feel natural before the formulas help.",
-      },
-      {
-        label: "Formula after idea",
-        tone: "method",
-        description: "Formal symbols only after the intuition is already built.",
-      },
-      {
-        label: "Think it through",
-        tone: "review",
-        description: "A slow, narrated reasoning pattern for a common question type.",
-      },
-      {
-        label: "Checklist",
-        tone: "method",
-        description: "Study order or decision steps to keep the topic from feeling scattered.",
-      },
-      {
-        label: "Recap",
-        tone: "review",
-        description: "The short friend-on-the-phone version to hold in your head.",
-      },
-      {
-        label: "Avoid",
-        tone: "trap",
-        description: "The mistake that usually flips the answer even when the algebra is fine.",
-      },
-    ],
-    formulaStrip: QUIZ_2_FORMULA_STRIP,
-    guide: QUIZ_2_PW_GUIDE,
-    quizzesEnabled: false,
-    unitQuizConfigs: [],
   },
   quiz2: {
     id: "quiz2",
     label: "Quiz 2",
     eyebrow: "Physics 7C · Quiz 2",
     title: "Quiz 2 Study Guide",
-    heading: "What to study for Quiz 2, in the right order",
+    heading: "Quiz 1-style teaching, trimmed to the official Quiz 2 scope",
     summary:
-      "Start with the overview and study order, then work Topic 1 through Topic 4 so the official Quiz 2 material feels like one connected set instead of a pile of packets.",
-    sidebarLabel: "Quiz 2 study plan",
-    outlineLegend: [
-      {
-        label: "Study hardest",
-        tone: "priority",
-        description: "Most repeated and highest-payoff material to drill first.",
-      },
-      {
-        label: "Must know",
-        tone: "priority",
-        description: "Core rule that unlocks multiple problem types.",
-      },
-      {
-        label: "Checklist",
-        tone: "method",
-        description: "Step-by-step setup to use when the prompt gets messy.",
-      },
-      {
-        label: "High yield",
-        tone: "priority",
-        description: "Shows up often enough that it is worth extra reps.",
-      },
-      {
-        label: "Model answer",
-        tone: "review",
-        description: "A worked pattern that shows how the reasoning should sound.",
-      },
-      {
-        label: "Avoid",
-        tone: "trap",
-        description: "Common mistakes that flip the answer even with good algebra.",
-      },
-      {
-        label: "Hook",
-        tone: "review",
-        description: "Real-world intuition that makes the physics easier to picture.",
-      },
-    ],
+      "Built from the same chapter-by-chapter style as Quiz 1, but limited to DL3 Activities 8.9-8.10, all of DL4 and DL5, and DL6 Activity 8.16.",
+    sidebarLabel: "Quiz 2 bookmarks",
     formulaStrip: QUIZ_2_FORMULA_STRIP,
-    guide: QUIZ_2_GUIDE,
+    guide: QUIZ_2_CLASSIC_GUIDE,
     quizzesEnabled: false,
     unitQuizConfigs: [],
   },
@@ -623,7 +534,12 @@ function renderOutline() {
           data-outline-link="${studyGuide.recap.id}"
           data-outline-kind="chapter"
         >
-          ${renderOutlineLabel(studyGuide.recap.title, studyGuide.recap.badge, studyGuide.recap.badgeTone)}
+          ${renderOutlineLabel(
+            studyGuide.recap.title,
+            studyGuide.recap.badge,
+            studyGuide.recap.badgeTone,
+            studyGuide.recap.locator,
+          )}
         </a>
         <ul class="outline-sublist">
           ${studyGuide.recap.sections
@@ -2210,7 +2126,9 @@ function findBestSectionForQuery(query) {
 }
 
 function getSectionRecords() {
-  const chapterRecords = STUDY_GUIDE.chapters.flatMap((chapter) =>
+  const studyGuide = getActiveStudyGuide();
+
+  const chapterRecords = studyGuide.chapters.flatMap((chapter) =>
     chapter.sections.map((section) => ({
       id: section.id,
       section: document.getElementById(section.id),
@@ -2220,11 +2138,11 @@ function getSectionRecords() {
     })),
   );
 
-  const recapRecords = STUDY_GUIDE.recap.sections.map((section) => ({
+  const recapRecords = (studyGuide.recap?.sections || []).map((section) => ({
     id: section.id,
     section: document.getElementById(section.id),
     sectionTitle: section.title,
-    chapterTitle: STUDY_GUIDE.recap.title,
+    chapterTitle: studyGuide.recap?.title || "",
     text: stripHtml(section.html),
   }));
 
