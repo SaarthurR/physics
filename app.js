@@ -425,7 +425,382 @@ const TERM_ALIASES = {
   "phase constant": "phase constant",
 };
 
+const FORMULA_VARIABLES = [
+  {
+    label: "ΔΦ",
+    aliases: ["ΔΦ", "Δphi"],
+    matches: (raw, normalized) => raw.includes("ΔΦ") || normalized.includes("deltaphi"),
+    meaning: "the total phase difference between the two waves you are comparing",
+    plug: "plug in the overall relative phase in radians when you are checking whether two waves reinforce or cancel",
+  },
+  {
+    label: "Φ",
+    aliases: ["Φ", "Phi"],
+    matches: (raw, normalized) =>
+      raw.includes("Φ") || normalized.startsWith("phi=") || normalized.startsWith("phi(x,t)="),
+    meaning: "the phase of one wave at a particular place and time",
+    plug: "plug in the phase angle in radians after combining the time term, position term, and any phase constant",
+  },
+  {
+    label: "Δφ₀",
+    aliases: ["Δφ₀", "delta phi zero"],
+    matches: (raw, normalized) => raw.includes("Δφ₀") || raw.includes("Δφ0") || normalized.includes("deltaphi0"),
+    meaning: "the built-in source phase difference before path difference is counted",
+    plug: "plug in the starting source offset in radians, often 0, π, or a value built from a delay like 2πΔt/T",
+  },
+  {
+    label: "φ₀",
+    aliases: ["φ₀", "phi zero"],
+    matches: (raw, normalized) =>
+      (raw.includes("φ₀") || raw.includes("φ0") || normalized.includes("phi0")) && !normalized.includes("deltaphi0"),
+    meaning: "the fixed phase constant for a single wave",
+    plug: "plug in the starting phase of the wave at your chosen origin, in radians",
+  },
+  {
+    label: "Δx",
+    aliases: ["Δx", "delta x"],
+    matches: (raw, normalized) => raw.includes("Δx") || normalized.includes("deltax"),
+    meaning: "the path difference, meaning how much farther one wave travels than the other",
+    plug: "plug in the distance difference between the two paths to the same observation point, in meters",
+  },
+  {
+    label: "Δt",
+    aliases: ["Δt", "delta t"],
+    matches: (raw, normalized) => raw.includes("Δt") || normalized.includes("deltat"),
+    meaning: "a time delay between two waves or between source starts",
+    plug: "plug in the actual delay in seconds",
+  },
+  {
+    label: "Δy",
+    aliases: ["Δy", "delta y"],
+    matches: (raw, normalized) => raw.includes("Δy") || normalized.includes("deltay"),
+    meaning: "the spacing between neighboring fringes on the screen",
+    plug: "plug in the measured distance between adjacent bright or dark fringes on the screen, in meters",
+  },
+  {
+    label: "y_shift",
+    aliases: ["y_shift", "y shift"],
+    matches: (raw, normalized) => raw.includes("y_shift") || normalized.includes("yshift"),
+    meaning: "the amount the whole interference pattern moves on the screen",
+    plug: "plug in the vertical screen shift in meters if the problem gives or asks for how far the pattern slides",
+  },
+  {
+    label: "y_total",
+    aliases: ["y_total", "y_tot"],
+    matches: (raw, normalized) =>
+      raw.includes("y_total") || raw.includes("y_tot") || normalized.includes("ytotal") || normalized.includes("ytot"),
+    meaning: "the actual total displacement after both waves are added together",
+    plug: "plug in the final combined displacement at that point and time",
+  },
+  {
+    label: "y₁",
+    aliases: ["y₁", "y1"],
+    matches: (raw, normalized) => raw.includes("y₁") || raw.includes("y_1") || normalized.includes("y1"),
+    meaning: "the displacement contributed by wave 1 alone",
+    plug: "plug in wave 1's displacement value at the same point and time",
+  },
+  {
+    label: "y₂",
+    aliases: ["y₂", "y2"],
+    matches: (raw, normalized) => raw.includes("y₂") || raw.includes("y_2") || normalized.includes("y2"),
+    meaning: "the displacement contributed by wave 2 alone",
+    plug: "plug in wave 2's displacement value at the same point and time",
+  },
+  {
+    label: "y",
+    aliases: ["y"],
+    matches: (raw, normalized) =>
+      /\by\b/.test(raw) || normalized.includes("y(x,t)") || normalized.includes("y(x,t)=") || normalized.startsWith("y="),
+    meaning: "the displacement of the medium from equilibrium",
+    plug: "plug in the vertical displacement or output position, usually in meters",
+  },
+  {
+    label: "x",
+    aliases: ["x"],
+    matches: (raw, normalized) =>
+      /\bx\b/.test(raw) || normalized.includes("x,t") || normalized.includes("x1") || normalized.includes("x2"),
+    meaning: "position along the wave or horizontal coordinate used in the setup",
+    plug: "plug in the location you are evaluating, in meters",
+  },
+  {
+    label: "x₁",
+    aliases: ["x₁", "x1"],
+    matches: (raw, normalized) => raw.includes("x₁") || normalized.includes("x1"),
+    meaning: "the path length or position associated with source 1",
+    plug: "plug in the distance from source 1 to the observation point, in meters",
+  },
+  {
+    label: "x₂",
+    aliases: ["x₂", "x2"],
+    matches: (raw, normalized) => raw.includes("x₂") || normalized.includes("x2"),
+    meaning: "the path length or position associated with source 2",
+    plug: "plug in the distance from source 2 to the observation point, in meters",
+  },
+  {
+    label: "t",
+    aliases: ["t"],
+    matches: (raw, normalized) => /\bt\b/.test(raw) || normalized.includes("(t)") || normalized.includes("t/"),
+    meaning: "time",
+    plug: "plug in the time after the chosen starting moment, in seconds",
+  },
+  {
+    label: "T",
+    aliases: ["T"],
+    matches: (raw, normalized) => /\bT\b/.test(raw) || normalized.includes("/t") || normalized.includes("tb"),
+    meaning: "period, meaning the time for one full cycle",
+    plug: "plug in one cycle time in seconds",
+  },
+  {
+    label: "T₁",
+    aliases: ["T₁", "T1"],
+    matches: (raw, normalized) => raw.includes("T₁") || normalized.includes("t1"),
+    meaning: "the period of wave 1",
+    plug: "plug in wave 1's period in seconds",
+  },
+  {
+    label: "T₂",
+    aliases: ["T₂", "T2"],
+    matches: (raw, normalized) => raw.includes("T₂") || normalized.includes("t2"),
+    meaning: "the period of wave 2",
+    plug: "plug in wave 2's period in seconds",
+  },
+  {
+    label: "T_b",
+    aliases: ["T_b", "Tb"],
+    matches: (raw, normalized) => raw.includes("T_b") || raw.includes("T₍b₎") || normalized.includes("tb"),
+    meaning: "the beat period, meaning the time between repeating loud-soft-loud cycles",
+    plug: "plug in the beat cycle time in seconds if the problem asks for the pulsing period instead of beat frequency",
+  },
+  {
+    label: "A",
+    aliases: ["A"],
+    matches: (raw, normalized) => /\bA\b/.test(raw) || normalized.includes("asin(") || normalized.startsWith("a="),
+    meaning: "amplitude, the maximum displacement from equilibrium",
+    plug: "plug in the wave's maximum displacement, in meters or the units used for the wave",
+  },
+  {
+    label: "λ",
+    aliases: ["λ", "lambda"],
+    matches: (raw, normalized) => raw.includes("λ") || normalized.includes("lambda"),
+    meaning: "wavelength, the distance for one full cycle in space",
+    plug: "plug in wavelength in meters unless the problem clearly stays in nanometers and you keep units consistent",
+  },
+  {
+    label: "λ_forward",
+    aliases: ["λ_forward", "lambda forward"],
+    matches: (raw, normalized) => raw.includes("λ_forward") || normalized.includes("lambdaforward"),
+    meaning: "the wavelength in front of a moving source",
+    plug: "plug in the compressed forward wavelength seen ahead of the source, in meters",
+  },
+  {
+    label: "λ_backward",
+    aliases: ["λ_backward", "lambda backward"],
+    matches: (raw, normalized) => raw.includes("λ_backward") || normalized.includes("lambdabackward"),
+    meaning: "the wavelength behind a moving source",
+    plug: "plug in the stretched wavelength behind the source, in meters",
+  },
+  {
+    label: "f",
+    aliases: ["f"],
+    matches: (raw, normalized) => /\bf\b/.test(raw) || normalized.startsWith("f="),
+    meaning: "frequency, meaning cycles per second",
+    plug: "plug in frequency in hertz, which means cycles per second",
+  },
+  {
+    label: "f₁",
+    aliases: ["f₁", "f1"],
+    matches: (raw, normalized) => raw.includes("f₁") || normalized.includes("f1"),
+    meaning: "frequency of source or wave 1",
+    plug: "plug in the first of the two compared frequencies, in hertz",
+  },
+  {
+    label: "f₂",
+    aliases: ["f₂", "f2"],
+    matches: (raw, normalized) => raw.includes("f₂") || normalized.includes("f2"),
+    meaning: "frequency of source or wave 2",
+    plug: "plug in the second of the two compared frequencies, in hertz",
+  },
+  {
+    label: "f_beat",
+    aliases: ["f_beat", "beat frequency"],
+    matches: (raw, normalized) => raw.includes("f_beat") || normalized.includes("fbeat"),
+    meaning: "the beat frequency, or the rate of the loud-soft pulsing",
+    plug: "plug in the pulsing rate in hertz after comparing the two nearby frequencies that are actually heard",
+  },
+  {
+    label: "f_carrier",
+    aliases: ["f_carrier", "carrier frequency"],
+    matches: (raw, normalized) => raw.includes("f_carrier") || normalized.includes("fcarrier"),
+    meaning: "the carrier frequency, or the average pitch inside the beat pattern",
+    plug: "plug in the underlying pitch in hertz when the problem asks for the note rather than the beat rate",
+  },
+  {
+    label: "f_obs",
+    aliases: ["f_obs", "observed frequency"],
+    matches: (raw, normalized) =>
+      raw.includes("f_obs") || raw.includes("f_o") || raw.includes("f_observed") || normalized.includes("fobs") || normalized.includes("fobserved"),
+    meaning: "the observed or heard frequency",
+    plug: "plug in the frequency the listener actually hears, usually in hertz",
+  },
+  {
+    label: "f_s",
+    aliases: ["f_s", "source frequency"],
+    matches: (raw, normalized) => raw.includes("f_s") || normalized.includes("fs"),
+    meaning: "the source frequency before motion changes what is heard",
+    plug: "plug in the emitted source frequency in hertz",
+  },
+  {
+    label: "v",
+    aliases: ["v"],
+    matches: (raw, normalized) => /\bv\b/.test(raw) || normalized.startsWith("v="),
+    meaning: "wave speed in the medium",
+    plug: "plug in the propagation speed in meters per second, like sound speed in air or wave speed on the string",
+  },
+  {
+    label: "vₒ",
+    aliases: ["vₒ", "vo"],
+    matches: (raw, normalized) => raw.includes("vₒ") || raw.includes("v_o") || normalized.includes("vo"),
+    meaning: "observer speed",
+    plug: "plug in the observer's speed relative to the medium, in meters per second, with the sign rule from the guide",
+  },
+  {
+    label: "vₛ",
+    aliases: ["vₛ", "vs"],
+    matches: (raw, normalized) => raw.includes("vₛ") || raw.includes("v_s") || normalized.includes("vs"),
+    meaning: "source speed",
+    plug: "plug in the source's speed relative to the medium, in meters per second, with the sign rule from the guide",
+  },
+  {
+    label: "d",
+    aliases: ["d"],
+    matches: (raw, normalized) => /\bd\b/.test(raw) || normalized.includes("dsintheta") || normalized.startsWith("d="),
+    meaning: "either slit spacing or thin-film thickness, depending on the formula",
+    plug: "plug in slit separation for double-slit and grating formulas, or film thickness/layer spacing for thin-film formulas, in meters",
+  },
+  {
+    label: "θ",
+    aliases: ["θ", "theta"],
+    matches: (raw, normalized) => raw.includes("θ") || normalized.includes("theta"),
+    meaning: "the angle away from the center line",
+    plug: "plug in the observation angle measured from the center direction, in radians or degrees as long as trig use is consistent",
+  },
+  {
+    label: "D",
+    aliases: ["D"],
+    matches: (raw, normalized) => /\bD\b/.test(raw) || normalized.includes("lambda d") || normalized.includes("/deltay"),
+    meaning: "screen distance, meaning how far the slits are from the screen",
+    plug: "plug in the slit-to-screen distance in meters",
+  },
+  {
+    label: "n",
+    aliases: ["n"],
+    matches: (raw, normalized) => /\bn\b/.test(raw) || normalized.includes("nlambda"),
+    meaning: "an integer order number counting which bright or dark fringe you are on",
+    plug: "plug in a whole number like 0, 1, 2, ... unless the setup explicitly tells you otherwise",
+  },
+  {
+    label: "I",
+    aliases: ["I"],
+    matches: (raw, normalized) => /\bI\b/.test(raw) || normalized.startsWith("i=") || normalized.includes("i/i0"),
+    meaning: "intensity, or power per unit area",
+    plug: "plug in intensity in watts per square meter",
+  },
+  {
+    label: "I₀",
+    aliases: ["I₀", "I0"],
+    matches: (raw, normalized) => raw.includes("I₀") || raw.includes("I0") || normalized.includes("i0"),
+    meaning: "a reference intensity",
+    plug: "plug in the baseline reference intensity used by the decibel formula",
+  },
+  {
+    label: "P",
+    aliases: ["P"],
+    matches: (raw) => /\bP\b/.test(raw),
+    meaning: "power",
+    plug: "plug in the source power in watts",
+  },
+  {
+    label: "Area",
+    aliases: ["Area"],
+    matches: (raw, normalized) => raw.includes("Area") || normalized.includes("area"),
+    meaning: "the area over which the power spreads",
+    plug: "plug in the wavefront area in square meters",
+  },
+  {
+    label: "D₀",
+    aliases: ["D₀", "D0"],
+    matches: (raw, normalized) => raw.includes("D₀") || raw.includes("D0") || normalized.includes("d0"),
+    meaning: "the reference decibel level in the comparison formula",
+    plug: "plug in the baseline decibel level if the problem gives one",
+  },
+  {
+    label: "h",
+    aliases: ["h"],
+    matches: (raw, normalized) => /\bh\b/.test(raw) || normalized.includes("h/"),
+    meaning: "Planck's constant",
+    plug: "plug in Planck's constant when the formula is from de Broglie or quantization",
+  },
+  {
+    label: "p",
+    aliases: ["p"],
+    matches: (raw, normalized) => /\bp\b/.test(raw) || normalized.endsWith("/p"),
+    meaning: "momentum",
+    plug: "plug in momentum in kilogram-meters per second",
+  },
+  {
+    label: "m",
+    aliases: ["m"],
+    matches: (raw, normalized) => /\bm\b/.test(raw) || normalized.includes("8m"),
+    meaning: "mass",
+    plug: "plug in the particle's mass in kilograms",
+  },
+  {
+    label: "L",
+    aliases: ["L"],
+    matches: (raw, normalized) => /\bL\b/.test(raw) || normalized.includes("l2"),
+    meaning: "the box or region length",
+    plug: "plug in the allowed region length in meters",
+  },
+  {
+    label: "Eₙ",
+    aliases: ["Eₙ", "En"],
+    matches: (raw, normalized) => raw.includes("Eₙ") || normalized.includes("en="),
+    meaning: "the energy of the nth allowed state",
+    plug: "plug in the quantized energy value for the level labeled by n",
+  },
+];
+
 const FORMULA_EXPLAINERS = {
+  "wave-equation": {
+    kind: "Formula",
+    title: "Wave equation",
+    short: "Describes the displacement of a sinusoidal wave at any position and time.",
+    preview: [
+      "Position and time both matter.",
+      "Amplitude sets size, wavelength sets spacing, period sets timing.",
+      "The sign on the x-term controls direction.",
+    ],
+    body: `
+      <p><strong>Core idea:</strong> this equation is the full address of the wave. It tells you the displacement at a chosen position and time.</p>
+      <p><strong>Why it works:</strong> a sinusoidal wave repeats in space and in time, so the phase combines a time part, a position part, and any built-in starting offset.</p>
+      <p><strong>Use it when:</strong> you need the wave's displacement, direction, wavelength, period, or phase information.</p>
+    `,
+  },
+  "period-frequency": {
+    kind: "Formula",
+    title: "Frequency-period relationship",
+    short: "Frequency and period are reciprocals.",
+    preview: [
+      "More cycles per second means a shorter period.",
+      "Less cycles per second means a longer period.",
+      "This is one of the fastest conversions on the quiz.",
+    ],
+    body: `
+      <p><strong>Core idea:</strong> frequency counts how many cycles happen each second, while period tells you how long one cycle takes.</p>
+      <p><strong>Why it works:</strong> if each cycle takes <code>T</code> seconds, then one second contains <code>1/T</code> cycles.</p>
+      <p><strong>Use it when:</strong> the problem gives period and asks for frequency, or gives frequency and asks for period.</p>
+    `,
+  },
   "wave-speed": {
     kind: "Formula",
     title: "Wave speed formula",
@@ -472,6 +847,51 @@ const FORMULA_EXPLAINERS = {
       <p><strong>What each part means:</strong> <code>ΔΦ</code> is the total phase difference, <code>Δx</code> is the path difference, <code>λ</code> is wavelength, and <code>Δφ₀</code> is any built-in source phase difference.</p>
       <p><strong>Why it works:</strong> traveling an extra distance changes where a wave is in its cycle, and a source can also start ahead or behind before any travel happens. The total phase is the sum of those two effects.</p>
       <p><strong>Use it when:</strong> two equal-frequency waves meet and you need to decide whether the result is constructive, destructive, or partial.</p>
+    `,
+  },
+  "phase-with-time": {
+    kind: "Formula",
+    title: "Full two-wave phase-difference formula",
+    short: "Compares two waves when both a time offset and a path offset matter.",
+    preview: [
+      "Time mismatch and path mismatch both affect the relative phase.",
+      "The source offset term is still separate.",
+      "Use it before simplifying away terms.",
+    ],
+    body: `
+      <p><strong>Core idea:</strong> this is the more complete relative-phase formula. It keeps the time-delay term, the path-difference term, and the source-offset term all visible.</p>
+      <p><strong>Why it works:</strong> relative phase can change because one wave starts later, travels farther, or is built with an initial phase offset.</p>
+      <p><strong>Use it when:</strong> the problem compares waves that are not automatically being sampled at the same place and same time.</p>
+    `,
+  },
+  "constructive-phase": {
+    kind: "Formula",
+    title: "Constructive phase condition",
+    short: "The total phase difference must land on an even multiple of π.",
+    preview: [
+      "This is the phase version of 'they arrive in step.'",
+      "Equivalent to whole-cycle agreement.",
+      "Use for bright or loud outcomes.",
+    ],
+    body: `
+      <p><strong>Core idea:</strong> constructive interference means the two waves line up so they reinforce.</p>
+      <p><strong>Why it works:</strong> a whole number of full cycles leaves the waves in the same stage of motion, so crests meet crests and troughs meet troughs.</p>
+      <p><strong>Use it when:</strong> you are deciding whether the result should be bright, loud, or reinforced.</p>
+    `,
+  },
+  "destructive-phase": {
+    kind: "Formula",
+    title: "Destructive phase condition",
+    short: "The total phase difference must land on an odd multiple of π.",
+    preview: [
+      "This is the phase version of 'they arrive opposite each other.'",
+      "Equivalent to a half-cycle mismatch.",
+      "Use for dark or quiet outcomes.",
+    ],
+    body: `
+      <p><strong>Core idea:</strong> destructive interference means one wave is half a cycle out of step with the other.</p>
+      <p><strong>Why it works:</strong> a half-cycle mismatch turns a crest into a trough at the meeting point, which drives cancellation.</p>
+      <p><strong>Use it when:</strong> you are deciding whether the result should be dark, quiet, or canceled.</p>
     `,
   },
   "constructive-general": {
@@ -554,6 +974,36 @@ const FORMULA_EXPLAINERS = {
       <p><strong>Use it when:</strong> a source or observer is moving and the problem asks for the frequency actually heard.</p>
     `,
   },
+  "moving-source-doppler": {
+    kind: "Formula",
+    title: "Moving-source Doppler formula",
+    short: "The source motion changes the spacing of the wavefronts before they reach you.",
+    preview: [
+      "The source term sits in the denominator.",
+      "Toward the observer makes the denominator smaller.",
+      "Away makes it larger.",
+    ],
+    body: `
+      <p><strong>Core idea:</strong> when only the source moves, the source changes the wavelength pattern in front of and behind it.</p>
+      <p><strong>Why it works:</strong> moving forward between emissions squeezes the forward wavefronts and stretches the backward ones.</p>
+      <p><strong>Use it when:</strong> the source moves but the observer is stationary.</p>
+    `,
+  },
+  "source-wavelength": {
+    kind: "Formula",
+    title: "Forward/backward source wavelength formula",
+    short: "Shows how a moving source compresses the front wavelength and stretches the back wavelength.",
+    preview: [
+      "Front wavelength gets smaller.",
+      "Back wavelength gets larger.",
+      "This is the geometry underneath Doppler.",
+    ],
+    body: `
+      <p><strong>Core idea:</strong> these wavelength relations are the physical picture behind the Doppler shift for a moving source.</p>
+      <p><strong>Why it works:</strong> the source moves between emissions, so the distance between successive wavefronts changes depending on whether you look in front of it or behind it.</p>
+      <p><strong>Use it when:</strong> the guide is asking you to reason from wavelength first before converting to frequency with <code>f = v/λ</code>.</p>
+    `,
+  },
   "double-slit-path": {
     kind: "Formula",
     title: "Double-slit path-difference formula",
@@ -618,6 +1068,36 @@ const FORMULA_EXPLAINERS = {
       <p><strong>Use it when:</strong> the screen is far away and the problem gives you wall spacing measurements.</p>
     `,
   },
+  "screen-geometry": {
+    kind: "Formula",
+    title: "Screen geometry formula",
+    short: "Relates the fringe position on the screen to the angle.",
+    preview: [
+      "This is the picture-to-screen step.",
+      "It converts angle into a measured screen distance.",
+      "Usually paired with the path-difference formula.",
+    ],
+    body: `
+      <p><strong>Core idea:</strong> this relation connects the interference angle to where the fringe lands on the screen.</p>
+      <p><strong>Why it works:</strong> it comes straight from right-triangle geometry between the slit line, screen distance, and fringe position.</p>
+      <p><strong>Use it when:</strong> the problem gives a screen distance or fringe location instead of an angle.</p>
+    `,
+  },
+  grating: {
+    kind: "Formula",
+    title: "Diffraction grating formula",
+    short: "Sets the bright angles for a many-slit interference pattern.",
+    preview: [
+      "Same bright-angle logic as double slit.",
+      "Different wavelengths leave at different angles.",
+      "That is why white light spreads into color.",
+    ],
+    body: `
+      <p><strong>Core idea:</strong> this formula gives the bright directions in a diffraction grating.</p>
+      <p><strong>Why it works:</strong> many slits still reinforce when their path differences line up as whole numbers of wavelengths.</p>
+      <p><strong>Use it when:</strong> the setup has a grating, many slits, or white-light color ordering.</p>
+    `,
+  },
   "crystal-phase": {
     kind: "Formula",
     title: "Crystal phase-shift formula",
@@ -664,6 +1144,111 @@ const FORMULA_EXPLAINERS = {
       <p><strong>What each part means:</strong> <code>d</code> is the layer spacing, so the lower ray travels one <code>d</code> downward and one <code>d</code> upward for an extra path of <code>2d</code>.</p>
       <p><strong>Why it works:</strong> constructive reflection happens when that extra distance matches a whole number of wavelengths in the simplified no-extra-phase-flip model.</p>
       <p><strong>Use it when:</strong> a thin-film or butterfly problem asks which thickness reinforces a specific reflected color.</p>
+    `,
+  },
+  intensity: {
+    kind: "Formula",
+    title: "Intensity formula",
+    short: "Intensity is power spread over area.",
+    preview: [
+      "More power raises intensity.",
+      "More area lowers intensity.",
+      "This is the start of loudness-with-distance logic.",
+    ],
+    body: `
+      <p><strong>Core idea:</strong> intensity tells you how concentrated the wave's power is.</p>
+      <p><strong>Why it works:</strong> the same power feels weaker when it is spread over a larger area.</p>
+      <p><strong>Use it when:</strong> you are comparing loudness, brightness, or energy spread across space.</p>
+    `,
+  },
+  "inverse-square": {
+    kind: "Formula",
+    title: "Inverse-square intensity rule",
+    short: "For 3D spreading, intensity falls like one over distance squared.",
+    preview: [
+      "Doubling distance makes intensity one fourth as large.",
+      "This comes from spherical spreading.",
+      "It explains why things get quiet quickly in 3D.",
+    ],
+    body: `
+      <p><strong>Core idea:</strong> in three dimensions the wave spreads over a growing sphere, so intensity drops quickly with distance.</p>
+      <p><strong>Why it works:</strong> the area of a sphere grows like <code>r²</code>, so the same power gets diluted by that factor.</p>
+      <p><strong>Use it when:</strong> the wave spreads out in 3D and the problem asks how intensity changes with distance.</p>
+    `,
+  },
+  decibels: {
+    kind: "Formula",
+    title: "Decibel formula",
+    short: "Converts an intensity ratio into a sound-level change on a logarithmic scale.",
+    preview: [
+      "Decibels compare intensities, not just raw amplitude.",
+      "A +10 dB change means ten times the intensity.",
+      "The log is why sound-level changes are not linear.",
+    ],
+    body: `
+      <p><strong>Core idea:</strong> decibels measure sound level on a logarithmic scale instead of a plain linear one.</p>
+      <p><strong>Why it works:</strong> our hearing responds well to ratios across huge ranges, so the decibel formula compresses those intensity changes.</p>
+      <p><strong>Use it when:</strong> the problem asks for sound level changes from intensity ratios or combined speaker levels.</p>
+    `,
+  },
+  "beat-period": {
+    kind: "Formula",
+    title: "Beat period formula",
+    short: "The beat period is the time between repeating loud-soft-loud cycles.",
+    preview: [
+      "It is the reciprocal partner of beat frequency.",
+      "Long beat period means slow pulsing.",
+      "Short beat period means fast pulsing.",
+    ],
+    body: `
+      <p><strong>Core idea:</strong> if the beat frequency tells you how many pulses happen per second, the beat period tells you how long one pulse cycle lasts.</p>
+      <p><strong>Why it works:</strong> beat period and beat frequency are reciprocals, just like ordinary period and ordinary frequency.</p>
+      <p><strong>Use it when:</strong> the problem gives or asks for the time between pulse peaks instead of the pulse rate.</p>
+    `,
+  },
+  "standing-wave-spacing": {
+    kind: "Formula",
+    title: "Standing-wave spacing rule",
+    short: "Node-to-node spacing is half a wavelength, and node-to-nearest-antinode is a quarter wavelength.",
+    preview: [
+      "This is a pattern-spacing rule.",
+      "It helps convert drawings into wavelength.",
+      "Then you can move on to harmonics.",
+    ],
+    body: `
+      <p><strong>Core idea:</strong> standing-wave patterns repeat in a fixed spatial way, and those repeating distances tell you the wavelength.</p>
+      <p><strong>Why it works:</strong> a full wavelength covers node to node to node, so adjacent nodes are half a wavelength apart and a node to the nearest antinode is half of that again.</p>
+      <p><strong>Use it when:</strong> the guide gives a node-antinode picture and asks for wavelength or harmonic reasoning.</p>
+    `,
+  },
+  "de-broglie": {
+    kind: "Formula",
+    title: "de Broglie wavelength formula",
+    short: "Connects particle momentum to wavelength.",
+    preview: [
+      "Bigger momentum means smaller wavelength.",
+      "This is the core particle-wave bridge.",
+      "Used in the matter-wave part of the guide.",
+    ],
+    body: `
+      <p><strong>Core idea:</strong> de Broglie said moving particles can be described by wavelengths too.</p>
+      <p><strong>Why it works:</strong> the wavelength shrinks as momentum grows, which is why wave behavior is easy to notice for tiny particles and hard to notice for everyday objects.</p>
+      <p><strong>Use it when:</strong> the problem asks for matter-wave wavelength from momentum.</p>
+    `,
+  },
+  "particle-box-energy": {
+    kind: "Formula",
+    title: "Particle-in-a-box energy formula",
+    short: "Gives the allowed quantized energy levels in the box model.",
+    preview: [
+      "Energy comes in allowed levels.",
+      "The levels scale with n squared.",
+      "This is not a continuous spectrum.",
+    ],
+    body: `
+      <p><strong>Core idea:</strong> the wave must fit the allowed box boundaries, so only certain wavelengths and energies are allowed.</p>
+      <p><strong>Why it works:</strong> the boundary condition forces standing-wave patterns, and that quantizes momentum and therefore energy.</p>
+      <p><strong>Use it when:</strong> the guide is in the first quantization or particle-in-a-box material.</p>
     `,
   },
 };
@@ -856,7 +1441,7 @@ function wrapTermsInElement(element) {
       if (!parent) return NodeFilter.FILTER_REJECT;
       if (
         parent.closest(
-          "[data-term-key], [data-formula-key], code, a, button, .formula-box, .formula-inline, .formula-chip",
+          "[data-term-key], [data-formula-explainable='true'], code, a, button, .formula-box, .formula-inline, .formula-chip",
         )
       ) {
         return NodeFilter.FILTER_REJECT;
@@ -917,45 +1502,55 @@ function buildTermFragment(text) {
 function markExplainableFormulas(container) {
   if (!container) return;
 
-  container.querySelectorAll(".formula-box, .formula-inline, .formula-chip").forEach((element) => {
-    const explainerKey = getFormulaExplainerKey(element);
-    if (!explainerKey) return;
+  container
+    .querySelectorAll(".formula-box, .formula-inline, .formula-chip, .data-table td:first-child, code")
+    .forEach((element) => {
+      if (!looksLikeFormulaElement(element)) return;
 
-    element.classList.add("is-explainable");
-    element.dataset.formulaKey = explainerKey;
+      const explainerKey = getFormulaExplainerKey(element);
+      const entry = getFormulaEntryFromElement(element, explainerKey);
+      if (!entry) return;
 
-    if (!isNaturallyFocusable(element)) {
-      element.tabIndex = 0;
-      element.setAttribute("role", "button");
-    }
+      element.classList.add("is-explainable");
+      element.dataset.formulaExplainable = "true";
+      if (explainerKey) {
+        element.dataset.formulaKey = explainerKey;
+      } else {
+        delete element.dataset.formulaKey;
+      }
 
-    if (element.dataset.formulaBound === "true") return;
-    element.dataset.formulaBound = "true";
+      if (!isNaturallyFocusable(element)) {
+        element.tabIndex = 0;
+        element.setAttribute("role", "button");
+      }
 
-    element.addEventListener("mouseenter", () => {
-      const explainer = FORMULA_EXPLAINERS[element.dataset.formulaKey];
-      if (!explainer) return;
-      showConceptHovercard(element, explainer);
+      if (element.dataset.formulaBound === "true") return;
+      element.dataset.formulaBound = "true";
+
+      element.addEventListener("mouseenter", () => {
+        const explainer = getFormulaEntryFromElement(element);
+        if (!explainer) return;
+        showConceptHovercard(element, explainer);
+      });
+      element.addEventListener("mouseleave", () => {
+        scheduleHovercardHide();
+      });
+      element.addEventListener("focus", () => {
+        const explainer = getFormulaEntryFromElement(element);
+        if (!explainer) return;
+        showConceptHovercard(element, explainer);
+      });
+      element.addEventListener("blur", () => {
+        scheduleHovercardHide();
+      });
+      element.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        const explainer = getFormulaEntryFromElement(element);
+        if (!explainer) return;
+        openConceptInspector(explainer);
+      });
     });
-    element.addEventListener("mouseleave", () => {
-      scheduleHovercardHide();
-    });
-    element.addEventListener("focus", () => {
-      const explainer = FORMULA_EXPLAINERS[element.dataset.formulaKey];
-      if (!explainer) return;
-      showConceptHovercard(element, explainer);
-    });
-    element.addEventListener("blur", () => {
-      scheduleHovercardHide();
-    });
-    element.addEventListener("keydown", (event) => {
-      if (event.key !== "Enter" && event.key !== " ") return;
-      event.preventDefault();
-      const explainer = FORMULA_EXPLAINERS[element.dataset.formulaKey];
-      if (!explainer) return;
-      openConceptInspector(explainer);
-    });
-  });
 }
 
 function getFormulaExplainerKey(element) {
@@ -971,8 +1566,30 @@ function getFormulaExplainerKey(element) {
   if (normalized.includes("ytot") && normalized.includes("y1") && normalized.includes("y2")) {
     return "superposition-principle";
   }
+  if ((normalized.includes("y(x,t)") || normalized.includes("y(x,t)=") || normalized.includes("y(x,t)-y0=")) && normalized.includes("sin(2pit/t")) {
+    return "wave-equation";
+  }
+  if ((normalized.startsWith("phi=") || normalized.startsWith("phi(x,t)=")) && normalized.includes("2pit/t")) {
+    return "wave-equation";
+  }
+  if (normalized.startsWith("f=1/t")) {
+    return "period-frequency";
+  }
+  if (normalized.includes("deltaphi=2pideltat/t-2pideltax/lambda+deltaphi0")) {
+    return "phase-with-time";
+  }
   if (normalized.includes("deltaphi") && normalized.includes("deltax") && normalized.includes("deltaphi0")) {
     return "total-phase";
+  }
+  if (normalized.includes("constructive:deltaphi=2npi") || normalized === "constructive:deltaphi=2npi" || normalized === "deltaphi=2npi") {
+    return "constructive-phase";
+  }
+  if (
+    normalized.includes("destructive:deltaphi=(2n+1)pi") ||
+    normalized === "destructive:deltaphi=(2n+1)pi" ||
+    normalized === "deltaphi=(2n+1)pi"
+  ) {
+    return "destructive-phase";
   }
   if (normalized.includes("deltax=nlambda-") && normalized.includes("deltaphi0")) {
     return "constructive-general";
@@ -986,17 +1603,32 @@ function getFormulaExplainerKey(element) {
   if (normalized.includes("fcarrier") && normalized.includes("f1") && normalized.includes("f2")) {
     return "carrier";
   }
+  if (normalized.includes("tb=1/|f1-f2|") || normalized.includes("tb(f1-f2)=1") || normalized.includes("tb(1/t1-1/t2)=1")) {
+    return "beat-period";
+  }
+  if (normalized.includes("fobserved=(v/(v±vsource))") || normalized.includes("fobserved=(v/(v+-vsource))") || normalized.includes("fobserved=(v/(v±vs))")) {
+    return "moving-source-doppler";
+  }
   if (normalized.includes("fobs") && normalized.includes("vo") && normalized.includes("fs")) {
     return "doppler";
   }
+  if ((normalized.includes("lambdaforward") || normalized.includes("lambdabackward")) && normalized.includes("/fs")) {
+    return "source-wavelength";
+  }
   if (normalized.includes("deltax=dsintheta")) {
     return "double-slit-path";
+  }
+  if (normalized.includes("nlambda=dsintheta")) {
+    return "grating";
   }
   if (normalized.includes("dsintheta=nlambda")) {
     return "bright";
   }
   if (normalized.includes("dsintheta=(n+1/2)lambda")) {
     return "dark";
+  }
+  if (normalized.includes("tantheta=deltay/d") || normalized.includes("tantheta=y/d") || normalized.includes("deltay=dtantheta")) {
+    return "screen-geometry";
   }
   if ((normalized.includes("d=lambdad/deltay") || normalized.includes("d=lambdad/")) && normalized.includes("deltay")) {
     return "small-angle";
@@ -1009,6 +1641,27 @@ function getFormulaExplainerKey(element) {
   }
   if (normalized.includes("2d=nlambda")) {
     return "thin-film";
+  }
+  if (normalized.includes("d=nlambda/2")) {
+    return "thin-film";
+  }
+  if (normalized.includes("i=p/area")) {
+    return "intensity";
+  }
+  if (normalized.includes("i∝1/r2")) {
+    return "inverse-square";
+  }
+  if (normalized.includes("d-d0=10log10(i/i0)")) {
+    return "decibels";
+  }
+  if (normalized.includes("lambda=h/p")) {
+    return "de-broglie";
+  }
+  if (normalized.includes("en=h2n2/(8ml2)")) {
+    return "particle-box-energy";
+  }
+  if (normalized.includes("nodetonode=lambda/2") || normalized.includes("nodetonode=lambda/2nodetonearestantinode=lambda/4")) {
+    return "standing-wave-spacing";
   }
   if (normalized.includes("v=lambdaf") || normalized.includes("v=lambdaf")) {
     return "wave-speed";
@@ -1023,7 +1676,137 @@ function normalizeFormulaText(value) {
     .replace(/[′']/g, "")
     .replace(/&nbsp;/g, "")
     .replace(/×/g, "")
+    .replace(/→/g, "")
+    .replace(/≈/g, "")
     .replace(/<[^>]+>/g, "");
+}
+
+function looksLikeFormulaElement(element) {
+  if (!element) return false;
+  if (element.classList.contains("formula-box") || element.classList.contains("formula-inline") || element.classList.contains("formula-chip")) {
+    return true;
+  }
+  if (element.dataset.formulaExplainable === "true") return true;
+  return looksLikeFormulaText(element.textContent || "");
+}
+
+function looksLikeFormulaText(text) {
+  const value = (text || "").trim();
+  if (!value) return false;
+  return /[=∝≈]/.test(value) || /[ΔλΦφθ₀₁₂₃₄₅₆₇₈₉]/.test(value) || /\bsin\b|\bcos\b|\blog\b/.test(value);
+}
+
+function getFormulaDisplayText(element) {
+  if (!element) return "";
+  if (element.classList.contains("formula-chip")) {
+    const label = element.querySelector("strong")?.textContent?.trim() || "";
+    const value = element.querySelector("span")?.textContent?.trim() || "";
+    return label && value ? `${label}: ${value}` : label || value;
+  }
+  return (element.textContent || "").replace(/\s+/g, " ").trim();
+}
+
+function getFormulaEntryFromElement(element, explicitKey = element?.dataset?.formulaKey || "") {
+  if (!element) return null;
+
+  const displayFormula = getFormulaDisplayText(element);
+  if (!displayFormula) return null;
+
+  const baseEntry = explicitKey ? FORMULA_EXPLAINERS[explicitKey] : null;
+  if (baseEntry) {
+    return enrichFormulaEntry(baseEntry, displayFormula);
+  }
+
+  return buildFallbackFormulaEntry(displayFormula);
+}
+
+function enrichFormulaEntry(entry, displayFormula) {
+  if (!entry) return null;
+
+  const variableMarkup = buildFormulaVariableMarkup(displayFormula);
+  const noteMarkup = `
+    <p class="concept-inspector-note"><strong>How to use it:</strong> plug in the number from the problem that matches the physical meaning of each symbol, not just a letter that looks similar. Keep the units consistent before you solve.</p>
+  `;
+
+  return {
+    ...entry,
+    body: `
+      <p><strong>Equation you clicked:</strong> <code>${escapeHtml(displayFormula)}</code></p>
+      ${entry.body || ""}
+      ${variableMarkup}
+      ${noteMarkup}
+    `,
+  };
+}
+
+function buildFallbackFormulaEntry(displayFormula) {
+  const variables = collectFormulaVariables(displayFormula);
+  if (!variables.length && !looksLikeFormulaText(displayFormula)) return null;
+
+  const variableMarkup = variables.length
+    ? `
+      <h3>What each part means</h3>
+      <ul>
+        ${variables
+          .map(
+            (variable) => `
+              <li><code>${escapeHtml(variable.label)}</code> means ${escapeHtml(variable.meaning)}. Plug in ${escapeHtml(
+                variable.plug,
+              )}.</li>
+            `,
+          )
+          .join("")}
+      </ul>
+    `
+    : `
+      <p>This line is mostly a worked substitution or numeric evaluation. Use the quantities from the problem statement with matching units and follow the same structure shown here.</p>
+    `;
+
+  return {
+    kind: "Formula",
+    title: "Equation breakdown",
+    short: "Explains the symbols and what kind of values belong in them.",
+    preview: variables.slice(0, 3).map((variable) => `${variable.label}: ${variable.meaning}`),
+    body: `
+      <p><strong>Equation you clicked:</strong> <code>${escapeHtml(displayFormula)}</code></p>
+      <p><strong>What this is doing:</strong> this equation links the physical quantities shown here. The key is to match each symbol to the right kind of measurement before plugging numbers in.</p>
+      ${variableMarkup}
+      <p class="concept-inspector-note"><strong>Plug-in rule:</strong> use values from the same scenario and keep units consistent. If one distance is in nanometers and another is in meters, convert before solving.</p>
+    `,
+  };
+}
+
+function buildFormulaVariableMarkup(displayFormula) {
+  const variables = collectFormulaVariables(displayFormula);
+  if (!variables.length) {
+    return `
+      <p>This clicked equation is already mostly plugged in with numbers, so use it as a worked pattern: match each number to the physical quantity the problem gives and keep units consistent.</p>
+    `;
+  }
+
+  return `
+    <h3>What each variable means</h3>
+    <ul>
+      ${variables
+        .map(
+          (variable) => `
+            <li><code>${escapeHtml(variable.label)}</code> means ${escapeHtml(variable.meaning)}. Plug in ${escapeHtml(
+              variable.plug,
+            )}.</li>
+          `,
+        )
+        .join("")}
+    </ul>
+  `;
+}
+
+function collectFormulaVariables(displayFormula) {
+  const raw = displayFormula || "";
+  const normalized = normalizeFormulaText(raw);
+
+  return FORMULA_VARIABLES.filter((variable) => variable.matches(raw, normalized)).filter(
+    (variable, index, array) => array.findIndex((candidate) => candidate.label === variable.label) === index,
+  );
 }
 
 function replaceUnicodeSubscripts(value) {
@@ -1969,9 +2752,9 @@ function handleConceptInteractionClick(event) {
     return;
   }
 
-  const formulaButton = event.target.closest("[data-formula-key]");
+  const formulaButton = event.target.closest("[data-formula-explainable='true']");
   if (formulaButton) {
-    const entry = FORMULA_EXPLAINERS[formulaButton.dataset.formulaKey];
+    const entry = getFormulaEntryFromElement(formulaButton);
     if (!entry) return;
     openConceptInspector(entry);
   }

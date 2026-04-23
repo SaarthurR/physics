@@ -1066,7 +1066,9 @@ textarea:focus-visible {
 
 .formula-box.is-explainable,
 .formula-inline.is-explainable,
-.formula-chip.is-explainable {
+.formula-chip.is-explainable,
+.data-table td.is-explainable,
+code.is-explainable {
   cursor: help;
   transition:
     transform 160ms ease,
@@ -1074,12 +1076,23 @@ textarea:focus-visible {
     background 160ms ease;
 }
 
+code.is-explainable {
+  display: inline-block;
+  padding: 0.08em 0.26em;
+  border-radius: 0.42em;
+  background: rgba(95, 129, 195, 0.08);
+}
+
 .formula-box.is-explainable:hover,
 .formula-box.is-explainable:focus-visible,
 .formula-inline.is-explainable:hover,
 .formula-inline.is-explainable:focus-visible,
 .formula-chip.is-explainable:hover,
-.formula-chip.is-explainable:focus-visible {
+.formula-chip.is-explainable:focus-visible,
+.data-table td.is-explainable:hover,
+.data-table td.is-explainable:focus-visible,
+code.is-explainable:hover,
+code.is-explainable:focus-visible {
   background: rgba(95, 129, 195, 0.14);
   box-shadow: 0 10px 24px rgba(36, 53, 88, 0.08);
   transform: translateY(-1px);
