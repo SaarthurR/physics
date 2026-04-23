@@ -1169,7 +1169,7 @@ code.is-explainable:focus-visible {
   opacity: 0;
   pointer-events: none;
   transition: opacity 160ms ease;
-  z-index: 45;
+  z-index: 72;
 }
 
 .concept-inspector-backdrop.is-open {
@@ -1196,7 +1196,7 @@ code.is-explainable:focus-visible {
   transition:
     opacity 180ms ease,
     transform 180ms ease;
-  z-index: 50;
+  z-index: 74;
 }
 
 .concept-inspector.is-open {
@@ -1405,6 +1405,63 @@ code.is-explainable:focus-visible {
   display: grid;
   gap: 14px;
   justify-items: end;
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+body.concept-inspector-open .floating-actions-rail {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+}
+
+.resource-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.resource-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid rgba(190, 58, 46, 0.16);
+  border-radius: 999px;
+  color: #8f241f;
+  background: rgba(255, 248, 246, 0.92);
+  text-decoration: none;
+  font-weight: 700;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.resource-button:hover,
+.resource-button:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(143, 36, 31, 0.12);
+  background: rgba(255, 243, 239, 0.98);
+  border-color: rgba(190, 58, 46, 0.26);
+  outline: none;
+}
+
+.resource-button::before {
+  content: "▶";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: #d93025;
+  color: #fff;
+  font-size: 0.72rem;
+  line-height: 1;
 }
 
 .chat-bubble,

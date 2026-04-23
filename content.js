@@ -4693,6 +4693,18 @@ This chapter covers the DL5 material on diffraction, two-slit interference, the 
           cloneStudyGuideSection("chapter-10-geometry", "quiz2-classic-ch4-geometry"),
           cloneStudyGuideSection("chapter-10-small-angle", "quiz2-classic-ch4-small-angle"),
           cloneStudyGuideSection("chapter-10-worked-example", "quiz2-classic-ch4-worked"),
+          {
+            id: "quiz2-classic-ch4-videos",
+            title: "Watch It Once - Organic Chemistry Tutor",
+            html: `
+              <p>If you want a quick outside explanation after reading this chapter, these are the closest Organic Chemistry Tutor matches for the Quiz 2 optics material.</p>
+              <div class="resource-actions">
+                <a class="resource-button" href="https://www.youtube.com/watch?v=ANsHXbIoA6U" target="_blank" rel="noreferrer noopener">Huygens Principle</a>
+                <a class="resource-button" href="https://www.youtube.com/watch?v=xaAthgG0o8o" target="_blank" rel="noreferrer noopener">Young's Double Slit</a>
+                <a class="resource-button" href="https://www.youtube.com/watch?v=9hCrhllI0ck" target="_blank" rel="noreferrer noopener">Single Slit Diffraction</a>
+              </div>
+            `,
+          },
         ],
       },
       {
@@ -4708,6 +4720,16 @@ This chapter keeps the later optics pieces that matter for the quiz: many-slit i
           cloneStudyGuideSection("chapter-11-multislit", "quiz2-classic-ch5-multislit"),
           cloneStudyGuideSection("chapter-11-grating-formula", "quiz2-classic-ch5-grating-formula"),
           cloneStudyGuideSection("chapter-11-white-light", "quiz2-classic-ch5-white-light"),
+          {
+            id: "quiz2-classic-ch5-grating-video",
+            title: "Diffraction Grating Video",
+            html: `
+              <p>If you want practice right after this section, this Organic Chemistry Tutor video lines up well with the grating part of Quiz 2.</p>
+              <div class="resource-actions">
+                <a class="resource-button" href="https://www.youtube.com/watch?v=gf7j2fumz70" target="_blank" rel="noreferrer noopener">Diffraction Grating Problems</a>
+              </div>
+            `,
+          },
           {
             id: "quiz2-classic-ch5-phase-shift",
             title: "Crystal Shift - The Formula You Want To See",

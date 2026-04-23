@@ -2771,6 +2771,7 @@ function openConceptInspector(entry) {
   conceptInspector.setAttribute("aria-hidden", "false");
   conceptInspectorBackdrop?.classList.add("is-open");
   conceptInspectorBackdrop?.setAttribute("aria-hidden", "false");
+  document.body.classList.add("concept-inspector-open");
 }
 
 function closeConceptInspector() {
@@ -2780,6 +2781,7 @@ function closeConceptInspector() {
   conceptInspector.setAttribute("aria-hidden", "true");
   conceptInspectorBackdrop?.classList.remove("is-open");
   conceptInspectorBackdrop?.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("concept-inspector-open");
 }
 
 function showConceptHovercard(anchor, entry) {
