@@ -46,6 +46,13 @@ const notesShell = document.querySelector("#notes-shell");
 const notesClose = document.querySelector("#notes-close");
 const notesInput = document.querySelector("#notes-input");
 const notesHighlightsRoot = document.querySelector("#notes-highlights-root");
+const conceptInspector = document.querySelector("#concept-inspector");
+const conceptInspectorBackdrop = document.querySelector("#concept-inspector-backdrop");
+const conceptInspectorClose = document.querySelector("#concept-inspector-close");
+const conceptInspectorKicker = document.querySelector("#concept-inspector-kicker");
+const conceptInspectorTitle = document.querySelector("#concept-inspector-title");
+const conceptInspectorBody = document.querySelector("#concept-inspector-body");
+const conceptHovercard = document.querySelector("#concept-hovercard");
 const chatShell = document.querySelector("#chat-shell");
 const chatClose = document.querySelector("#chat-close");
 const openChatHero = document.querySelector("#open-chat-hero");
@@ -258,6 +265,436 @@ const sectionHintMap = {
   ],
 };
 
+const TERM_EXPLAINERS = {
+  superposition: {
+    kind: "Key vocab",
+    title: "Superposition",
+    short: "When two waves overlap, you add their effects at the same point and time.",
+    body: `
+      <p><strong>Plain English:</strong> superposition means waves do not fight over space. If two waves reach the same place at the same time, the medium responds to both at once.</p>
+      <p><strong>What you actually do:</strong> take the displacement from wave 1, take the displacement from wave 2, and add them. Positive and negative values matter, so cancellation is possible.</p>
+      <p><strong>Why it matters here:</strong> interference, beats, two-speaker problems, double slit, and thin film all start from this one idea.</p>
+    `,
+  },
+  interference: {
+    kind: "Key vocab",
+    title: "Interference",
+    short: "The result you get after waves superpose.",
+    body: `
+      <p><strong>Plain English:</strong> interference is just the pattern that comes out after superposition. Sometimes the waves reinforce, sometimes they cancel, and sometimes they land somewhere in between.</p>
+      <p><strong>What controls it:</strong> the relative phase of the waves at the meeting point. If they arrive in step, the effect is stronger. If they arrive out of step, the effect weakens or disappears.</p>
+      <p><strong>How to spot it on this site:</strong> loud versus quiet speakers, bright versus dark fringes, and color-selection effects in optics are all interference stories.</p>
+    `,
+  },
+  "constructive interference": {
+    kind: "Key vocab",
+    title: "Constructive Interference",
+    short: "The waves arrive in step and reinforce each other.",
+    body: `
+      <p><strong>Plain English:</strong> constructive interference happens when two waves line up so their effects add in the same direction.</p>
+      <p><strong>What it looks like:</strong> louder sound, brighter light, or a bigger displacement than one wave alone would make.</p>
+      <p><strong>Fast rule:</strong> the total phase difference lands on an even multiple of π, or equivalently a whole multiple of 2π.</p>
+    `,
+  },
+  "destructive interference": {
+    kind: "Key vocab",
+    title: "Destructive Interference",
+    short: "The waves arrive out of step and cancel some or all of each other.",
+    body: `
+      <p><strong>Plain English:</strong> destructive interference happens when one wave is trying to push the medium up while the other is trying to push it down.</p>
+      <p><strong>What it looks like:</strong> quiet spots, dark fringes, or zero displacement if the two waves have equal size.</p>
+      <p><strong>Fast rule:</strong> the total phase difference lands on an odd multiple of π.</p>
+    `,
+  },
+  "phase difference": {
+    kind: "Key vocab",
+    title: "Phase Difference",
+    short: "A measure of how out of step two waves are.",
+    body: `
+      <p><strong>Plain English:</strong> phase difference tells you where each wave is in its cycle relative to the other one.</p>
+      <p><strong>Zero phase difference</strong> means the waves are lined up. <strong>π phase difference</strong> means one is half a cycle ahead of the other.</p>
+      <p><strong>Why it matters:</strong> it is the thing that decides constructive versus destructive interference.</p>
+    `,
+  },
+  "path difference": {
+    kind: "Key vocab",
+    title: "Path Difference",
+    short: "How much farther one wave travels than the other.",
+    body: `
+      <p><strong>Plain English:</strong> path difference is just a distance comparison. If one wave has to travel farther, it arrives later in the cycle.</p>
+      <p><strong>Why that matters:</strong> extra travel distance becomes extra phase lag. That is why geometry alone can turn a loud point into a quiet point.</p>
+      <p><strong>Typical move:</strong> find two distances to the same observation point, subtract them, then plug that result into the phase formula.</p>
+    `,
+  },
+  "beat frequency": {
+    kind: "Key vocab",
+    title: "Beat Frequency",
+    short: "How fast the loud-soft-loud pulsing happens when nearby frequencies drift in and out of sync.",
+    body: `
+      <p><strong>Plain English:</strong> beat frequency is not the note you sing along to. It is the rate of the volume pulsing.</p>
+      <p><strong>Formula idea:</strong> the farther apart the two source frequencies are, the faster they drift in and out of phase.</p>
+      <p><strong>Quiz trap:</strong> students often confuse beat rate with the average pitch heard underneath the envelope.</p>
+    `,
+  },
+  "carrier frequency": {
+    kind: "Key vocab",
+    title: "Carrier Frequency",
+    short: "The average pitch inside a beat pattern.",
+    body: `
+      <p><strong>Plain English:</strong> when you hear beats, the sound has a fast underlying tone and a slower pulsing envelope. The carrier frequency is that underlying tone.</p>
+      <p><strong>Why it matters:</strong> if the question asks for the note heard, not the beat rate, you usually want the average of the two source frequencies.</p>
+      <p><strong>Good sanity check:</strong> the carrier should sit between the two original frequencies.</p>
+    `,
+  },
+  "doppler effect": {
+    kind: "Key vocab",
+    title: "Doppler Effect",
+    short: "Motion changes the frequency you hear because it changes how tightly wavefronts are packed.",
+    body: `
+      <p><strong>Plain English:</strong> when source and observer move toward each other, wavefronts get encountered more often, so the heard frequency rises. When they separate, the heard frequency drops.</p>
+      <p><strong>Think physically first:</strong> ask whether the motion squeezes wavefronts together or stretches them apart before touching the signs in the formula.</p>
+      <p><strong>On Quiz 2:</strong> Doppler often appears before beats, so you change the heard frequencies first and only then compare them.</p>
+    `,
+  },
+  diffraction: {
+    kind: "Key vocab",
+    title: "Diffraction",
+    short: "A wave spreads after passing through an opening or around an obstacle.",
+    body: `
+      <p><strong>Plain English:</strong> diffraction is the reason a narrow slit can behave like a new wave source instead of acting like a simple geometric hole.</p>
+      <p><strong>Why it matters:</strong> without diffraction, double slit and grating patterns would not form the way they do.</p>
+      <p><strong>Visual cue:</strong> if the guide talks about openings, slits, or waves bending/spreading, diffraction is usually in play.</p>
+    `,
+  },
+  wavefront: {
+    kind: "Key vocab",
+    title: "Wavefront",
+    short: "A line or surface connecting points that are at the same phase.",
+    body: `
+      <p><strong>Plain English:</strong> a wavefront is a snapshot of “all the places the wave is in the same stage of its cycle.”</p>
+      <p><strong>Example:</strong> a circular ripple crest in a pond is a wavefront. Every point on that crest is in the same phase.</p>
+      <p><strong>Why it helps:</strong> wavefront drawings make path difference and interference geometry much easier to see.</p>
+    `,
+  },
+  "diffraction grating": {
+    kind: "Key vocab",
+    title: "Diffraction Grating",
+    short: "A many-slit setup that sharpens interference peaks and separates wavelengths by angle.",
+    body: `
+      <p><strong>Plain English:</strong> a diffraction grating is like a double slit repeated many times.</p>
+      <p><strong>Why it works so well:</strong> more slits do not move the bright angles much, but they make the bright spots sharper and the dark regions darker.</p>
+      <p><strong>What you usually use it for:</strong> color ordering, wavelength separation, and white-light patterns.</p>
+    `,
+  },
+  "thin film interference": {
+    kind: "Key vocab",
+    title: "Thin Film Interference",
+    short: "Interference caused by reflected rays that travel slightly different distances inside a layered structure.",
+    body: `
+      <p><strong>Plain English:</strong> one reflected ray bounces off the top surface while another goes deeper and comes back. Because one ray travels farther, the two reflected rays can reinforce one color and weaken another.</p>
+      <p><strong>Why it shows up on the quiz:</strong> the butterfly problem is really an interference problem where the extra path is a round trip through a small thickness.</p>
+      <p><strong>Core idea:</strong> the color you see strongly is the color whose reflected rays arrive most nearly in phase.</p>
+    `,
+  },
+  "phase constant": {
+    kind: "Key vocab",
+    title: "Phase Constant",
+    short: "A built-in starting offset in a wave’s cycle.",
+    body: `
+      <p><strong>Plain English:</strong> the phase constant tells you where a wave already is in its cycle before path difference starts changing anything.</p>
+      <p><strong>Examples:</strong> opposite wiring, a source that starts early, or a crystal delay can all behave like phase-constant differences.</p>
+      <p><strong>Why it matters:</strong> it can flip constructive and destructive conditions even when the geometry stays the same.</p>
+    `,
+  },
+};
+
+const TERM_ALIASES = {
+  "constructive interference": "constructive interference",
+  "destructive interference": "destructive interference",
+  "thin film interference": "thin film interference",
+  "diffraction grating": "diffraction grating",
+  "phase difference": "phase difference",
+  "path difference": "path difference",
+  "beat frequency": "beat frequency",
+  "carrier frequency": "carrier frequency",
+  "doppler effect": "doppler effect",
+  superposition: "superposition",
+  interference: "interference",
+  diffraction: "diffraction",
+  wavefront: "wavefront",
+  "phase constant": "phase constant",
+};
+
+const FORMULA_EXPLAINERS = {
+  "wave-speed": {
+    kind: "Formula",
+    title: "Wave speed formula",
+    short: "Connects speed, wavelength, and frequency.",
+    preview: [
+      "v is how fast the disturbance travels.",
+      "λ is distance per cycle.",
+      "f is cycles per second.",
+    ],
+    body: `
+      <p><strong>Formula:</strong> <code>v = λf</code></p>
+      <p><strong>What each part means:</strong> <code>v</code> is wave speed, <code>λ</code> is wavelength, and <code>f</code> is frequency.</p>
+      <p><strong>Why it works:</strong> if each cycle takes up one wavelength of space and the source produces <code>f</code> cycles each second, then the disturbance covers <code>λf</code> distance per second.</p>
+      <p><strong>Use it when:</strong> a problem gives any two of speed, wavelength, and frequency and asks for the third.</p>
+    `,
+  },
+  "superposition-principle": {
+    kind: "Formula",
+    title: "Superposition principle",
+    short: "Add the two wave displacements point by point.",
+    preview: [
+      "y_tot is the actual displacement.",
+      "y₁ and y₂ are the separate contributions.",
+      "Signs matter, so cancellation is possible.",
+    ],
+    body: `
+      <p><strong>Formula:</strong> <code>y_tot = y₁ + y₂</code></p>
+      <p><strong>What each part means:</strong> <code>y_tot</code> is what the medium actually does, while <code>y₁</code> and <code>y₂</code> are what each wave would have done alone.</p>
+      <p><strong>Why it works:</strong> the medium responds to both disturbances at once, so the final displacement is the algebraic sum.</p>
+      <p><strong>Use it when:</strong> you are reasoning about overlapping waves, interference, or beats.</p>
+    `,
+  },
+  "total-phase": {
+    kind: "Formula",
+    title: "Total phase difference formula",
+    short: "Adds path difference and built-in source offset to decide interference type.",
+    preview: [
+      "Δx is the geometry term.",
+      "Δφ₀ is the source-offset term.",
+      "The total decides constructive vs destructive.",
+    ],
+    body: `
+      <p><strong>Formula:</strong> <code>ΔΦ = -2πΔx/λ + Δφ₀</code></p>
+      <p><strong>What each part means:</strong> <code>ΔΦ</code> is the total phase difference, <code>Δx</code> is the path difference, <code>λ</code> is wavelength, and <code>Δφ₀</code> is any built-in source phase difference.</p>
+      <p><strong>Why it works:</strong> traveling an extra distance changes where a wave is in its cycle, and a source can also start ahead or behind before any travel happens. The total phase is the sum of those two effects.</p>
+      <p><strong>Use it when:</strong> two equal-frequency waves meet and you need to decide whether the result is constructive, destructive, or partial.</p>
+    `,
+  },
+  "constructive-general": {
+    kind: "Formula",
+    title: "General constructive condition",
+    short: "Gives the path difference needed for reinforcement when a source offset is present.",
+    preview: [
+      "Starts from ΔΦ = 2nπ.",
+      "Works even when Δφ₀ is not zero.",
+      "Special cases drop out automatically.",
+    ],
+    body: `
+      <p><strong>Formula:</strong> <code>Δx = nλ - (Δφ₀λ)/(2π)</code></p>
+      <p><strong>What each part means:</strong> <code>n</code> is the fringe/order integer, <code>λ</code> is wavelength, and <code>Δφ₀</code> is the built-in source phase difference.</p>
+      <p><strong>Why it works:</strong> constructive interference means the total phase difference must land on an even multiple of π. Solving the total-phase formula for <code>Δx</code> gives this condition.</p>
+      <p><strong>Use it when:</strong> the prompt includes opposite wiring, a timing lead, or a crystal, so the simple <code>Δx = nλ</code> shortcut is no longer enough.</p>
+    `,
+  },
+  "destructive-general": {
+    kind: "Formula",
+    title: "General destructive condition",
+    short: "Gives the path difference needed for cancellation when a source offset is present.",
+    preview: [
+      "Starts from ΔΦ = (2n+1)π.",
+      "Includes source phase from the start.",
+      "Safer than the half-wavelength shortcut when Δφ₀ is nonzero.",
+    ],
+    body: `
+      <p><strong>Formula:</strong> <code>Δx = (n + 1/2)λ - (Δφ₀λ)/(2π)</code></p>
+      <p><strong>What each part means:</strong> the first term is the usual half-integer path difference pattern, while the second term corrects for any built-in source phase shift.</p>
+      <p><strong>Why it works:</strong> destructive interference happens when the total phase lands on an odd multiple of π, and this is the solved-for-geometry version of that rule.</p>
+      <p><strong>Use it when:</strong> the question asks for a dark point, quiet point, or cancellation in the presence of source offsets.</p>
+    `,
+  },
+  "beat-frequency": {
+    kind: "Formula",
+    title: "Beat frequency formula",
+    short: "Measures how fast the pulsing envelope repeats.",
+    preview: [
+      "Subtract the two nearby frequencies.",
+      "Use absolute value so the answer stays positive.",
+      "This is pulse rate, not heard pitch.",
+    ],
+    body: `
+      <p><strong>Formula:</strong> <code>f_beat = |f₁ - f₂|</code></p>
+      <p><strong>What each part means:</strong> <code>f₁</code> and <code>f₂</code> are the two source or heard frequencies, and the absolute value makes the beat rate positive.</p>
+      <p><strong>Why it works:</strong> the beat envelope comes from how quickly the two phases drift apart, and that drift rate is set by the frequency difference.</p>
+      <p><strong>Use it when:</strong> the sources have close but different frequencies and the question asks for the loud-soft-loud pulse rate.</p>
+    `,
+  },
+  carrier: {
+    kind: "Formula",
+    title: "Carrier frequency formula",
+    short: "Finds the average pitch inside a beat pattern.",
+    preview: [
+      "Average the two frequencies.",
+      "Represents the fast oscillation inside the envelope.",
+      "Different from beat rate.",
+    ],
+    body: `
+      <p><strong>Formula:</strong> <code>f_carrier = (f₁ + f₂)/2</code></p>
+      <p><strong>What each part means:</strong> you average the two nearby frequencies because the fast underlying oscillation sits between them.</p>
+      <p><strong>Why it works:</strong> the sum of two close-frequency waves looks like a fast oscillation modulated by a slower envelope, and that fast oscillation lives near the average frequency.</p>
+      <p><strong>Use it when:</strong> the problem asks what pitch is heard during a beat pattern.</p>
+    `,
+  },
+  doppler: {
+    kind: "Formula",
+    title: "Full Doppler formula",
+    short: "Tracks how observer motion and source motion change the heard frequency.",
+    preview: [
+      "Numerator tracks observer motion.",
+      "Denominator tracks source motion.",
+      "Toward each other raises frequency.",
+    ],
+    body: `
+      <p><strong>Formula:</strong> <code>f_obs = ((v ± v_o) / (v ∓ v_s)) f_s</code></p>
+      <p><strong>What each part means:</strong> <code>v</code> is wave speed in the medium, <code>v_o</code> is observer speed, <code>v_s</code> is source speed, and <code>f_s</code> is the source frequency.</p>
+      <p><strong>Why it works:</strong> observer motion changes how often wavefronts are encountered, while source motion changes how tightly wavefronts are packed in space. The signs are linked opposites, not independent choices.</p>
+      <p><strong>Use it when:</strong> a source or observer is moving and the problem asks for the frequency actually heard.</p>
+    `,
+  },
+  "double-slit-path": {
+    kind: "Formula",
+    title: "Double-slit path-difference formula",
+    short: "Turns the slit geometry into the path difference between the two rays.",
+    preview: [
+      "d is slit separation.",
+      "θ is angle from center.",
+      "This is the geometry step before bright/dark conditions.",
+    ],
+    body: `
+      <p><strong>Formula:</strong> <code>Δx = d sin θ</code></p>
+      <p><strong>What each part means:</strong> <code>Δx</code> is path difference, <code>d</code> is the slit spacing, and <code>θ</code> is the angle away from the center line.</p>
+      <p><strong>Why it works:</strong> the geometry of the two rays makes one path slightly longer than the other, and this expression captures that extra distance.</p>
+      <p><strong>Use it when:</strong> converting a double-slit or grating picture into interference conditions.</p>
+    `,
+  },
+  bright: {
+    kind: "Formula",
+    title: "Bright-fringe condition",
+    short: "The path difference lands on a whole number of wavelengths.",
+    preview: [
+      "Path difference matches full cycles.",
+      "That means the waves arrive in step.",
+      "Use for bright or loud results.",
+    ],
+    body: `
+      <p><strong>Formula:</strong> <code>d sin θ = nλ</code></p>
+      <p><strong>What each part means:</strong> the geometric path difference equals an integer number of wavelengths.</p>
+      <p><strong>Why it works:</strong> a whole extra number of cycles does not change the phase relationship, so the waves still reinforce.</p>
+      <p><strong>Use it when:</strong> the problem asks for bright fringes, maxima, or constructive directions in double-slit and grating setups.</p>
+    `,
+  },
+  dark: {
+    kind: "Formula",
+    title: "Dark-fringe condition",
+    short: "The path difference lands on a half-integer number of wavelengths.",
+    preview: [
+      "Half a cycle offset flips crest into trough.",
+      "That creates cancellation.",
+      "Use for dark or zero-signal results.",
+    ],
+    body: `
+      <p><strong>Formula:</strong> <code>d sin θ = (n + 1/2)λ</code></p>
+      <p><strong>What each part means:</strong> the path difference is a half-integer number of wavelengths, so one wave arrives half a cycle out of step with the other.</p>
+      <p><strong>Why it works:</strong> half a wavelength of extra travel corresponds to a phase mismatch of π, which drives destructive interference.</p>
+      <p><strong>Use it when:</strong> the prompt asks for dark fringes, minima, cancellation, or zero intensity.</p>
+    `,
+  },
+  "small-angle": {
+    kind: "Formula",
+    title: "Small-angle fringe-spacing formula",
+    short: "Connects wavelength, screen distance, and fringe spacing when the screen is far away.",
+    preview: [
+      "D is screen distance.",
+      "Δy is fringe spacing on the screen.",
+      "Useful because screen distances are easier to measure than slit spacing.",
+    ],
+    body: `
+      <p><strong>Formula:</strong> <code>d = λD/Δy</code> or equivalently <code>Δy = λD/d</code></p>
+      <p><strong>What each part means:</strong> <code>d</code> is slit spacing, <code>D</code> is screen distance, <code>Δy</code> is fringe spacing, and <code>λ</code> is wavelength.</p>
+      <p><strong>Why it works:</strong> for small angles, <code>sin θ ≈ tan θ ≈ y/D</code>, so the interference condition turns into a direct screen-position formula.</p>
+      <p><strong>Use it when:</strong> the screen is far away and the problem gives you wall spacing measurements.</p>
+    `,
+  },
+  "crystal-phase": {
+    kind: "Formula",
+    title: "Crystal phase-shift formula",
+    short: "Converts a time delay into a source phase difference.",
+    preview: [
+      "Δt is the delay added by the crystal.",
+      "T is one full cycle time.",
+      "This tells you how much of a cycle the wave starts behind.",
+    ],
+    body: `
+      <p><strong>Formula:</strong> <code>Δφ₀ = 2πΔt/T</code></p>
+      <p><strong>What each part means:</strong> <code>Δt</code> is the delay and <code>T</code> is the period of the wave.</p>
+      <p><strong>Why it works:</strong> one full period corresponds to one full cycle, or <code>2π</code> radians. A fraction of a period gives the same fraction of <code>2π</code>.</p>
+      <p><strong>Use it when:</strong> a crystal or timing offset changes one slit or source before the normal geometry starts.</p>
+    `,
+  },
+  "crystal-shift": {
+    kind: "Formula",
+    title: "Crystal pattern-shift formula",
+    short: "Tells you how far the whole double-slit pattern moves.",
+    preview: [
+      "Δφ₀ is the source phase shift.",
+      "λ and D scale the shift up.",
+      "d in the denominator means wider slit spacing shrinks the shift.",
+    ],
+    body: `
+      <p><strong>Formula:</strong> <code>y_shift = Δφ₀λD / (2πd)</code></p>
+      <p><strong>What each part means:</strong> <code>Δφ₀</code> is the crystal-caused phase shift, <code>λ</code> is wavelength, <code>D</code> is screen distance, and <code>d</code> is slit spacing.</p>
+      <p><strong>Why it works:</strong> the crystal changes the phase condition at the center, so the whole set of bright and dark points slides to new positions. The formula is the solved screen-position version of that idea.</p>
+      <p><strong>Use it when:</strong> the problem asks how far the bright pattern shifts after one slit gets delayed.</p>
+    `,
+  },
+  "thin-film": {
+    kind: "Formula",
+    title: "Thin-film constructive condition",
+    short: "Uses the extra round-trip path inside the layered film.",
+    preview: [
+      "One ray reflects immediately.",
+      "The other goes down and back up.",
+      "That extra path is 2d.",
+    ],
+    body: `
+      <p><strong>Formula:</strong> <code>2d = nλ</code></p>
+      <p><strong>What each part means:</strong> <code>d</code> is the layer spacing, so the lower ray travels one <code>d</code> downward and one <code>d</code> upward for an extra path of <code>2d</code>.</p>
+      <p><strong>Why it works:</strong> constructive reflection happens when that extra distance matches a whole number of wavelengths in the simplified no-extra-phase-flip model.</p>
+      <p><strong>Use it when:</strong> a thin-film or butterfly problem asks which thickness reinforces a specific reflected color.</p>
+    `,
+  },
+};
+
+const FORMULA_STRIP_EXPLAINER_KEYS = {
+  "Wave speed": "wave-speed",
+  Doppler: "doppler",
+  Interference: "total-phase",
+  "Total phase": "total-phase",
+  Beats: "beat-frequency",
+  "Double slit": "double-slit-path",
+  Bright: "bright",
+  Dark: "dark",
+  Crystal: "crystal-phase",
+  "Thin film": "thin-film",
+  Superposition: "superposition-principle",
+};
+
+const SUBSCRIPT_DIGITS = {
+  "₀": "0",
+  "₁": "1",
+  "₂": "2",
+  "₃": "3",
+  "₄": "4",
+  "₅": "5",
+  "₆": "6",
+  "₇": "7",
+  "₈": "8",
+  "₉": "9",
+};
+
 const settingsKey = "waves-study-chat-settings";
 const activeGuideKey = "waves-study-active-guide";
 const chatLayoutKey = "waves-study-chat-layout";
@@ -284,6 +721,8 @@ let lastOpenedSectionId = "";
 let scrollSpyTargets = [];
 let scrollSpyTicking = false;
 let activeOutlineLinkId = "";
+let hoverCardAnchor = null;
+let hoverCardHideTimer = null;
 let activeGuideId = loadActiveGuideId();
 
 renderActiveGuide();
@@ -300,6 +739,7 @@ wireChatEvents();
 wireStudyConceptsShell();
 wireNotesShell();
 wireSelectionAssist();
+wireConceptInspector();
 window.addEventListener("scroll", scheduleScrollSpySync, { passive: true });
 window.addEventListener("resize", () => {
   scheduleScrollSpySync();
@@ -347,6 +787,8 @@ function setActiveGuide(guideId, options = {}) {
 }
 
 function renderActiveGuide() {
+  closeConceptInspector();
+  hideConceptHovercard();
   renderGuideChrome();
   renderFormulaStrip();
   renderOutline();
@@ -355,6 +797,7 @@ function renderActiveGuide() {
   applyAllPersistentHighlights();
   wireScrollSpy();
   renderMathInNode(documentRoot);
+  enhanceInteractiveStudyHelpers();
 }
 
 function renderGuideChrome() {
@@ -385,6 +828,206 @@ function renderFormulaStrip() {
       `,
     )
     .join("");
+}
+
+function enhanceInteractiveStudyHelpers() {
+  hideConceptHovercard();
+  annotateStudyTerms(documentRoot);
+  markExplainableFormulas(documentRoot);
+  markExplainableFormulas(formulaStrip);
+}
+
+function annotateStudyTerms(container) {
+  if (!container) return;
+
+  const blocks = container.querySelectorAll("p, li, td, th, figcaption, h4");
+  blocks.forEach((block) => {
+    if (block.querySelector("[data-term-key]")) return;
+    wrapTermsInElement(block);
+  });
+}
+
+function wrapTermsInElement(element) {
+  const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      if (!node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+
+      const parent = node.parentElement;
+      if (!parent) return NodeFilter.FILTER_REJECT;
+      if (
+        parent.closest(
+          "[data-term-key], [data-formula-key], code, a, button, .formula-box, .formula-inline, .formula-chip",
+        )
+      ) {
+        return NodeFilter.FILTER_REJECT;
+      }
+
+      return NodeFilter.FILTER_ACCEPT;
+    },
+  });
+
+  const textNodes = [];
+  while (walker.nextNode()) {
+    textNodes.push(walker.currentNode);
+  }
+
+  textNodes.forEach((node) => {
+    const replacement = buildTermFragment(node.nodeValue);
+    if (replacement) {
+      node.parentNode.replaceChild(replacement, node);
+    }
+  });
+}
+
+function buildTermFragment(text) {
+  const aliases = Object.keys(TERM_ALIASES).sort((left, right) => right.length - left.length);
+  const pattern = new RegExp(`\\b(${aliases.map((value) => escapeRegExp(value)).join("|")})\\b`, "gi");
+  const matches = [...text.matchAll(pattern)];
+  if (!matches.length) return null;
+
+  const fragment = document.createDocumentFragment();
+  let cursor = 0;
+
+  matches.forEach((match) => {
+    const matchedText = match[0];
+    const start = match.index ?? 0;
+
+    if (start > cursor) {
+      fragment.append(document.createTextNode(text.slice(cursor, start)));
+    }
+
+    const key = TERM_ALIASES[matchedText.toLowerCase()];
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "inline-term";
+    button.dataset.termKey = key;
+    button.textContent = matchedText;
+    fragment.append(button);
+
+    cursor = start + matchedText.length;
+  });
+
+  if (cursor < text.length) {
+    fragment.append(document.createTextNode(text.slice(cursor)));
+  }
+
+  return fragment;
+}
+
+function markExplainableFormulas(container) {
+  if (!container) return;
+
+  container.querySelectorAll(".formula-box, .formula-inline, .formula-chip").forEach((element) => {
+    const explainerKey = getFormulaExplainerKey(element);
+    if (!explainerKey) return;
+
+    element.classList.add("is-explainable");
+    element.dataset.formulaKey = explainerKey;
+
+    if (!isNaturallyFocusable(element)) {
+      element.tabIndex = 0;
+      element.setAttribute("role", "button");
+    }
+
+    if (element.dataset.formulaBound === "true") return;
+    element.dataset.formulaBound = "true";
+
+    element.addEventListener("mouseenter", () => {
+      const explainer = FORMULA_EXPLAINERS[element.dataset.formulaKey];
+      if (!explainer) return;
+      showConceptHovercard(element, explainer);
+    });
+    element.addEventListener("mouseleave", () => {
+      scheduleHovercardHide();
+    });
+    element.addEventListener("focus", () => {
+      const explainer = FORMULA_EXPLAINERS[element.dataset.formulaKey];
+      if (!explainer) return;
+      showConceptHovercard(element, explainer);
+    });
+    element.addEventListener("blur", () => {
+      scheduleHovercardHide();
+    });
+    element.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      const explainer = FORMULA_EXPLAINERS[element.dataset.formulaKey];
+      if (!explainer) return;
+      openConceptInspector(explainer);
+    });
+  });
+}
+
+function getFormulaExplainerKey(element) {
+  if (!element) return "";
+
+  if (element.classList.contains("formula-chip")) {
+    const label = element.querySelector("strong")?.textContent?.trim() || "";
+    return FORMULA_STRIP_EXPLAINER_KEYS[label] || "";
+  }
+
+  const normalized = normalizeFormulaText(element.textContent || "");
+
+  if (normalized.includes("ytot") && normalized.includes("y1") && normalized.includes("y2")) {
+    return "superposition-principle";
+  }
+  if (normalized.includes("deltaphi") && normalized.includes("deltax") && normalized.includes("deltaphi0")) {
+    return "total-phase";
+  }
+  if (normalized.includes("deltax=nlambda-") && normalized.includes("deltaphi0")) {
+    return "constructive-general";
+  }
+  if (normalized.includes("deltax=(n+1/2)lambda-") && normalized.includes("deltaphi0")) {
+    return "destructive-general";
+  }
+  if (normalized.includes("fbeat") && normalized.includes("f1") && normalized.includes("f2")) {
+    return "beat-frequency";
+  }
+  if (normalized.includes("fcarrier") && normalized.includes("f1") && normalized.includes("f2")) {
+    return "carrier";
+  }
+  if (normalized.includes("fobs") && normalized.includes("vo") && normalized.includes("fs")) {
+    return "doppler";
+  }
+  if (normalized.includes("deltax=dsintheta")) {
+    return "double-slit-path";
+  }
+  if (normalized.includes("dsintheta=nlambda")) {
+    return "bright";
+  }
+  if (normalized.includes("dsintheta=(n+1/2)lambda")) {
+    return "dark";
+  }
+  if ((normalized.includes("d=lambdad/deltay") || normalized.includes("d=lambdad/")) && normalized.includes("deltay")) {
+    return "small-angle";
+  }
+  if (normalized.includes("deltaphi0=2pideltat/t")) {
+    return "crystal-phase";
+  }
+  if (normalized.includes("yshift=") && normalized.includes("deltaphi0") && normalized.includes("2pid")) {
+    return "crystal-shift";
+  }
+  if (normalized.includes("2d=nlambda")) {
+    return "thin-film";
+  }
+  if (normalized.includes("v=lambdaf") || normalized.includes("v=lambdaf")) {
+    return "wave-speed";
+  }
+
+  return "";
+}
+
+function normalizeFormulaText(value) {
+  return replaceUnicodeSubscripts((value || "").toLowerCase())
+    .replace(/\s+/g, "")
+    .replace(/[′']/g, "")
+    .replace(/&nbsp;/g, "")
+    .replace(/×/g, "")
+    .replace(/<[^>]+>/g, "");
+}
+
+function replaceUnicodeSubscripts(value) {
+  return value.replace(/[₀₁₂₃₄₅₆₇₈₉]/g, (character) => SUBSCRIPT_DIGITS[character] || character);
 }
 
 function renderOutlineLabel(text, badge, tone, locator = "") {
@@ -1298,6 +1941,112 @@ function wireNotesShell() {
     if (notesShell.contains(event.target) || notesButton.contains(event.target)) return;
     closeNotesShell();
   });
+}
+
+function wireConceptInspector() {
+  [documentRoot, formulaStrip].forEach((root) => {
+    root?.addEventListener("click", handleConceptInteractionClick);
+  });
+
+  conceptInspectorClose?.addEventListener("click", closeConceptInspector);
+  conceptInspectorBackdrop?.addEventListener("click", closeConceptInspector);
+  conceptHovercard?.addEventListener("mouseenter", cancelHovercardHide);
+  conceptHovercard?.addEventListener("mouseleave", scheduleHovercardHide);
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && conceptInspector?.classList.contains("is-open")) {
+      closeConceptInspector();
+    }
+  });
+}
+
+function handleConceptInteractionClick(event) {
+  const termButton = event.target.closest("[data-term-key]");
+  if (termButton) {
+    const entry = TERM_EXPLAINERS[termButton.dataset.termKey];
+    if (!entry) return;
+    openConceptInspector(entry);
+    return;
+  }
+
+  const formulaButton = event.target.closest("[data-formula-key]");
+  if (formulaButton) {
+    const entry = FORMULA_EXPLAINERS[formulaButton.dataset.formulaKey];
+    if (!entry) return;
+    openConceptInspector(entry);
+  }
+}
+
+function openConceptInspector(entry) {
+  if (!entry || !conceptInspector) return;
+
+  if (conceptInspectorKicker) conceptInspectorKicker.textContent = entry.kind || "Concept help";
+  if (conceptInspectorTitle) conceptInspectorTitle.textContent = entry.title || "Definition";
+  if (conceptInspectorBody) conceptInspectorBody.innerHTML = entry.body || "";
+
+  conceptInspector.classList.add("is-open");
+  conceptInspector.setAttribute("aria-hidden", "false");
+  conceptInspectorBackdrop?.classList.add("is-open");
+  conceptInspectorBackdrop?.setAttribute("aria-hidden", "false");
+}
+
+function closeConceptInspector() {
+  if (!conceptInspector) return;
+
+  conceptInspector.classList.remove("is-open");
+  conceptInspector.setAttribute("aria-hidden", "true");
+  conceptInspectorBackdrop?.classList.remove("is-open");
+  conceptInspectorBackdrop?.setAttribute("aria-hidden", "true");
+}
+
+function showConceptHovercard(anchor, entry) {
+  if (!conceptHovercard || !anchor || !entry) return;
+
+  cancelHovercardHide();
+  hoverCardAnchor = anchor;
+
+  const previewMarkup = Array.isArray(entry.preview) && entry.preview.length
+    ? `<ul>${entry.preview.map((line) => `<li>${escapeHtml(line)}</li>`).join("")}</ul>`
+    : "";
+
+  conceptHovercard.innerHTML = `
+    <strong>${escapeHtml(entry.title || "Formula help")}</strong>
+    <p>${escapeHtml(entry.short || "")}</p>
+    ${previewMarkup}
+    <p class="concept-hovercard-meta">Click for the full breakdown.</p>
+  `;
+
+  conceptHovercard.classList.add("is-visible");
+  conceptHovercard.setAttribute("aria-hidden", "false");
+
+  const rect = anchor.getBoundingClientRect();
+  const width = conceptHovercard.offsetWidth || 320;
+  const maxLeft = window.scrollX + window.innerWidth - width - 12;
+  const left = Math.max(12, Math.min(maxLeft, rect.left + window.scrollX));
+  const top = Math.max(12, rect.top + window.scrollY - conceptHovercard.offsetHeight - 10);
+
+  conceptHovercard.style.left = `${left}px`;
+  conceptHovercard.style.top = `${top}px`;
+}
+
+function hideConceptHovercard() {
+  hoverCardAnchor = null;
+  if (!conceptHovercard) return;
+  conceptHovercard.classList.remove("is-visible");
+  conceptHovercard.setAttribute("aria-hidden", "true");
+}
+
+function scheduleHovercardHide() {
+  cancelHovercardHide();
+  hoverCardHideTimer = window.setTimeout(() => {
+    hideConceptHovercard();
+  }, 110);
+}
+
+function cancelHovercardHide() {
+  if (!hoverCardHideTimer) return;
+  window.clearTimeout(hoverCardHideTimer);
+  hoverCardHideTimer = null;
 }
 
 function openNotesShell() {
@@ -3577,6 +4326,15 @@ function safeJsonParse(value) {
   } catch {
     return null;
   }
+}
+
+function isNaturallyFocusable(element) {
+  if (!element) return false;
+  return ["BUTTON", "A", "INPUT", "TEXTAREA", "SELECT"].includes(element.tagName);
+}
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function escapeHtml(value) {
