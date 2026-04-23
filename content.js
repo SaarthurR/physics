@@ -1184,6 +1184,10 @@ Phase-shifted double slit problem places a screen 4 m away and asks how a nonzer
                 <li>Will there be some wavelengths of light that interfere destructively?</li>
               </ol>
             </div>
+            <figure class="concept-figure concept-figure-small">
+              <img src="./assets/figures/chapter11-butterfly-thin-film.svg" alt="Butterfly thin-film diagram showing incoming light reflecting from successive scale layers separated by distance d" />
+              <figcaption>The butterfly setup is a layered-reflection picture: one ray reflects from the top scale, and another travels down and back up from the next scale, creating an extra path of <code>2d</code>.</figcaption>
+            </figure>
             <h4>1 - The two important rays</h4>
             <p>One ray reflects immediately from the top layer. The other travels down to the next layer, reflects, and then travels back up. That second ray covers an extra round-trip distance inside the layered structure.</p>
             <h4>2 - Constructive blue reflection</h4>
@@ -4721,6 +4725,10 @@ This chapter keeps the later optics pieces that matter for the quiz: many-slit i
             title: "Thin Film Interference - The Butterfly Problem",
             html: `
               <p>In the butterfly setup, one reflected ray bounces straight off the top layer while another ray goes down to the next layer and comes back up. That second ray travels an extra round-trip distance.</p>
+              <figure class="concept-figure concept-figure-small">
+                <img src="./assets/figures/chapter11-butterfly-thin-film.svg" alt="Butterfly thin-film diagram showing incoming light reflecting from successive scale layers separated by distance d" />
+                <figcaption>The key picture is the two reflected rays: top-layer reflection versus the deeper round-trip reflection that adds the extra path <code>2d</code>.</figcaption>
+              </figure>
               <div class="formula-box">extra path = d + d = 2d</div>
               <p>If there is no extra reflection phase offset, constructive interference happens when that extra path is a whole number of wavelengths:</p>
               <div class="formula-box">2d = nλ</div>
@@ -5348,6 +5356,10 @@ Chapter 8 uses the butterfly example to explain how path difference between refl
             title: "How Thin-Film Interference Works",
             html: `
               <p>In the butterfly example, one ray reflects from the top surface while another enters the layer, reflects from below, and then returns. The second ray travels an extra distance of <code>2d</code>.</p>
+              <figure class="concept-figure concept-figure-small">
+                <img src="./assets/figures/chapter11-butterfly-thin-film.svg" alt="Butterfly thin-film diagram showing incoming light reflecting from successive scale layers separated by distance d" />
+                <figcaption>This is the same butterfly thin-film geometry used in Quiz 2: the lower ray travels an extra down-and-up distance through the layered structure.</figcaption>
+              </figure>
               <p>If that extra distance matches a whole number of wavelengths, the reflected light reinforces:</p>
               <div class="formula-inline">2d = nλ</div>
               <p>For the first constructive case, <code>n = 1</code>, so <code>d = λ/2</code>.</p>

@@ -1,0 +1,36 @@
+<svg width="760" height="860" viewBox="0 0 760 860" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0L10 5L0 10V0Z" fill="#101214"/>
+    </marker>
+  </defs>
+
+  <rect width="760" height="860" fill="#FFFFFF"/>
+
+  <text x="410" y="58" fill="#101214" font-family="Manrope, Arial, sans-serif" font-size="44">light source</text>
+  <circle cx="555" cy="150" r="68" stroke="#101214" stroke-width="4"/>
+
+  <line x1="423" y1="278" x2="423" y2="492" stroke="#101214" stroke-width="4" marker-end="url(#arrowhead)"/>
+  <line x1="530" y1="278" x2="530" y2="492" stroke="#101214" stroke-width="4" marker-end="url(#arrowhead)"/>
+  <line x1="637" y1="278" x2="637" y2="492" stroke="#101214" stroke-width="4" marker-end="url(#arrowhead)"/>
+
+  <text x="700" y="340" fill="#101214" font-family="Manrope, Arial, sans-serif" font-size="42">incoming</text>
+  <text x="700" y="410" fill="#101214" font-family="Manrope, Arial, sans-serif" font-size="42">light rays</text>
+
+  <line x1="380" y1="622" x2="760" y2="622" stroke="#101214" stroke-width="6"/>
+  <line x1="392" y1="782" x2="760" y2="782" stroke="#101214" stroke-width="6"/>
+  <line x1="426" y1="854" x2="760" y2="854" stroke="#101214" stroke-width="6"/>
+
+  <line x1="158" y1="762" x2="332" y2="626" stroke="#101214" stroke-width="3.5" marker-end="url(#arrowhead)"/>
+  <line x1="214" y1="782" x2="332" y2="782" stroke="#101214" stroke-width="3.5" marker-end="url(#arrowhead)"/>
+  <line x1="158" y1="804" x2="332" y2="852" stroke="#101214" stroke-width="3.5" marker-end="url(#arrowhead)"/>
+
+  <text x="4" y="798" fill="#101214" font-family="Manrope, Arial, sans-serif" font-size="42">Scales</text>
+
+  <line x1="806" y1="616" x2="806" y2="788" stroke="#101214" stroke-width="3.5" marker-start="url(#arrowhead)" marker-end="url(#arrowhead)"/>
+  <line x1="788" y1="782" x2="824" y2="782" stroke="#101214" stroke-width="3.5"/>
+  <text x="860" y="712" fill="#101214" font-family="Manrope, Arial, sans-serif" font-size="46">d</text>
+
+  <line x1="806" y1="776" x2="806" y2="860" stroke="#101214" stroke-width="3.5" marker-start="url(#arrowhead)" marker-end="url(#arrowhead)"/>
+  <text x="860" y="836" fill="#101214" font-family="Manrope, Arial, sans-serif" font-size="46">d</text>
+</svg>
