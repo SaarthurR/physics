@@ -4477,14 +4477,16 @@ const QUIZ_2_CLASSIC_CHAPTER_LOCATORS = {
   "quiz2-classic-chapter-2": "DL4 • Activity 8.11 same-frequency interference scenarios",
   "quiz2-classic-chapter-3": "DL4-DL5 • beats plus wrap-up applications",
   "quiz2-classic-chapter-4": "DL5 • Activities 8.14-8.15 diffraction and Young's double slit",
-  "quiz2-classic-chapter-5": "DL6 • Activity 8.16 plus the grating ideas it reviews",
+  "quiz2-classic-chapter-5": "DL4 FNT 2 plus DL6 • thin film, gratings, and crystal phase shifts",
   "quiz2-classic-chapter-6": "Mixed reference • official Quiz 2 formulas from DL3 through DL6 Activity 8.16",
   "quiz2-classic-recap": "Mixed recap • official Quiz 2 scope in one last pass",
 };
 
 const QUIZ_2_CLASSIC_SECTION_LOCATORS = {
   "quiz2-classic-ch1-pond": "DL3 • Activity 8.10 superposition of waves in two dimensions",
+  "quiz2-classic-ch2-fnt-table": "DL4 • FNT 2 five speaker parameter sets",
   "quiz2-classic-ch2-kdvs": "DL5 • Activity 8.13 KDVS radio antennas wrap-up",
+  "quiz2-classic-ch3-doppler-signs": "DL5 • Doppler sign-choice explainer for mixed beats problems",
   "quiz2-classic-ch3-challenge": "DL5 • Activity 8.13 beats + Doppler combined",
   "quiz2-classic-ch4-hook": "DL5 • Activity 8.14 diffraction and two-slit interference",
   "quiz2-classic-ch4-wavefront-ray": "DL5 • Activity 8.14 diffraction and two-slit interference",
@@ -4497,6 +4499,7 @@ const QUIZ_2_CLASSIC_SECTION_LOCATORS = {
   "quiz2-classic-ch5-grating-formula": "DL5 • Activity 8.15 diffraction grating formula",
   "quiz2-classic-ch5-white-light": "DL6 • Activity 8.16 white light through a diffraction grating",
   "quiz2-classic-ch5-phase-shift": "DL6 • Activity 8.16 crystal phase-shift mock quiz",
+  "quiz2-classic-ch5-thin-film": "DL4 • FNT 2 blue morpho butterfly thin-film interference",
   "quiz2-classic-ch6-reference": "Mixed reference • official Quiz 2 formulas from DL3 8.9-8.10, DL4, DL5, and DL6 8.16",
   "quiz2-classic-recap-12": "Mixed recap • Quiz 2 in 12 sentences",
 };
@@ -4520,7 +4523,28 @@ The key ideas are superposition, constructive and destructive interference, tota
           cloneStudyGuideSection("chapter-6-superposition", "quiz2-classic-ch1-superposition"),
           cloneStudyGuideSection("chapter-6-types", "quiz2-classic-ch1-types"),
           cloneStudyGuideSection("chapter-6-phase-chart", "quiz2-classic-ch1-phase-chart"),
-          cloneStudyGuideSection("chapter-6-conditions", "quiz2-classic-ch1-conditions"),
+          {
+            id: "quiz2-classic-ch1-conditions",
+            title: "General Interference Conditions - The Formula Anchor",
+            html: `
+              <p>This is the version worth memorizing because it already includes built-in source phase difference. It works whether the offset comes from opposite wiring, a timing lead, or a crystal.</p>
+              <div class="formula-box">Constructive: Δx = nλ - (Δφ₀λ)/(2π)</div>
+              <div class="formula-box">Destructive: Δx = (n + 1/2)λ - (Δφ₀λ)/(2π)</div>
+              <p><strong>Special case 1:</strong> if <code>Δφ₀ = 0</code>, these collapse to the familiar same-phase rules:</p>
+              <ul>
+                <li>Constructive: <code>Δx = nλ</code></li>
+                <li>Destructive: <code>Δx = (n + 1/2)λ</code></li>
+              </ul>
+              <p><strong>Special case 2:</strong> if <code>Δφ₀ = π</code>, the conditions flip:</p>
+              <ul>
+                <li>Constructive: <code>Δx = (n + 1/2)λ</code></li>
+                <li>Destructive: <code>Δx = nλ</code></li>
+              </ul>
+              <div class="callout">
+                <strong>Why this matters:</strong> the general formula is the safer starting point whenever the prompt hides a source offset in words like <em>out of phase</em>, <em>reversed leads</em>, or <em>one source delayed</em>.
+              </div>
+            `,
+          },
           cloneStudyGuideSection("chapter-6-pond-problem", "quiz2-classic-ch1-pond"),
         ],
       },
@@ -4535,6 +4559,58 @@ This chapter covers the same-frequency interference setups from DL4 Activity 8.1
         sections: [
           cloneStudyGuideSection("chapter-8-hook", "quiz2-classic-ch2-hook"),
           cloneStudyGuideSection("chapter-8-simplified-phase-chart", "quiz2-classic-ch2-phase-chart"),
+          {
+            id: "quiz2-classic-ch2-fnt-table",
+            title: "The Full FNT 2 Speaker Parameter Sets",
+            html: `
+              <p>The FNT does not just ask for “same wiring” or “opposite wiring” in words. It gives specific parameter sets, so it helps to see all five in one table.</p>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Set</th>
+                    <th>Parameters</th>
+                    <th>Phase logic</th>
+                    <th>Result</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td><code>x₁ = x</code>, <code>x₂ = x + λ</code>, <code>Δφ₀ = 0</code></td>
+                    <td>Path difference adds <code>2π</code></td>
+                    <td>Constructive</td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td><code>x₁ = x</code>, <code>x₂ = x</code>, <code>Δφ₀ = π</code></td>
+                    <td>No path term, only opposite wiring</td>
+                    <td>Destructive</td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td><code>x₁ = x</code>, <code>x₂ = x + λ/2</code>, <code>Δφ₀ = 0</code></td>
+                    <td>Path difference adds <code>π</code></td>
+                    <td>Destructive</td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td><code>x₁ = x</code>, <code>x₂ = x</code>, <code>Δφ₀ = 0</code></td>
+                    <td>No path term and no source offset</td>
+                    <td>Constructive</td>
+                  </tr>
+                  <tr>
+                    <td>5</td>
+                    <td><code>x₁ = x + λ/2</code>, <code>x₂ = x</code>, <code>Δφ₀ = π</code></td>
+                    <td><code>-π + π = 0</code>, so the two out-of-phase effects cancel</td>
+                    <td>Constructive</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="callout callout-trap">
+                <strong>Set 5 trap:</strong> opposite wiring does <em>not</em> automatically mean destructive. If the geometry contributes the opposite phase shift, the total phase can come back to zero.
+              </div>
+            `,
+          },
           cloneStudyGuideSection("chapter-8-four-scenarios", "quiz2-classic-ch2-scenarios"),
           cloneStudyGuideSection("chapter-8-walking-around", "quiz2-classic-ch2-walking"),
           cloneStudyGuideSection("chapter-8-kdvs", "quiz2-classic-ch2-kdvs"),
@@ -4553,6 +4629,48 @@ This chapter covers DL4 Activity 8.12 and the DL5 wrap-up application where Dopp
           cloneStudyGuideSection("chapter-9-what-happening", "quiz2-classic-ch3-what-happening"),
           cloneStudyGuideSection("chapter-9-derivation", "quiz2-classic-ch3-derivation"),
           cloneStudyGuideSection("chapter-9-reading-graphs", "quiz2-classic-ch3-reading-graphs"),
+          {
+            id: "quiz2-classic-ch3-doppler-signs",
+            title: "How The Linked Doppler Signs Actually Work",
+            html: `
+              <p>The symbols <code>±</code> and <code>∓</code> are linked opposites. You do <em>not</em> choose them independently. Once you choose the sign in the numerator, the denominator must take the opposite-style sign.</p>
+              <div class="formula-box">f<sub>obs</sub> = ((v ± v<sub>o</sub>) / (v ∓ v<sub>s</sub>)) f<sub>s</sub></div>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Motion</th>
+                    <th>Sign choice</th>
+                    <th>Physical effect</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Observer toward source</td>
+                    <td><code>+v_o</code></td>
+                    <td>You run into wavefronts faster, so the heard frequency goes up.</td>
+                  </tr>
+                  <tr>
+                    <td>Observer away from source</td>
+                    <td><code>-v_o</code></td>
+                    <td>You meet wavefronts less often, so the heard frequency goes down.</td>
+                  </tr>
+                  <tr>
+                    <td>Source toward observer</td>
+                    <td><code>-v_s</code></td>
+                    <td>The source bunches wavefronts together, so the heard frequency goes up.</td>
+                  </tr>
+                  <tr>
+                    <td>Source away from observer</td>
+                    <td><code>+v_s</code></td>
+                    <td>The source stretches wavefront spacing, so the heard frequency goes down.</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="takeaway-line">
+                <strong>Memory rule:</strong> motion that brings source and observer closer raises the heard frequency. Motion that separates them lowers it. Do the Doppler step first, then do the beat step.
+              </div>
+            `,
+          },
           cloneStudyGuideSection("chapter-9-challenge", "quiz2-classic-ch3-challenge"),
         ],
       },
@@ -4576,17 +4694,41 @@ This chapter covers the DL5 material on diffraction, two-slit interference, the 
       {
         id: "quiz2-classic-chapter-5",
         number: "05",
-        title: "Chapter 5 - Gratings, White Light, and Crystal Phase Shifts",
+        title: "Chapter 5 - Gratings, Crystal Phase Shifts, and Thin Film",
         plainText: `
-Chapter 5 Gratings, White Light, and Crystal Phase Shifts for Quiz 2.
-This chapter keeps only the parts you need from the later light material: many-slit intuition, the grating formula, white-light color ordering, and the crystal-shifted double-slit setup from DL6 Activity 8.16.
+Chapter 5 Gratings, Crystal Phase Shifts, and Thin Film for Quiz 2.
+This chapter keeps the later optics pieces that matter for the quiz: many-slit intuition, white-light color ordering, the crystal-shifted double-slit setup from DL6 Activity 8.16, and the butterfly thin-film interference idea.
         `.trim(),
         sections: [
           cloneStudyGuideSection("chapter-11-hook", "quiz2-classic-ch5-hook"),
           cloneStudyGuideSection("chapter-11-multislit", "quiz2-classic-ch5-multislit"),
           cloneStudyGuideSection("chapter-11-grating-formula", "quiz2-classic-ch5-grating-formula"),
           cloneStudyGuideSection("chapter-11-white-light", "quiz2-classic-ch5-white-light"),
-          cloneStudyGuideSection("chapter-11-phase-shift", "quiz2-classic-ch5-phase-shift"),
+          {
+            id: "quiz2-classic-ch5-phase-shift",
+            title: "Crystal Shift - The Formula You Want To See",
+            html: `
+              <p>A crystal in front of one slit does not change the slit geometry. It adds a source phase difference before the waves head to the screen.</p>
+              <div class="formula-inline">ΔΦ = -2πΔx/λ + Δφ₀</div>
+              <p>At the center of the screen, <code>Δx = 0</code>, so the center is no longer automatically bright. The crystal can decide the whole result there.</p>
+              <div class="formula-box">y<sub>shift</sub> = Δφ₀λD / (2πd)</div>
+              <p><strong>Interpretation:</strong> this is the shift of the whole interference pattern. It <strong>shifts the pattern and does not change fringe spacing</strong>.</p>
+              <p>If you want the nearest bright spot above center, use the constructive condition closest to the center and convert the required path difference into a screen position with the small-angle approximation.</p>
+            `,
+          },
+          {
+            id: "quiz2-classic-ch5-thin-film",
+            title: "Thin Film Interference - The Butterfly Problem",
+            html: `
+              <p>In the butterfly setup, one reflected ray bounces straight off the top layer while another ray goes down to the next layer and comes back up. That second ray travels an extra round-trip distance.</p>
+              <div class="formula-box">extra path = d + d = 2d</div>
+              <p>If there is no extra reflection phase offset, constructive interference happens when that extra path is a whole number of wavelengths:</p>
+              <div class="formula-box">2d = nλ</div>
+              <div class="formula-inline">d = nλ / 2</div>
+              <p>For the smallest blue-light spacing, use <code>n = 1</code>. With blue light around <code>450 nm</code>, that gives <code>d = 225 nm</code>.</p>
+              <p><strong>Why the wing looks blue:</strong> if the layer spacing reinforces blue especially well, blue reflections add strongly while other wavelengths are weaker or partially cancelled.</p>
+            `,
+          },
         ],
       },
       {
@@ -4595,7 +4737,7 @@ This chapter keeps only the parts you need from the later light material: many-s
         title: "Chapter 6 - Quiz 2 Formula Reference",
         plainText: `
 Chapter 6 Quiz 2 Formula Reference.
-This reference keeps only the formulas that actually matter for the official Quiz 2 scope: total phase, beats, Doppler before beats, double-slit geometry, and crystal phase shifts.
+This reference keeps only the formulas that actually matter for the official Quiz 2 scope: total phase, beats, Doppler before beats, double-slit geometry, crystal phase shifts, and thin-film interference.
         `.trim(),
         sections: [
           {
@@ -4625,6 +4767,16 @@ This reference keeps only the formulas that actually matter for the official Qui
                     <td>Destructive: ΔΦ = (2n+1)π</td>
                     <td>Anti-phase condition</td>
                     <td>Use it for quiet, dark, or zero-signal results</td>
+                  </tr>
+                  <tr>
+                    <td>Constructive: Δx = nλ - (Δφ₀λ)/(2π)</td>
+                    <td>General constructive condition with a built-in source offset</td>
+                    <td>Use this when the prompt includes opposite wiring, a timing lead, or a crystal</td>
+                  </tr>
+                  <tr>
+                    <td>Destructive: Δx = (n + 1/2)λ - (Δφ₀λ)/(2π)</td>
+                    <td>General destructive condition with a built-in source offset</td>
+                    <td>This is the safer version when Δφ₀ is not zero</td>
                   </tr>
                   <tr>
                     <td>f<sub>beat</sub> = |f₁ - f₂|</td>
@@ -4666,6 +4818,16 @@ This reference keeps only the formulas that actually matter for the official Qui
                     <td>Convert a crystal time delay into a phase shift</td>
                     <td>At the center of the screen, this term can decide the whole answer</td>
                   </tr>
+                  <tr>
+                    <td>y<sub>shift</sub> = Δφ₀λD / (2πd)</td>
+                    <td>Shift of a double-slit pattern when a crystal adds source phase difference</td>
+                    <td>The whole pattern moves, but the fringe spacing stays the same</td>
+                  </tr>
+                  <tr>
+                    <td>2d = nλ</td>
+                    <td>Thin-film constructive condition in the simplified butterfly model</td>
+                    <td>The extra path is the down-and-back round trip, so it is <code>2d</code></td>
+                  </tr>
                 </tbody>
               </table>
             `,
@@ -4686,7 +4848,7 @@ Beat rate is the absolute frequency difference and carrier pitch is the average.
 Doppler can change a heard frequency before you compute the beat rate.
 Two slits act like two sources.
 Bright fringes satisfy d sin theta equals n lambda and dark fringes satisfy d sin theta equals n plus one-half lambda.
-A diffraction grating keeps the same basic angle rule but makes the peaks sharper.
+Thin film picks colors by an extra round-trip path of 2d, while a diffraction grating separates colors by angle.
 White light stays white straight through because all wavelengths share the zero-order direction.
 Blue stays closer to the center than red because shorter wavelength needs a smaller angle for the same order.
 A crystal in one slit adds a source phase shift, so the center is not automatically bright.
@@ -4707,7 +4869,7 @@ A crystal in one slit adds a source phase shift, so the center is not automatica
               <li>If motion changes one of the sounds first, do the Doppler step before you do the beat step.</li>
               <li>In the double-slit experiment, each slit acts like a source and the screen pattern is just constructive and destructive interference laid out in space.</li>
               <li>For bright fringes use d sin θ = nλ, and for dark fringes use d sin θ = (n + 1/2)λ.</li>
-              <li>White light through a grating stays white straight through, but away from the center blue is closer in and red is farther out.</li>
+              <li>Thin-film questions use an extra round-trip path of 2d, while white light through a grating stays white straight through and then spreads by color away from the center.</li>
               <li>A crystal in one slit adds Δφ₀, so even the center of the pattern can change from bright to dark or partial interference.</li>
             </ol>
           `,
