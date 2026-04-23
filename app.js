@@ -123,7 +123,7 @@ const guideConfigs = {
     sidebarLabel: "Quiz 2 bookmarks",
     formulaStrip: QUIZ_2_FORMULA_STRIP,
     guide: QUIZ_2_CLASSIC_GUIDE,
-    quizzesEnabled: false,
+    quizzesEnabled: true,
     unitQuizConfigs: [],
   },
   quiz22: {

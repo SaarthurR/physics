@@ -5448,6 +5448,427 @@ The recap for Quiz 2.2 contains a master concept and formula table plus seven fi
 );
 
 export const QUIZ_BANK = {
+  "quiz2-classic-chapter-1": [
+    {
+      id: "q2c1-mc-1",
+      type: "mc",
+      prompt: "What does the superposition principle actually tell you to do at a point where two waves overlap?",
+      choices: [
+        "Add the source frequencies and ignore displacement.",
+        "Add the instantaneous displacements from each wave.",
+        "Average the amplitudes and keep the larger one.",
+        "Assume the waves permanently destroy each other.",
+      ],
+      answer: 1,
+      explanation: "Superposition says the total displacement at that instant is the algebraic sum of the individual displacements.",
+    },
+    {
+      id: "q2c1-mc-2",
+      type: "mc",
+      prompt: "In the Quiz 2 interference formula, which pair of ideas together determines the total phase difference?",
+      choices: [
+        "Amplitude and intensity",
+        "Wave speed and period",
+        "Path difference and source phase difference",
+        "Frequency and screen distance only",
+      ],
+      answer: 2,
+      explanation: "The guide's anchor formula is ΔΦ = -2πΔx/λ + Δφ₀, so both geometry and built-in source offset matter.",
+    },
+    {
+      id: "q2c1-mc-3",
+      type: "mc",
+      prompt: "If two points have the same path difference as before, but one source is now wired half a cycle out of phase, what changed physically?",
+      choices: [
+        "Only the wavelength changed",
+        "Only the source phase offset changed",
+        "Only the distance to the screen changed",
+        "Nothing changed because path difference stayed the same",
+      ],
+      answer: 1,
+      explanation: "Reversing the wiring adds a built-in phase offset, so Δφ₀ changes even if the geometry does not.",
+    },
+    {
+      id: "q2c1-mc-4",
+      type: "mc",
+      prompt: "A point can be dark even when both waves arrive there strongly because:",
+      choices: [
+        "Dark means no waves reached the point",
+        "The amplitudes must both be zero there",
+        "The waves arrive with a total phase difference of an odd multiple of π",
+        "One wave must always travel faster than the other",
+      ],
+      answer: 2,
+      explanation: "Destructive interference is about phase mismatch, not about the waves failing to arrive.",
+    },
+    {
+      id: "q2c1-short-1",
+      type: "short",
+      prompt: "Why can flipping one source's wiring change a point from constructive to destructive even if the distances to that point stay the same?",
+      expected:
+        "Because the path difference can stay the same while the built-in source phase difference changes, so the total phase difference changes.",
+      rubric:
+        "Mark correct if the answer says the geometry can stay unchanged while a source offset like Δφ₀ changes the total phase and flips the interference result.",
+      requiredConcepts: [
+        { label: "source phase difference", terms: ["source phase", "phase difference", "delta phi", "phi0", "offset"] },
+        { label: "total phase", terms: ["total phase", "overall phase", "interference result", "constructive", "destructive"] },
+      ],
+    },
+    {
+      id: "q2c1-short-2",
+      type: "short",
+      prompt: "What is the difference between path difference Δx and source phase difference Δφ₀ in words?",
+      expected:
+        "Path difference comes from geometry and distance traveled, while source phase difference is a built-in starting offset between the sources.",
+      rubric:
+        "Mark correct if the answer distinguishes geometry or distance traveled from a built-in starting phase offset at the sources.",
+      requiredConcepts: [
+        { label: "geometry", terms: ["geometry", "distance", "path", "travel"] },
+        { label: "starting offset", terms: ["starting", "source", "offset", "phase constant", "wired"] },
+      ],
+    },
+  ],
+  "quiz2-classic-chapter-2": [
+    {
+      id: "q2c2-mc-1",
+      type: "mc",
+      prompt: "Which habit is safest when a same-frequency speaker problem gives both distances and a source offset?",
+      choices: [
+        "Judge only from the picture because destructive points look obvious",
+        "Use only path difference and ignore source phase",
+        "Compute the total phase difference before deciding constructive or destructive",
+        "Assume equal distances always means constructive",
+      ],
+      answer: 2,
+      explanation: "The whole point of the FNT-style table is that path difference and source offset must be combined into one total phase decision.",
+    },
+    {
+      id: "q2c2-mc-2",
+      type: "mc",
+      prompt: "For the parameter set x₁ = x, x₂ = x + λ/2, and Δφ₀ = 0, the result is:",
+      choices: ["Constructive", "Destructive", "No interference", "Impossible to tell"],
+      answer: 1,
+      explanation: "A half-wavelength path difference contributes a phase difference of π, so same-phase sources cancel there.",
+    },
+    {
+      id: "q2c2-mc-3",
+      type: "mc",
+      prompt: "For the parameter set x₁ = x, x₂ = x, and Δφ₀ = π, the result is:",
+      choices: ["Constructive", "Destructive", "A beat pattern", "Always louder than either speaker alone"],
+      answer: 1,
+      explanation: "Equal paths remove the geometry contribution, leaving only the built-in π offset.",
+    },
+    {
+      id: "q2c2-mc-4",
+      type: "mc",
+      prompt: "Why is FNT Set 5 constructive even though the sources are out of phase?",
+      choices: [
+        "Because opposite wiring always wins over geometry",
+        "Because the λ/2 path shift and the π source shift cancel in the total phase",
+        "Because equal amplitudes automatically force constructive interference",
+        "Because the observer is moving",
+      ],
+      answer: 1,
+      explanation: "Set 5 is the trap: one π comes from geometry and one π comes from the sources, so the total phase returns to zero mod 2π.",
+    },
+    {
+      id: "q2c2-short-1",
+      type: "short",
+      prompt: "In plain language, why is Set 5 constructive instead of destructive?",
+      expected:
+        "Because one half-cycle mismatch comes from the extra half-wavelength path, but the sources also start half a cycle apart, so those two mismatches cancel in the total phase.",
+      rubric:
+        "Mark correct if the answer says there are two phase shifts of size π or half a cycle and they cancel each other, leaving an in-phase result.",
+      requiredConcepts: [
+        { label: "path shift", terms: ["path", "half wavelength", "lambda/2", "geometry"] },
+        { label: "source shift", terms: ["source", "wiring", "pi", "half cycle", "out of phase"] },
+      ],
+    },
+    {
+      id: "q2c2-short-2",
+      type: "short",
+      prompt: "If reversing one speaker lead flips a location from loud to quiet and nothing else changes, what quantity did you change in the math?",
+      expected: "You changed the built-in source phase difference, usually by adding a π offset.",
+      rubric:
+        "Mark correct if the answer mentions source phase difference, Δφ₀, or adding a π / half-cycle offset while the path difference stays the same.",
+      requiredConcepts: [
+        { label: "source phase difference", terms: ["delta phi", "phi0", "source phase", "offset", "pi"] },
+      ],
+    },
+  ],
+  "quiz2-classic-chapter-3": [
+    {
+      id: "q2c3-mc-1",
+      type: "mc",
+      prompt: "What produces beats in the first place?",
+      choices: [
+        "Two identical in-phase waves from the same source",
+        "Two slightly different frequencies superposing",
+        "Any single wave with a large amplitude",
+        "A wave reflecting from a wall",
+      ],
+      answer: 1,
+      explanation: "Beats come from adding two nearby frequencies, which creates a slow envelope riding on a faster oscillation.",
+    },
+    {
+      id: "q2c3-mc-2",
+      type: "mc",
+      prompt: "If two moving sound sources are involved, which frequencies should you compare to get the beat frequency you actually hear?",
+      choices: [
+        "The emitted source frequencies before any motion is considered",
+        "The observed frequencies after each Doppler shift is found",
+        "Only the lower frequency",
+        "Only the average frequency",
+      ],
+      answer: 1,
+      explanation: "The guide's rule is Doppler first, beats second, because your ears compare what actually arrives.",
+    },
+    {
+      id: "q2c3-mc-3",
+      type: "mc",
+      prompt: "In the full Doppler formula, if the observer moves toward the source and the source moves toward the observer, which sign choices go with those two motions?",
+      choices: [
+        "+vₒ and -vₛ",
+        "-vₒ and +vₛ",
+        "+vₒ and +vₛ",
+        "-vₒ and -vₛ",
+      ],
+      answer: 0,
+      explanation: "Toward the source raises the numerator with +vₒ, and a source moving toward the observer lowers the denominator with -vₛ.",
+    },
+    {
+      id: "q2c3-mc-4",
+      type: "mc",
+      prompt: "What is the conceptual difference between beat frequency and heard pitch?",
+      choices: [
+        "They are always the same number",
+        "Beat frequency is the slow loud-soft rate, while pitch tracks the faster oscillation you hear as the note",
+        "Pitch is only for light, not sound",
+        "Beat frequency depends only on amplitude",
+      ],
+      answer: 1,
+      explanation: "Beats tell you how fast the envelope rises and falls, while pitch is tied to the much faster carrier frequency.",
+    },
+    {
+      id: "q2c3-short-1",
+      type: "short",
+      prompt: "Why should you do the Doppler calculation before the beat calculation in a mixed problem?",
+      expected:
+        "Because the beat frequency must be found from the frequencies that actually reach the listener, and motion changes those frequencies first.",
+      rubric:
+        "Mark correct if the answer says the listener hears Doppler-shifted frequencies first and the beat calculation uses those observed frequencies, not the original emitted ones.",
+      requiredConcepts: [
+        { label: "observed frequencies", terms: ["observed", "heard", "listener", "reach", "arrive"] },
+        { label: "order of steps", terms: ["first", "before", "doppler", "then", "beat"] },
+      ],
+    },
+    {
+      id: "q2c3-short-2",
+      type: "short",
+      prompt: "In easy words, what do the linked signs ± and ∓ mean in the Doppler formula?",
+      expected:
+        "They mean the sign choices are paired opposites, so once you pick the correct sign for one part based on the motion, the other part uses the opposite-style sign.",
+      rubric:
+        "Mark correct if the answer says the signs are linked or paired opposites and are not chosen independently.",
+      requiredConcepts: [
+        { label: "linked signs", terms: ["linked", "paired", "opposite", "not independent", "together"] },
+      ],
+    },
+  ],
+  "quiz2-classic-chapter-4": [
+    {
+      id: "q2c4-mc-1",
+      type: "mc",
+      prompt: "When does diffraction become especially noticeable?",
+      choices: [
+        "When the opening is much larger than the wavelength",
+        "When the opening size is comparable to the wavelength",
+        "Only when the amplitude is zero",
+        "Only for sound and never for light",
+      ],
+      answer: 1,
+      explanation: "Diffraction becomes strong when the gap size is on the order of the wavelength.",
+    },
+    {
+      id: "q2c4-mc-2",
+      type: "mc",
+      prompt: "Why can two narrow slits create an interference pattern on the screen?",
+      choices: [
+        "Because each slit acts like a source of waves that can superpose at the screen",
+        "Because light from one slit blocks the other slit completely",
+        "Because the slits change the speed of light in vacuum",
+        "Because only one slit really matters",
+      ],
+      answer: 0,
+      explanation: "Young's experiment works because the two slits act like coherent wave sources whose phases can add or cancel.",
+    },
+    {
+      id: "q2c4-mc-3",
+      type: "mc",
+      prompt: "If you increase the slit separation d while keeping λ and D fixed, the fringe spacing on the screen will:",
+      choices: ["Increase", "Decrease", "Stay the same", "Become impossible to predict"],
+      answer: 1,
+      explanation: "Fringe spacing scales like λD/d, so larger d squeezes the pattern together.",
+    },
+    {
+      id: "q2c4-mc-4",
+      type: "mc",
+      prompt: "For same-phase slits, a dark fringe occurs when the path difference is:",
+      choices: ["nλ", "(n + 1/2)λ", "2nπ", "always zero"],
+      answer: 1,
+      explanation: "A half-integer number of wavelengths gives a π mismatch and therefore destructive interference.",
+    },
+    {
+      id: "q2c4-short-1",
+      type: "short",
+      prompt: "Why is the center of the screen usually bright in the ordinary double-slit setup with no added source offset?",
+      expected:
+        "Because at the center both slits are the same distance away, so the path difference is zero and the waves arrive in phase.",
+      rubric:
+        "Mark correct if the answer mentions equal distances or zero path difference at the center leading to in-phase arrival and constructive interference.",
+      requiredConcepts: [
+        { label: "zero path difference", terms: ["zero", "same distance", "equal path", "path difference"] },
+        { label: "constructive", terms: ["in phase", "constructive", "bright"] },
+      ],
+    },
+    {
+      id: "q2c4-short-2",
+      type: "short",
+      prompt: "If the wavelength gets larger while the slit setup stays the same, what happens to the pattern and why?",
+      expected:
+        "The fringes spread farther apart because a larger wavelength needs a larger angle or position shift to produce the same interference order.",
+      rubric:
+        "Mark correct if the answer says the fringes get farther apart or more spread out and connects that to the larger wavelength in the interference geometry.",
+      requiredConcepts: [
+        { label: "spread out", terms: ["farther apart", "spread", "wider", "larger spacing"] },
+        { label: "wavelength role", terms: ["wavelength", "lambda", "angle", "geometry"] },
+      ],
+    },
+  ],
+  "quiz2-classic-chapter-5": [
+    {
+      id: "q2c5-mc-1",
+      type: "mc",
+      prompt: "In white-light diffraction from a grating, which color lands farther from the center?",
+      choices: ["Blue, because it has the shorter wavelength", "Red, because the larger wavelength needs a larger angle", "They land in the same place", "Whichever color has the greater amplitude"],
+      answer: 1,
+      explanation: "From d sin θ = nλ, a larger wavelength requires a larger angle for the same order, so red spreads farther out than blue.",
+    },
+    {
+      id: "q2c5-mc-2",
+      type: "mc",
+      prompt: "What is the main effect of putting a crystal in front of one slit in the Quiz 2 setup?",
+      choices: [
+        "It changes the slit spacing d",
+        "It changes the screen distance D",
+        "It adds a source phase difference that shifts the whole pattern",
+        "It removes interference completely",
+      ],
+      answer: 2,
+      explanation: "The crystal adds a phase offset before the waves interfere, which shifts the pattern without changing fringe spacing.",
+    },
+    {
+      id: "q2c5-mc-3",
+      type: "mc",
+      prompt: "Why is the extra path in the thin-film butterfly picture written as 2d?",
+      choices: [
+        "Because the wavelength doubles inside the film",
+        "Because the second ray goes down through the layer and then back up",
+        "Because there are always exactly two bright colors",
+        "Because d means diameter, not thickness",
+      ],
+      answer: 1,
+      explanation: "The lower ray travels one thickness downward and one thickness upward, giving a round-trip extra distance of 2d.",
+    },
+    {
+      id: "q2c5-mc-4",
+      type: "mc",
+      prompt: "If the center of a double-slit screen stops being bright after a crystal is added, what is the best explanation?",
+      choices: [
+        "The center moved, but the crystal has no effect there",
+        "The crystal changed the wavelength to zero",
+        "At Δx = 0 the added source phase difference can still make the center constructive or destructive",
+        "The slits are no longer coherent only at the center",
+      ],
+      answer: 2,
+      explanation: "Zero path difference does not guarantee brightness once a nonzero Δφ₀ is built into the sources.",
+    },
+    {
+      id: "q2c5-short-1",
+      type: "short",
+      prompt: "Why can a thin film make a butterfly wing look strongly blue?",
+      expected:
+        "Because the film thickness can make blue reflections add constructively while other wavelengths are weaker or partly cancel, so blue stands out more strongly.",
+      rubric:
+        "Mark correct if the answer says the film reinforces blue by constructive interference and mentions that other wavelengths are less reinforced or more canceled.",
+      requiredConcepts: [
+        { label: "constructive blue", terms: ["blue", "constructive", "reinforce", "add"] },
+        { label: "other wavelengths", terms: ["other wavelengths", "others", "cancel", "weaker"] },
+      ],
+    },
+    {
+      id: "q2c5-short-2",
+      type: "short",
+      prompt: "What changes in a crystal-shift problem, and what stays the same?",
+      expected:
+        "The whole interference pattern shifts because the source phase offset changes, but the fringe spacing stays the same because the slit geometry is unchanged.",
+      rubric:
+        "Mark correct if the answer says the pattern position shifts while fringe spacing stays the same, and connects that to added phase offset rather than changed geometry.",
+      requiredConcepts: [
+        { label: "shift", terms: ["shift", "move", "position"] },
+        { label: "spacing unchanged", terms: ["spacing", "fringe spacing", "same", "unchanged"] },
+      ],
+    },
+  ],
+  "quiz2-classic-chapter-6": [
+    {
+      id: "q2c6-mc-1",
+      type: "mc",
+      prompt: "If a prompt says the sources are not starting in phase, which formula anchor is the safest place to begin?",
+      choices: [
+        "Δx = nλ only",
+        "ΔΦ = -2πΔx/λ + Δφ₀",
+        "f_beat = |f₁ - f₂| only",
+        "2d = nλ only",
+      ],
+      answer: 1,
+      explanation: "The total-phase formula keeps both geometry and built-in source offset visible from the start.",
+    },
+    {
+      id: "q2c6-mc-2",
+      type: "mc",
+      prompt: "Which formula belongs specifically to the thin-film butterfly-style condition highlighted in Quiz 2?",
+      choices: ["d sin θ = nλ", "2d = nλ", "f = 1/T", "Δx = (n + 1/2)λ only"],
+      answer: 1,
+      explanation: "The thin-film section uses the extra round-trip path 2d and sets it equal to a whole number of wavelengths for constructive interference.",
+    },
+    {
+      id: "q2c6-mc-3",
+      type: "mc",
+      prompt: "Which formula directly tells you the amount of screen shift caused by a crystal phase offset?",
+      choices: [
+        "y_shift = Δφ₀λD / (2πd)",
+        "f_obs = ((v ± vₒ)/(v ∓ vₛ)) fₛ",
+        "v = λf",
+        "ΔΦ = 2nπ",
+      ],
+      answer: 0,
+      explanation: "That is the boxed crystal-shift result added to the Quiz 2 optics chapter and the formula reference.",
+    },
+    {
+      id: "q2c6-short-1",
+      type: "short",
+      prompt: "If a problem has opposite wiring and unequal path lengths, why is starting from the total-phase formula smarter than jumping straight to Δx = nλ or Δx = (n + 1/2)λ?",
+      expected:
+        "Because the total-phase formula keeps both the path contribution and the source offset in one expression, so you do not accidentally ignore the built-in phase difference.",
+      rubric:
+        "Mark correct if the answer says the total-phase formula includes both geometry and source offset and prevents you from forgetting a nonzero Δφ₀.",
+      requiredConcepts: [
+        { label: "both contributions", terms: ["both", "path", "source", "offset", "delta phi"] },
+        { label: "safer start", terms: ["safe", "safer", "forget", "ignore", "one expression"] },
+      ],
+    },
+  ],
   "chapter-1": [
     {
       id: "c1-mc-1",
