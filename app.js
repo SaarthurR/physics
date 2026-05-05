@@ -5,8 +5,10 @@ import {
   QUIZ_2_CLASSIC_GUIDE,
   QUIZ_22_FORMULA_STRIP,
   QUIZ_22_GUIDE,
+  QUIZ_3_FORMULA_STRIP,
+  QUIZ_3_GUIDE,
   QUIZ_BANK,
-} from "./content.js";
+} from "./content.js?v=quiz3";
 
 const HARDCODED_GROQ_KEY =
   "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";
@@ -138,6 +140,20 @@ const guideConfigs = {
     formulaStrip: QUIZ_22_FORMULA_STRIP,
     guide: QUIZ_22_GUIDE,
     quizzesEnabled: false,
+    unitQuizConfigs: [],
+  },
+  quiz3: {
+    id: "quiz3",
+    label: "Quiz 3",
+    eyebrow: "Physics 7C · Quiz 3",
+    title: "Quiz 3 Study Guide",
+    heading: "Standing waves, optics, vision correction, and early electric charge",
+    summary:
+      "Built from the attached DL8-DL11 study guide in the same chapter-by-chapter format as Quiz 2, with lecture figures, formula anchors, trap checks, and chapter quizzes.",
+    sidebarLabel: "Quiz 3 bookmarks",
+    formulaStrip: QUIZ_3_FORMULA_STRIP,
+    guide: QUIZ_3_GUIDE,
+    quizzesEnabled: true,
     unitQuizConfigs: [],
   },
 };
@@ -4384,7 +4400,10 @@ function getQuizDisplayMeta(quizId) {
     };
   }
 
-  const chapterLabel = quizId.replace("chapter-", "Chapter ");
+  const chapterMatch = quizId.match(/chapter-(\d+)/);
+  const chapterLabel = chapterMatch
+    ? `Chapter ${chapterMatch[1]}`
+    : quizId.replace(/-/g, " ");
   return {
     kicker: `${chapterLabel} quiz`,
     cardTitle: "Quick check",

@@ -38,6 +38,16 @@ export const QUIZ_22_FORMULA_STRIP = [
   { label: "Thin film", value: "2d = nλ" },
 ];
 
+export const QUIZ_3_FORMULA_STRIP = [
+  { label: "Standing", value: "λₙ = 2L/n or 4L/(2n - 1)" },
+  { label: "de Broglie", value: "λ = h / p" },
+  { label: "Photon", value: "E = hf = hc / λ" },
+  { label: "Mirror/Lens", value: "1/o + 1/i = 1/f" },
+  { label: "Snell", value: "n₁ sin θ₁ = n₂ sin θ₂" },
+  { label: "Critical", value: "sin θc = n₂ / n₁" },
+  { label: "Power", value: "P = 1/f" },
+];
+
 export const STUDY_GUIDE = {
   title: "Waves: Complete Study Guide",
   subtitle: "PW-Style | DL 1 - DL 5 | Acts 8.1 through 8.15",
@@ -5481,7 +5491,1073 @@ The recap for Quiz 2.2 contains a master concept and formula table plus seven fi
   QUIZ_22_CHAPTER_LOCATORS,
 );
 
+const QUIZ_3_CHAPTER_LOCATORS = {
+  "quiz3-chapter-1": "DL8 • standing waves, boundaries, and harmonics",
+  "quiz3-chapter-2": "DL8 • de Broglie waves, photons, and hydrogen review",
+  "quiz3-chapter-3": "DL8-DL9 • mirrors, reflection, and image logic",
+  "quiz3-chapter-4": "DL9-DL10 • Fermat, refraction, total internal reflection, and prisms",
+  "quiz3-chapter-5": "DL9-DL10 • thin lenses and image formation",
+  "quiz3-chapter-6": "DL10-DL11 • multiple lenses, the eye, and vision correction",
+  "quiz3-chapter-7": "DL11 • the first electric-charge and induction ideas",
+  "quiz3-recap": "Mixed recap • DL8 through DL11 formula sheet and trap list",
+};
+
+const QUIZ_3_SECTION_LOCATORS = {
+  "quiz3-ch1-hook": "DL8 • standing-wave picture and why the pattern looks frozen",
+  "quiz3-ch1-boundaries": "DL8 • nodes, antinodes, and end conditions",
+  "quiz3-ch1-harmonics": "DL8 • allowed wavelengths for strings and tubes",
+  "quiz3-ch1-strategy": "DL8 • quickest standing-wave problem workflow",
+  "quiz3-ch1-videos": "Outside help • Organic Chemistry Tutor standing-wave matches",
+  "quiz3-ch2-matter": "DL8 • de Broglie wavelength and wave-particle review",
+  "quiz3-ch2-hydrogen": "DL8 • hydrogen energy levels and allowed transitions",
+  "quiz3-ch2-traps": "DL8 • photons, intensity, frequency, and common mixups",
+  "quiz3-ch2-videos": "Outside help • Organic Chemistry Tutor quantum-review matches",
+  "quiz3-ch3-reflection": "DL8 • law of reflection and flat-mirror basics",
+  "quiz3-ch3-curved": "DL8 • concave and convex mirror ray logic",
+  "quiz3-ch3-cases": "DL8 • mirror cases by object position",
+  "quiz3-ch3-art": "DL8-DL9 • convex mirror examples and visual anchors",
+  "quiz3-ch3-videos": "Outside help • Organic Chemistry Tutor mirror matches",
+  "quiz3-ch4-language": "DL9 • rays versus wavefronts and time-minimizing paths",
+  "quiz3-ch4-snell": "DL9 • Snell's law, bend direction, and critical angle",
+  "quiz3-ch4-prisms": "DL9-DL10 • prism geometry and dispersion",
+  "quiz3-ch4-videos": "Outside help • Organic Chemistry Tutor refraction matches",
+  "quiz3-ch5-rays": "DL9-DL10 • converging and diverging lens ray rules",
+  "quiz3-ch5-equation": "DL9-DL10 • thin-lens equation, magnification, and sign conventions",
+  "quiz3-ch5-gallery": "DL9-DL10 • lecture figure bank for lens families and setups",
+  "quiz3-ch5-videos": "Outside help • Organic Chemistry Tutor thin-lens matches",
+  "quiz3-ch6-systems": "DL10 • multi-lens logic and chained image formation",
+  "quiz3-ch6-eye": "DL10-DL11 • eye model, near point, far point, and optical power",
+  "quiz3-ch6-videos": "Outside help • Organic Chemistry Tutor multi-lens matches",
+  "quiz3-ch7-charge": "DL11 • charge imbalance, attraction, repulsion, and induction",
+  "quiz3-ch7-traps": "DL11 • first electric-force misconceptions to avoid",
+  "quiz3-ch7-videos": "Outside help • Organic Chemistry Tutor electrostatics matches",
+  "quiz3-recap-formulas": "Mixed recap • one-page formula anchor for Quiz 3",
+  "quiz3-recap-traps": "Mixed recap • the fastest last-minute checklist",
+};
+
+export const QUIZ_3_GUIDE = withSectionLocators(
+  {
+    title: "Quiz 3 Study Guide",
+    subtitle: "PW-style guide | DL8 through DL11 | standing waves, optics, and early electric charge",
+    chapters: [
+      {
+        id: "quiz3-chapter-1",
+        number: "01",
+        title: "Chapter 1 - Standing Waves and Allowed Patterns",
+        plainText: `
+Chapter 1 Standing Waves and Allowed Patterns for Quiz 3.
+This chapter builds the standing-wave model first, then uses boundary conditions to decide which wavelengths and harmonics are allowed.
+        `.trim(),
+        sections: [
+          {
+            id: "quiz3-ch1-hook",
+            title: "The Hook - A Wave Pattern That Looks Frozen",
+            html: `
+              <p>A standing wave feels strange the first time you see it because the medium is moving, but the pattern does not seem to travel left or right. That is your first clue that this is not a brand-new wave source. It is interference between two traveling waves going opposite directions.</p>
+              <p>So the first mental move is always: <strong>standing wave = two matching traveling waves plus reflection</strong>. Once that picture is clear, nodes, antinodes, and harmonics stop feeling random.</p>
+              <figure class="concept-figure concept-figure-small">
+                <img src="./assets/figures/quiz2-standing-waves.svg" alt="Standing-wave patterns for fixed-fixed, open-open, and fixed-open boundaries" />
+                <figcaption>Use the pattern picture first. The geometry of nodes and antinodes tells you the allowed wavelength before any formula does.</figcaption>
+              </figure>
+            `,
+          },
+          {
+            id: "quiz3-ch1-boundaries",
+            title: "Nodes, Antinodes, and the Ends of the System",
+            html: `
+              <p>The ends decide the pattern:</p>
+              <ul>
+                <li>Fixed end or closed end -> node</li>
+                <li>Free end or open end -> antinode</li>
+              </ul>
+              <div class="formula-box">node to nearest node = λ / 2</div>
+              <div class="formula-box">node to nearest antinode = λ / 4</div>
+              <div class="callout callout-trap">
+                <strong>Trap:</strong> do not memorize a wavelength formula first and only then ask what the ends are doing. The ends are the reason the formula is what it is.
+              </div>
+            `,
+          },
+          {
+            id: "quiz3-ch1-harmonics",
+            title: "Allowed Wavelengths and Harmonics",
+            html: `
+              <p>For a string with two fixed ends, or a tube with two open ends, the pattern logic is the same: both ends must match. For a closed-open tube, the ends mismatch, so only odd harmonics survive.</p>
+              <div class="formula-box">fixed-fixed or open-open: λₙ = 2L / n</div>
+              <div class="formula-box">closed-open or fixed-free: λₙ = 4L / (2n - 1)</div>
+              <div class="takeaway-line">
+                <strong>Memory rule:</strong> if the two ends are different, the shortest pattern is only a quarter wavelength long, and the odd-harmonic pattern follows from that.
+              </div>
+            `,
+          },
+          {
+            id: "quiz3-ch1-strategy",
+            title: "Fast Problem Strategy",
+            html: `
+              <ol class="long-list">
+                <li>Label each end as a node or an antinode.</li>
+                <li>Sketch the shortest pattern that fits.</li>
+                <li>Count how many quarter-wavelength or half-wavelength pieces fill the length.</li>
+                <li>Solve for <code>λ</code>, then use <code>v = fλ</code> only if the problem asks for frequency or speed.</li>
+              </ol>
+              <p>That order is what keeps standing-wave questions from turning into formula roulette.</p>
+            `,
+          },
+          {
+            id: "quiz3-ch1-videos",
+            title: "Watch It Once - Organic Chemistry Tutor",
+            html: `
+              <p>If you want a fast outside pass on the standing-wave chapter, these are the closest Organic Chemistry Tutor matches for the fixed-end, open-end, and harmonic ideas you are using here.</p>
+              <div class="resource-actions">
+                <a class="resource-button" href="https://www.youtube.com/watch?v=-8nn8hb0H8o" target="_blank" rel="noreferrer noopener">Standing Waves on a String</a>
+                <a class="resource-button" href="https://www.youtube.com/watch?v=7eyYNNUojEc" target="_blank" rel="noreferrer noopener">Organ Pipes and Open/Closed Tubes</a>
+              </div>
+            `,
+          },
+        ],
+      },
+      {
+        id: "quiz3-chapter-2",
+        number: "02",
+        title: "Chapter 2 - Quantum Review, Photons, and Hydrogen",
+        plainText: `
+Chapter 2 Quantum Review, Photons, and Hydrogen for Quiz 3.
+This chapter carries the standing-wave idea into matter waves, photon energy, and discrete hydrogen transitions.
+        `.trim(),
+        sections: [
+          {
+            id: "quiz3-ch2-matter",
+            title: "Matter Can Behave Like a Wave",
+            html: `
+              <p>The big bridge from standing waves to quantum is this: if a particle behaves like a wave, then a trapped particle cannot fit just any pattern. Only certain wave patterns are allowed, so only certain energies are allowed.</p>
+              <div class="formula-box">de Broglie: λ = h / p</div>
+              <figure class="concept-figure concept-figure-small">
+                <img src="./assets/figures/quiz2-particle-box.svg" alt="Particle-in-a-box standing-wave idea with de Broglie wavelength" />
+                <figcaption>Particle-in-a-box is the same standing-wave logic in quantum clothing: only the wavelengths that fit the boundaries survive.</figcaption>
+              </figure>
+            `,
+          },
+          {
+            id: "quiz3-ch2-hydrogen",
+            title: "Hydrogen Levels and Exact Energy Gaps",
+            html: `
+              <p>Hydrogen does not allow a continuous smear of electron energies. The atom has discrete levels, so absorption and emission must match the energy gap exactly.</p>
+              <div class="formula-box">E<sub>photon</sub> = hf = hc / λ</div>
+              <div class="formula-box">transition rule: E<sub>photon</sub> = |ΔE|</div>
+              <figure class="concept-figure">
+                <img src="./assets/figures/dl8/dl8-page-02-img-000-obj-0011.png" alt="Hydrogen atom energy-level diagram from DL8" />
+                <figcaption>The level picture is the cleanest reminder that only specific jumps are allowed. No matching gap -> no transition.</figcaption>
+              </figure>
+            `,
+          },
+          {
+            id: "quiz3-ch2-traps",
+            title: "Intensity, Frequency, and the Two Classic Photon Traps",
+            html: `
+              <p><strong>Trap 1:</strong> brighter light does not automatically mean each photon has more energy. Photon energy depends on frequency, not intensity.</p>
+              <p><strong>Trap 2:</strong> increasing intensity usually means more photons, while increasing frequency means more energy per photon.</p>
+              <div class="callout callout-review">
+                <strong>Short version:</strong> standing-wave logic explains why energies become discrete, and photon logic explains why transitions come in exact packets.
+              </div>
+            `,
+          },
+          {
+            id: "quiz3-ch2-videos",
+            title: "Watch It Once - Organic Chemistry Tutor",
+            html: `
+              <p>This chapter mixes several short quantum-review topics, so I added the closest Organic Chemistry Tutor videos for the matter-wave, photon, and hydrogen-transition pieces.</p>
+              <div class="resource-actions">
+                <a class="resource-button" href="https://www.youtube.com/watch?v=TX_4r76RppM" target="_blank" rel="noreferrer noopener">Wave Particle Duality</a>
+                <a class="resource-button" href="https://www.youtube.com/watch?v=cYyFPFU6s_A" target="_blank" rel="noreferrer noopener">de Broglie Wavelength</a>
+                <a class="resource-button" href="https://www.youtube.com/watch?v=mXxsT1ut35Q" target="_blank" rel="noreferrer noopener">Bohr Model and Hydrogen Transitions</a>
+              </div>
+            `,
+          },
+        ],
+      },
+      {
+        id: "quiz3-chapter-3",
+        number: "03",
+        title: "Chapter 3 - Mirrors, Reflection, and Images",
+        plainText: `
+Chapter 3 Mirrors, Reflection, and Images for Quiz 3.
+This chapter starts with equal-angle reflection, then builds flat, concave, and convex mirror image logic from ray behavior.
+        `.trim(),
+        sections: [
+          {
+            id: "quiz3-ch3-reflection",
+            title: "Reflection Basics - Measure From the Normal",
+            html: `
+              <p>The law of reflection is compact, but students still lose points on it because they measure from the mirror surface instead of the normal.</p>
+              <div class="formula-box">angle of incidence = angle of reflection</div>
+              <div class="concept-gallery">
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl8/dl8-page-03-img-001-obj-0015.png" alt="Law of reflection diagram with equal angles measured from the normal" />
+                  <figcaption>Both angles are measured from the normal line, not from the mirror face.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl8/dl8-page-03-img-003-obj-0019.png" alt="Candle and flat mirror diagram showing points A and B" />
+                  <figcaption>A flat mirror forms a virtual image the same distance behind the mirror as the object is in front.</figcaption>
+                </figure>
+              </div>
+            `,
+          },
+          {
+            id: "quiz3-ch3-curved",
+            title: "Concave vs. Convex - What the Reflected Rays Try To Do",
+            html: `
+              <p>Concave mirrors bring parallel rays together; convex mirrors spread them apart as if they came from behind the mirror. That one sentence predicts almost everything else.</p>
+              <div class="concept-gallery">
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl8/dl8-page-04-img-004-obj-0022.png" alt="Concave mirror parallel-ray diagram" />
+                  <figcaption>Parallel rays into a concave mirror are pushed toward a focal point.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl8/dl8-page-04-img-005-obj-0023.png" alt="Convex mirror parallel-ray diagram" />
+                  <figcaption>Convex mirrors spread the rays, which is why their images stay virtual.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl8/dl8-page-04-img-006-obj-0024.png" alt="Concave mirror principal-ray diagram through focal point and center of curvature" />
+                  <figcaption>The three principal-ray rules are just a fast visual version of the same image-location story.</figcaption>
+                </figure>
+              </div>
+            `,
+          },
+          {
+            id: "quiz3-ch3-cases",
+            title: "Image Cases You Should Be Able To Predict Before Algebra",
+            html: `
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Mirror</th>
+                    <th>Key case</th>
+                    <th>Prediction</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Concave</td>
+                    <td><code>o &gt; 2f</code></td>
+                    <td>Real, inverted, smaller</td>
+                  </tr>
+                  <tr>
+                    <td>Concave</td>
+                    <td><code>f &lt; o &lt; 2f</code></td>
+                    <td>Real, inverted, larger</td>
+                  </tr>
+                  <tr>
+                    <td>Concave</td>
+                    <td><code>o &lt; f</code></td>
+                    <td>Virtual, upright, larger</td>
+                  </tr>
+                  <tr>
+                    <td>Convex</td>
+                    <td>Any real object</td>
+                    <td>Always virtual, upright, smaller</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="concept-gallery">
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl8/dl8-page-05-img-007-obj-0027.png" alt="Concave mirror with object beyond the center of curvature" />
+                  <figcaption>Object beyond <code>C</code>: expect the real image to fall between <code>F</code> and <code>C</code>.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl8/dl8-page-05-img-008-obj-0028.png" alt="Concave mirror with object near the focal point" />
+                  <figcaption>Object inside the focal length flips the logic to a virtual, upright, magnified image.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl8/dl8-page-05-img-009-obj-0029.png" alt="Convex mirror focal-point construction" />
+                  <figcaption>Convex mirrors backtrace to a focal point behind the mirror, so the image never becomes real.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl8/dl8-page-06-img-010-obj-0033.png" alt="Convex mirror with object in front and focal point behind mirror" />
+                  <figcaption>This is why wide-angle mirrors stay safe and predictable: upright, reduced, and virtual every time.</figcaption>
+                </figure>
+              </div>
+              <div class="formula-box">mirror equation: 1/o + 1/i = 1/f</div>
+              <div class="formula-box">magnification: M = h<sub>i</sub> / h<sub>o</sub> = -i / o</div>
+            `,
+          },
+          {
+            id: "quiz3-ch3-art",
+            title: "Convex Mirrors in Real Life - The Arnolfini Anchor",
+            html: `
+              <p>The lecture packets keep returning to the convex mirror in Jan van Eyck's <em>Arnolfini Portrait</em> because it acts like a real-world field-of-view demo: the mirror shrinks the image, stays upright, and lets you see a wider slice of the room.</p>
+              <div class="concept-gallery">
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl8/dl8-page-07-img-011-obj-0036.jpg" alt="Close-up of the Arnolfini Portrait convex mirror" />
+                  <figcaption>DL8 zooms in on the mirror to make the wide-field effect obvious.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl8/dl8-page-07-img-012-obj-0037.jpg" alt="Full Arnolfini Portrait showing the convex mirror in the room" />
+                  <figcaption>The full painting helps you compare the room with the tiny but wide-angle reflected view.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl9/dl9-page-02-img-000-obj-0012.jpg" alt="Later lecture close-up of the same Arnolfini convex mirror example" />
+                  <figcaption>DL9 brings the same mirror back because it is still the cleanest real-life convex-mirror example.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl9/dl9-page-02-img-001-obj-0014.jpg" alt="Later lecture full Arnolfini Portrait image" />
+                  <figcaption>Same idea, same physics: wider field of view at the price of smaller apparent image size.</figcaption>
+                </figure>
+              </div>
+            `,
+          },
+          {
+            id: "quiz3-ch3-videos",
+            title: "Watch It Once - Organic Chemistry Tutor",
+            html: `
+              <p>If you want a cleaner outside explanation for the mirror chapter, these are the best Organic Chemistry Tutor matches for flat-mirror basics, curved mirrors, and image prediction.</p>
+              <div class="resource-actions">
+                <a class="resource-button" href="https://www.youtube.com/watch?v=yscrBkfPRyc" target="_blank" rel="noreferrer noopener">Law of Reflection</a>
+                <a class="resource-button" href="https://www.youtube.com/watch?v=efPZ5uSDeuI" target="_blank" rel="noreferrer noopener">Mirror Equation</a>
+                <a class="resource-button" href="https://www.youtube.com/watch?v=dBOzdoIsOEI" target="_blank" rel="noreferrer noopener">Ray Diagrams</a>
+              </div>
+            `,
+          },
+        ],
+      },
+      {
+        id: "quiz3-chapter-4",
+        number: "04",
+        title: "Chapter 4 - Fermat, Refraction, and Prisms",
+        plainText: `
+Chapter 4 Fermat, Refraction, and Prisms for Quiz 3.
+This chapter connects time-minimizing paths to Snell's law, bend direction, total internal reflection, and color spreading in prisms.
+        `.trim(),
+        sections: [
+          {
+            id: "quiz3-ch4-language",
+            title: "Wavefronts, Rays, and the Fastest-Time Picture",
+            html: `
+              <p>For this part of the course, most problems are ray problems, but it still helps to remember what the drawings mean. Wavefronts show equal-phase surfaces. Rays show the travel direction more cleanly.</p>
+              <figure class="concept-figure">
+                <img src="./assets/figures/chapter4-wavefronts.png" alt="Wavefront and ray representation figure" />
+                <figcaption>Use wavefronts when you want the equal-phase picture, but switch to rays when you need angle geometry.</figcaption>
+              </figure>
+              <figure class="concept-figure">
+                <img src="./assets/figures/dl9/dl9-page-03-img-002-obj-0017.png" alt="Lifeguard-style fastest-path diagram across two regions" />
+                <figcaption>Fermat's principle is the optics version of the lifeguard problem: the minimum-time path is not always the straight-line path.</figcaption>
+              </figure>
+            `,
+          },
+          {
+            id: "quiz3-ch4-snell",
+            title: "Snell's Law, Bend Direction, and Total Internal Reflection",
+            html: `
+              <div class="formula-box">n = c / v</div>
+              <div class="formula-box">n₁ sin θ₁ = n₂ sin θ₂</div>
+              <p>Higher index means slower light. So the bend-direction rule becomes easy:</p>
+              <ul>
+                <li>fast to slow -> toward the normal</li>
+                <li>slow to fast -> away from the normal</li>
+              </ul>
+              <div class="concept-gallery">
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl9/dl9-page-04-img-004-obj-0022.png" alt="Snell-law refraction diagram at a boundary" />
+                  <figcaption>Snell's law is easiest to trust when you tie it to the speed change instead of memorized arrows.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl9/dl9-page-04-img-003-obj-0021.png" alt="Point A to B through ice and glass diagram" />
+                  <figcaption>The path-bending story is really a time-minimizing story through two different optical speeds.</figcaption>
+                </figure>
+              </div>
+              <div class="formula-box">critical angle: sin θc = n₂ / n₁, only when n₁ &gt; n₂</div>
+              <div class="callout callout-trap">
+                <strong>Trap:</strong> total internal reflection does <em>not</em> happen just because the angle is large. It only happens going from higher index to lower index.
+              </div>
+            `,
+          },
+          {
+            id: "quiz3-ch4-prisms",
+            title: "Prisms and Dispersion - Light Bends Twice",
+            html: `
+              <p>A prism problem is a two-boundary problem. The ray bends when it enters and bends again when it leaves, so never stop after the first surface.</p>
+              <div class="concept-gallery">
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl9/dl9-page-05-img-006-obj-0026.png" alt="Acrylic block or wheel refraction apparatus top view" />
+                  <figcaption>Lecture apparatus view: one boundary already changes the direction because the speed changes.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl9/dl9-page-06-img-008-obj-0032.png" alt="Acrylic refraction apparatus side view" />
+                  <figcaption>The side-view setup keeps the same message: draw the normal first, then decide toward or away.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl9/dl9-page-07-img-009-obj-0036.png" alt="Plastic prism with refractive index label" />
+                  <figcaption>A prism is just a carefully arranged pair of refracting surfaces.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl9/dl9-page-08-img-011-obj-0040.png" alt="Plastic prism image from later page" />
+                  <figcaption>Same object, same reminder: the prism shape matters because it forces two separate refractions.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl9/dl9-page-09-img-013-obj-0044.png" alt="Prism geometry with apex angle theta" />
+                  <figcaption>This is the geometry picture you use when the packet asks how the angle or shape affects the exiting ray.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl9/dl9-page-09-img-014-obj-0045.png" alt="Prism-shape comparison figure" />
+                  <figcaption>Converging-looking prism shapes and diverging-looking prism shapes push bundles of rays differently.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl10/dl10-page-02-img-000-obj-0013.png" alt="Prism diagram with labeled apex angle" />
+                  <figcaption>DL10 revisits the same apex-angle geometry because the angle story keeps showing up in prism questions.</figcaption>
+                </figure>
+              </div>
+              <p>In normal dispersion, blue light bends more than red because blue has the larger refractive index in the material and therefore travels more slowly there.</p>
+            `,
+          },
+          {
+            id: "quiz3-ch4-videos",
+            title: "Watch It Once - Organic Chemistry Tutor",
+            html: `
+              <p>This chapter is mostly a refraction chapter, so these links are the closest Organic Chemistry Tutor matches for rays, Snell's law, and critical-angle logic.</p>
+              <div class="resource-actions">
+                <a class="resource-button" href="https://www.youtube.com/watch?v=ON1QGqB6vxg" target="_blank" rel="noreferrer noopener">Refraction of Light</a>
+                <a class="resource-button" href="https://www.youtube.com/watch?v=KiJi8yqB_Rg" target="_blank" rel="noreferrer noopener">Snell's Law and Index of Refraction</a>
+                <a class="resource-button" href="https://www.youtube.com/watch?v=a20C08qmC_o" target="_blank" rel="noreferrer noopener">Total Internal Reflection and Critical Angle</a>
+              </div>
+            `,
+          },
+        ],
+      },
+      {
+        id: "quiz3-chapter-5",
+        number: "05",
+        title: "Chapter 5 - Thin Lenses and Image Formation",
+        plainText: `
+Chapter 5 Thin Lenses and Image Formation for Quiz 3.
+This chapter keeps the mirror-style image logic, but switches from reflection to refraction and organizes the main converging versus diverging lens cases.
+        `.trim(),
+        sections: [
+          {
+            id: "quiz3-ch5-rays",
+            title: "Converging vs. Diverging Lens Ray Rules",
+            html: `
+              <p>The lens story is conceptually the same as mirrors: do the rays physically meet, or do you have to backtrace them? Converging lenses can do both depending on object position. Diverging lenses stay virtual-only for a real object in this course setup.</p>
+              <div class="concept-gallery">
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl10/dl10-page-06-img-005-obj-0027.png" alt="Lens shape figure with converging and diverging forms" />
+                  <figcaption>The first job is classification: thicker in the middle usually means converging; thinner in the middle usually means diverging.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl10/dl10-page-05-img-003-obj-0023.png" alt="Optics bench or lens setup image from lecture" />
+                  <figcaption>The apparatus pictures matter because they remind you that the image story comes from how the lens redirects incoming bundles.</figcaption>
+                </figure>
+              </div>
+            `,
+          },
+          {
+            id: "quiz3-ch5-equation",
+            title: "Thin-Lens Equation, Magnification, and Sign Logic",
+            html: `
+              <div class="formula-box">1/o + 1/i = 1/f</div>
+              <div class="formula-box">M = h<sub>i</sub> / h<sub>o</sub> = -i / o</div>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Quantity</th>
+                    <th>Sign rule</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>o</code></td>
+                    <td>positive for the real object setups used here</td>
+                  </tr>
+                  <tr>
+                    <td><code>f</code></td>
+                    <td>positive for converging, negative for diverging</td>
+                  </tr>
+                  <tr>
+                    <td><code>i</code></td>
+                    <td>positive for real images, negative for virtual images</td>
+                  </tr>
+                  <tr>
+                    <td><code>M</code></td>
+                    <td>positive upright, negative inverted</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="callout callout-priority">
+                <strong>Prediction first:</strong> before you calculate anything, say whether the rays should meet or only appear to meet. The algebra should confirm your picture, not replace it.
+              </div>
+            `,
+          },
+          {
+            id: "quiz3-ch5-gallery",
+            title: "Lecture Figure Bank - Lens Families and Repeated Setups",
+            html: `
+              <p>The later packets use a lot of compact lens sketches. They look abstract at first, but they are really just a fast visual bank of converging, diverging, and repeated image-formation setups.</p>
+              <div class="concept-gallery">
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl9/dl9-page-10-img-016-obj-0049.png" alt="Lens icon strip from DL9" />
+                  <figcaption>One repeated lens icon set from DL9.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl9/dl9-page-10-img-018-obj-0051.png" alt="Second lens icon strip from DL9" />
+                  <figcaption>Another repeated strip: same lens ideas, slightly different arrangement.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl9/dl9-page-10-img-020-obj-0053.png" alt="Third lens icon strip from DL9" />
+                  <figcaption>Use these as classification practice, not as isolated art.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl9/dl9-page-10-img-022-obj-0055.png" alt="Fourth lens icon strip from DL9" />
+                  <figcaption>If you can label each sketch converging or diverging, you are already halfway to the right prediction.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl9/dl9-page-10-img-024-obj-0057.png" alt="Fifth lens icon strip from DL9" />
+                  <figcaption>The packet repeats these because the visual pattern recognition matters.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl9/dl9-page-11-img-026-obj-0061.png" alt="Lens icon grid from DL9" />
+                  <figcaption>This larger grid works well as a rapid-fire recognition drill before a quiz.</figcaption>
+                </figure>
+              </div>
+            `,
+          },
+          {
+            id: "quiz3-ch5-videos",
+            title: "Watch It Once - Organic Chemistry Tutor",
+            html: `
+              <p>If you want extra lens practice after this chapter, these are the closest Organic Chemistry Tutor videos for the thin-lens equation and image-formation picture.</p>
+              <div class="resource-actions">
+                <a class="resource-button" href="https://www.youtube.com/watch?v=VKMswYSiyko" target="_blank" rel="noreferrer noopener">Thin Lens Equations</a>
+                <a class="resource-button" href="https://www.youtube.com/watch?v=7ehfXmO42h8" target="_blank" rel="noreferrer noopener">Thin Lens Equation Problems</a>
+                <a class="resource-button" href="https://www.youtube.com/watch?v=dBOzdoIsOEI" target="_blank" rel="noreferrer noopener">Ray Diagrams</a>
+              </div>
+            `,
+          },
+        ],
+      },
+      {
+        id: "quiz3-chapter-6",
+        number: "06",
+        title: "Chapter 6 - Multiple Lenses, the Eye, and Vision Correction",
+        plainText: `
+Chapter 6 Multiple Lenses, the Eye, and Vision Correction for Quiz 3.
+This chapter chains lenses together, then turns the same image-placement logic toward the eye, near point, far point, and corrective lenses.
+        `.trim(),
+        sections: [
+          {
+            id: "quiz3-ch6-systems",
+            title: "Multiple-Lens Systems - Finish Lens 1 Before Starting Lens 2",
+            html: `
+              <p>The key sentence is simple: <strong>the image made by lens 1 becomes the object for lens 2</strong>. That is the entire structure of a two-lens problem.</p>
+              <ol class="long-list">
+                <li>Solve lens 1 completely.</li>
+                <li>Locate image 1.</li>
+                <li>Use the lens separation to turn image 1 into object distance for lens 2.</li>
+                <li>Solve lens 2, then multiply magnifications.</li>
+              </ol>
+              <div class="formula-box">M<sub>total</sub> = M₁ M₂</div>
+            `,
+          },
+          {
+            id: "quiz3-ch6-eye",
+            title: "The Eye, Near Point, Far Point, and Corrective Lenses",
+            html: `
+              <p>The eye chapter is still just lens physics. A corrective lens helps by placing a <strong>virtual image</strong> where your eye can focus.</p>
+              <div class="formula-box">optical power: P = 1/f</div>
+              <div class="concept-gallery">
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl10/dl10-page-07-img-007-obj-0031.png" alt="Object-lens-distance vision-correction diagram from DL10" />
+                  <figcaption>These distance diagrams are really object-image placement problems with biological labels attached.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl10/dl10-page-07-img-008-obj-0032.png" alt="Simplified eye diagram showing lens and retina separated by 2.5 cm" />
+                  <figcaption>The simplified eye model keeps the geometry visible: lens in front, retina at the target image plane.</figcaption>
+                </figure>
+                <figure class="concept-figure">
+                  <img src="./assets/figures/dl11/dl11-page-02-img-000-obj-0016.png" alt="Vision-correction distance setup from DL11" />
+                  <figcaption>DL11 keeps the same layout because optometry questions are image-location questions in disguise.</figcaption>
+                </figure>
+              </div>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Condition</th>
+                    <th>Problem</th>
+                    <th>Fix</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Myopia</td>
+                    <td>Far point is too close</td>
+                    <td>Diverging lens</td>
+                  </tr>
+                  <tr>
+                    <td>Hyperopia</td>
+                    <td>Near point is too far away</td>
+                    <td>Converging lens</td>
+                  </tr>
+                </tbody>
+              </table>
+            `,
+          },
+          {
+            id: "quiz3-ch6-videos",
+            title: "Watch It Once - Organic Chemistry Tutor",
+            html: `
+              <p>He does not seem to have a single Quiz-3-perfect eye-correction video here, but these Organic Chemistry Tutor links are still very useful for the two-lens and image-chaining logic behind this chapter.</p>
+              <div class="resource-actions">
+                <a class="resource-button" href="https://www.youtube.com/watch?v=0Im-NQeqjYg" target="_blank" rel="noreferrer noopener">Multiple Two-Lens System</a>
+                <a class="resource-button" href="https://www.youtube.com/watch?v=VKMswYSiyko" target="_blank" rel="noreferrer noopener">Thin Lens Equations</a>
+                <a class="resource-button" href="https://www.youtube.com/watch?v=dBOzdoIsOEI" target="_blank" rel="noreferrer noopener">Ray Diagrams</a>
+              </div>
+            `,
+          },
+        ],
+      },
+      {
+        id: "quiz3-chapter-7",
+        number: "07",
+        title: "Chapter 7 - Electric Charge and Induction Kickoff",
+        plainText: `
+Chapter 7 Electric Charge and Induction Kickoff for Quiz 3.
+This chapter is the first bridge into the next unit: charge imbalance, like-versus-unlike interactions, and why neutral objects can still be attracted.
+        `.trim(),
+        sections: [
+          {
+            id: "quiz3-ch7-charge",
+            title: "Charge Means Imbalance, Not a New Kind of Matter",
+            html: `
+              <p>An object is neutral when its positive and negative charge add to zero overall. It becomes charged when that balance is broken, usually by transferring electrons during rubbing or contact in these introductory setups.</p>
+              <ul>
+                <li>like charges repel</li>
+                <li>unlike charges attract</li>
+                <li>the sign story is about electron imbalance, not about creating or destroying charge</li>
+              </ul>
+            `,
+          },
+          {
+            id: "quiz3-ch7-traps",
+            title: "Induction - Why a Neutral Object Can Still Be Attracted",
+            html: `
+              <p>This is the first subtle idea of the unit. A neutral conductor can still respond because its charges can rearrange internally. The closer opposite charges pull more strongly than the farther like charges push, so the net effect can still be attraction.</p>
+              <div class="callout callout-trap">
+                <strong>Trap:</strong> neutral does not mean unresponsive. It only means the total charge is zero.
+              </div>
+              <div class="takeaway-line">
+                <strong>Soda-can logic:</strong> bring a charged rod near a neutral metal can, the charges shuffle, and the can can roll toward the rod even though the can started neutral.
+              </div>
+            `,
+          },
+          {
+            id: "quiz3-ch7-videos",
+            title: "Watch It Once - Organic Chemistry Tutor",
+            html: `
+              <p>This chapter is your first electrostatics bridge, so I linked the closest Organic Chemistry Tutor videos for charge basics, attraction/repulsion, and induction.</p>
+              <div class="resource-actions">
+                <a class="resource-button" href="https://www.youtube.com/watch?v=VD009jiZreo" target="_blank" rel="noreferrer noopener">Electric Charge</a>
+                <a class="resource-button" href="https://www.youtube.com/watch?v=ZbBHnod_Mew" target="_blank" rel="noreferrer noopener">Charging by Induction</a>
+                <a class="resource-button" href="https://www.youtube.com/watch?v=kCp5yYjo9zE" target="_blank" rel="noreferrer noopener">Coulomb's Law</a>
+              </div>
+            `,
+          },
+        ],
+      },
+    ],
+    recap: {
+      id: "quiz3-recap",
+      title: "Final Recap - Formula Sheet and Trap List",
+      plainText: `
+The Quiz 3 recap condenses DL8 through DL11 into a final formula table plus the highest-value conceptual traps to review under time pressure.
+      `.trim(),
+      sections: [
+        {
+          id: "quiz3-recap-formulas",
+          title: "Quiz 3 Formula Anchor",
+          html: `
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Topic</th>
+                  <th>Formula or rule</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Standing waves</td>
+                  <td><code>node to node = λ/2</code>, <code>node to antinode = λ/4</code>, <code>λₙ = 2L/n</code>, <code>λₙ = 4L/(2n-1)</code></td>
+                </tr>
+                <tr>
+                  <td>de Broglie</td>
+                  <td><code>λ = h/p</code></td>
+                </tr>
+                <tr>
+                  <td>Photon energy</td>
+                  <td><code>E = hf = hc/λ</code></td>
+                </tr>
+                <tr>
+                  <td>Hydrogen transitions</td>
+                  <td><code>E_photon = |ΔE|</code></td>
+                </tr>
+                <tr>
+                  <td>Mirrors and lenses</td>
+                  <td><code>1/o + 1/i = 1/f</code>, <code>M = h_i / h_o = -i/o</code></td>
+                </tr>
+                <tr>
+                  <td>Refraction</td>
+                  <td><code>n = c/v</code>, <code>n₁ sin θ₁ = n₂ sin θ₂</code></td>
+                </tr>
+                <tr>
+                  <td>Total internal reflection</td>
+                  <td><code>sin θc = n₂/n₁</code> when <code>n₁ &gt; n₂</code></td>
+                </tr>
+                <tr>
+                  <td>Optical power</td>
+                  <td><code>P = 1/f</code> with <code>f</code> in meters</td>
+                </tr>
+              </tbody>
+            </table>
+          `,
+        },
+        {
+          id: "quiz3-recap-traps",
+          title: "11 Traps Worth Checking One More Time",
+          html: `
+            <ol class="long-list">
+              <li>Standing waves: boundaries first, formulas second.</li>
+              <li>Closed-open systems allow only odd harmonics.</li>
+              <li>Higher intensity does not mean higher photon energy.</li>
+              <li>Hydrogen transitions require an exact energy gap match.</li>
+              <li>Reflection angles are measured from the normal, not the mirror surface.</li>
+              <li>Concave mirrors and converging lenses can switch between real and virtual depending on object position.</li>
+              <li>Convex mirrors and diverging lenses stay virtual for the real-object cases used here.</li>
+              <li>Fast to slow bends toward the normal; slow to fast bends away.</li>
+              <li>Total internal reflection needs high index to low index, not just a large angle.</li>
+              <li>In a two-lens system, image 1 becomes object 2.</li>
+              <li>A neutral conductor can still be attracted because its charges can rearrange by induction.</li>
+            </ol>
+            <p>The attached guide's big message still holds: pick the model first, sketch the picture second, and only then choose the formula.</p>
+          `,
+        },
+      ],
+    },
+  },
+  QUIZ_3_SECTION_LOCATORS,
+  QUIZ_3_CHAPTER_LOCATORS,
+);
+
 export const QUIZ_BANK = {
+  "quiz3-chapter-1": [
+    {
+      id: "q3c1-mc-1",
+      type: "mc",
+      prompt: "What is a standing wave really made from?",
+      choices: [
+        "A single wave that stopped moving forever",
+        "Two identical traveling waves moving in opposite directions",
+        "A wave with zero frequency",
+        "A wave with no medium motion anywhere",
+      ],
+      answer: 1,
+      explanation: "Standing waves come from interference between matching waves moving in opposite directions.",
+    },
+    {
+      id: "q3c1-mc-2",
+      type: "mc",
+      prompt: "In a closed-open tube, the closed end behaves like a:",
+      choices: ["Node", "Antinode", "Bright fringe", "Source"],
+      answer: 0,
+      explanation: "A closed end stays at zero displacement, so it is a node.",
+    },
+    {
+      id: "q3c1-mc-3",
+      type: "mc",
+      prompt: "Why do only odd harmonics appear in a closed-open tube?",
+      choices: [
+        "Because the tube blocks even frequencies only",
+        "Because one end must be a node and the other an antinode",
+        "Because sound cannot reflect in tubes",
+        "Because wavelength is always fixed at 4L",
+      ],
+      answer: 1,
+      explanation: "The mixed boundary condition forces quarter-wave patterns that step through odd harmonics only.",
+    },
+    {
+      id: "q3c1-short-1",
+      type: "short",
+      prompt: "Why does a standing-wave pattern look stationary even though the medium is still moving?",
+      expected:
+        "Because the pattern comes from two opposite traveling waves interfering, so the nodes and antinodes stay fixed while the medium still oscillates.",
+      rubric:
+        "Mark correct if the answer says the pattern is fixed by interference of opposite waves while the medium still moves or oscillates.",
+    },
+  ],
+  "quiz3-chapter-2": [
+    {
+      id: "q3c2-mc-1",
+      type: "mc",
+      prompt: "What does the de Broglie relation connect?",
+      choices: [
+        "Charge and electric field",
+        "Wavelength and momentum",
+        "Frequency and mirror curvature",
+        "Power and focal length",
+      ],
+      answer: 1,
+      explanation: "The de Broglie formula is λ = h/p, so it links matter-wave wavelength to momentum.",
+    },
+    {
+      id: "q3c2-mc-2",
+      type: "mc",
+      prompt: "If you increase the frequency of light, what happens to the energy of each photon?",
+      choices: ["It decreases", "It stays the same", "It increases", "It becomes zero"],
+      answer: 2,
+      explanation: "Photon energy is E = hf, so higher frequency means higher energy per photon.",
+    },
+    {
+      id: "q3c2-mc-3",
+      type: "mc",
+      prompt: "Why are hydrogen absorption and emission lines discrete instead of continuous?",
+      choices: [
+        "Because intensity is always fixed",
+        "Because the atom allows only certain energy levels and transitions between them",
+        "Because mirrors inside the atom reflect light",
+        "Because all wavelengths have the same energy",
+      ],
+      answer: 1,
+      explanation: "The electron can occupy only allowed energy levels, so photons must match exact energy gaps.",
+    },
+    {
+      id: "q3c2-short-1",
+      type: "short",
+      prompt: "Why does brighter light not automatically give more energetic photoelectrons?",
+      expected:
+        "Because brightness usually means more photons, while the energy per photon depends on frequency, not intensity.",
+      rubric:
+        "Mark correct if the answer distinguishes number of photons or intensity from energy per photon and ties the latter to frequency.",
+    },
+  ],
+  "quiz3-chapter-3": [
+    {
+      id: "q3c3-mc-1",
+      type: "mc",
+      prompt: "The law of reflection measures the angles relative to the:",
+      choices: ["Mirror surface", "Normal", "Object height", "Focal point"],
+      answer: 1,
+      explanation: "Both the incident and reflected angles are measured from the normal.",
+    },
+    {
+      id: "q3c3-mc-2",
+      type: "mc",
+      prompt: "For a concave mirror with the object inside the focal length, the image is:",
+      choices: [
+        "Real, inverted, smaller",
+        "Virtual, upright, larger",
+        "Real, upright, same size",
+        "Impossible to form",
+      ],
+      answer: 1,
+      explanation: "Inside the focal length, the reflected rays spread and must be backtraced to get a virtual upright image.",
+    },
+    {
+      id: "q3c3-mc-3",
+      type: "mc",
+      prompt: "A convex mirror with a real object in front of it produces an image that is always:",
+      choices: [
+        "Real and inverted",
+        "Virtual, upright, and smaller",
+        "Virtual and larger",
+        "At infinity",
+      ],
+      answer: 1,
+      explanation: "Convex mirrors always spread the reflected rays, so the image stays virtual, upright, and reduced.",
+    },
+    {
+      id: "q3c3-short-1",
+      type: "short",
+      prompt: "In plain language, what is the difference between a real image and a virtual image for mirrors?",
+      expected:
+        "A real image forms where rays actually meet, while a virtual image is found by backtracing rays that only appear to come from a point.",
+      rubric:
+        "Mark correct if the answer says real images come from actual ray intersection and virtual images come from apparent or backtraced intersection.",
+    },
+  ],
+  "quiz3-chapter-4": [
+    {
+      id: "q3c4-mc-1",
+      type: "mc",
+      prompt: "When light goes from a faster medium into a slower medium, it bends:",
+      choices: [
+        "Toward the normal",
+        "Away from the normal",
+        "Straight through with no change",
+        "Only if the wavelength is blue",
+      ],
+      answer: 0,
+      explanation: "Fast to slow means higher index on the other side, so the ray bends toward the normal.",
+    },
+    {
+      id: "q3c4-mc-2",
+      type: "mc",
+      prompt: "Total internal reflection can happen only when light goes:",
+      choices: [
+        "From lower index to higher index",
+        "From higher index to lower index",
+        "Between equal indices only",
+        "From any medium at 45 degrees",
+      ],
+      answer: 1,
+      explanation: "TIR requires the light to try leaving the slower-light, higher-index medium for a lower-index one.",
+    },
+    {
+      id: "q3c4-mc-3",
+      type: "mc",
+      prompt: "In normal dispersion through a prism, blue light usually bends more than red because blue:",
+      choices: [
+        "Has the larger refractive index in the material",
+        "Always has the greater amplitude",
+        "Travels faster in the prism",
+        "Is reflected instead of refracted",
+      ],
+      answer: 0,
+      explanation: "Normal dispersion means higher-frequency blue light usually has the larger index and therefore bends more.",
+    },
+    {
+      id: "q3c4-short-1",
+      type: "short",
+      prompt: "Why is it a mistake to stop after the first surface in a prism problem?",
+      expected:
+        "Because a prism changes the ray at entry and again at exit, so the final direction depends on two refractions, not one.",
+      rubric:
+        "Mark correct if the answer explicitly says the ray bends twice or at both surfaces of the prism.",
+    },
+  ],
+  "quiz3-chapter-5": [
+    {
+      id: "q3c5-mc-1",
+      type: "mc",
+      prompt: "A converging lens with the object inside the focal length produces an image that is:",
+      choices: [
+        "Real, inverted, smaller",
+        "Virtual, upright, larger",
+        "Always at the focal point",
+        "Virtual and smaller",
+      ],
+      answer: 1,
+      explanation: "Inside the focal length, a converging lens behaves like the close-up mirror case and gives a virtual upright magnified image.",
+    },
+    {
+      id: "q3c5-mc-2",
+      type: "mc",
+      prompt: "For the real-object setups used in this course, a diverging lens makes an image that is always:",
+      choices: [
+        "Real and inverted",
+        "Virtual, upright, and smaller",
+        "Virtual and larger",
+        "At infinity",
+      ],
+      answer: 1,
+      explanation: "Diverging lenses spread the transmitted rays, so the image stays virtual, upright, and reduced.",
+    },
+    {
+      id: "q3c5-mc-3",
+      type: "mc",
+      prompt: "What sign does focal length take for a diverging lens?",
+      choices: ["Positive", "Negative", "Zero", "It changes every problem"],
+      answer: 1,
+      explanation: "The sign convention used here assigns negative focal length to diverging lenses.",
+    },
+    {
+      id: "q3c5-short-1",
+      type: "short",
+      prompt: "Before using the thin-lens equation, what physical question should you answer first?",
+      expected:
+        "You should decide whether the refracted rays actually meet or only appear to meet, so you can predict whether the image is real or virtual first.",
+      rubric:
+        "Mark correct if the answer says to predict real versus virtual or whether the rays physically intersect before doing algebra.",
+    },
+  ],
+  "quiz3-chapter-6": [
+    {
+      id: "q3c6-mc-1",
+      type: "mc",
+      prompt: "In a two-lens system, the image made by lens 1 becomes:",
+      choices: [
+        "Irrelevant after the first calculation",
+        "The object for lens 2",
+        "Always the final image",
+        "The focal length of lens 2",
+      ],
+      answer: 1,
+      explanation: "That handoff from image 1 to object 2 is the main structure of a multi-lens problem.",
+    },
+    {
+      id: "q3c6-mc-2",
+      type: "mc",
+      prompt: "Myopia is typically corrected with a:",
+      choices: ["Converging lens", "Diverging lens", "Flat mirror", "Prism"],
+      answer: 1,
+      explanation: "A diverging lens moves the apparent image to the person's far point so the eye can focus it.",
+    },
+    {
+      id: "q3c6-mc-3",
+      type: "mc",
+      prompt: "A positive optical power corresponds to a:",
+      choices: ["Converging lens", "Diverging lens", "Neutral conductor", "Convex mirror"],
+      answer: 0,
+      explanation: "Positive power means positive focal length, which corresponds to a converging lens.",
+    },
+    {
+      id: "q3c6-short-1",
+      type: "short",
+      prompt: "What is the key job of a corrective lens in plain language?",
+      expected:
+        "It creates a virtual image at a distance where the eye can focus clearly.",
+      rubric:
+        "Mark correct if the answer says the lens places or moves a virtual image to a focusable location for the eye.",
+    },
+  ],
+  "quiz3-chapter-7": [
+    {
+      id: "q3c7-mc-1",
+      type: "mc",
+      prompt: "If two charged objects repel each other, they must have:",
+      choices: [
+        "Opposite signs",
+        "The same sign",
+        "No net charge",
+        "Equal mass",
+      ],
+      answer: 1,
+      explanation: "Like charges repel and unlike charges attract.",
+    },
+    {
+      id: "q3c7-mc-2",
+      type: "mc",
+      prompt: "In these introductory rubbing examples, which particles are usually transferred?",
+      choices: ["Protons", "Neutrons", "Electrons", "Photons"],
+      answer: 2,
+      explanation: "The solid materials exchange electrons, not protons or neutrons.",
+    },
+    {
+      id: "q3c7-mc-3",
+      type: "mc",
+      prompt: "Why can a neutral metal can still be attracted toward a charged rod?",
+      choices: [
+        "Because neutral objects secretly have no charges inside them",
+        "Because its charges can rearrange by induction",
+        "Because gravity becomes stronger",
+        "Because only positive charges move",
+      ],
+      answer: 1,
+      explanation: "A neutral conductor can polarize, so the nearer opposite charges pull more strongly than the farther like charges push.",
+    },
+    {
+      id: "q3c7-short-1",
+      type: "short",
+      prompt: "Why does neutral not mean unresponsive in electric-charge problems?",
+      expected:
+        "Because an object can have zero net charge overall while its internal charges still rearrange, so it can still feel a net attraction through induction.",
+      rubric:
+        "Mark correct if the answer says zero net charge does not stop internal charge rearrangement or induction-based attraction.",
+    },
+  ],
   "quiz2-classic-chapter-1": [
     {
       id: "q2c1-mc-1",
