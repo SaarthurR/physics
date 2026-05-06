@@ -5553,11 +5553,12 @@ This chapter builds the standing-wave model first, then uses boundary conditions
             id: "quiz3-ch1-hook",
             title: "The Hook - A Wave Pattern That Looks Frozen",
             html: `
-              <p>A standing wave feels strange the first time you see it because the medium is moving, but the pattern does not seem to travel left or right. That is your first clue that this is not a brand-new wave source. It is interference between two traveling waves going opposite directions.</p>
-              <p>So the first mental move is always: <strong>standing wave = two matching traveling waves plus reflection</strong>. Once that picture is clear, nodes, antinodes, and harmonics stop feeling random.</p>
+              <p>A standing wave is not a wave that somehow stopped existing. It is what you get when a traveling wave reflects, comes back, and overlaps with itself.</p>
+              <p>That overlap makes a pattern that looks frozen in place: some spots always stay at zero, while other spots move up and down the most. The material is still moving, but the overall pattern is not sliding left or right.</p>
+              <p>So the first mental move is: <strong>standing wave = two matching traveling waves moving in opposite directions</strong>. Usually one is the original wave and the other is the reflected wave.</p>
               <figure class="concept-figure concept-figure-small">
                 <img src="./assets/figures/quiz2-standing-waves.svg" alt="Standing-wave patterns for fixed-fixed, open-open, and fixed-open boundaries" />
-                <figcaption>Use the pattern picture first. The geometry of nodes and antinodes tells you the allowed wavelength before any formula does.</figcaption>
+                <figcaption>Look for the fixed spots and the biggest-motion spots first. That picture tells you the allowed wavelength before any formula does.</figcaption>
               </figure>
             `,
           },
@@ -5565,13 +5566,19 @@ This chapter builds the standing-wave model first, then uses boundary conditions
             id: "quiz3-ch1-boundaries",
             title: "Nodes, Antinodes, and the Ends of the System",
             html: `
-              <p>The ends decide the pattern:</p>
+              <p>Now we can name the two important parts of the pattern:</p>
+              <ul>
+                <li><strong>Node:</strong> a spot that always stays at zero displacement</li>
+                <li><strong>Antinode:</strong> a spot that swings the most</li>
+              </ul>
+              <p>The ends of the system tell you which one must appear there:</p>
               <ul>
                 <li>Fixed end or closed end -> node</li>
                 <li>Free end or open end -> antinode</li>
               </ul>
               <div class="formula-box">node to nearest node = λ / 2</div>
               <div class="formula-box">node to nearest antinode = λ / 4</div>
+              <p>Those two distances are the reason standing-wave sketches work. Once you know what has to happen at the ends, you just count how many quarter-wavelength chunks fit inside the length.</p>
               <div class="callout callout-trap">
                 <strong>Trap:</strong> do not memorize a wavelength formula first and only then ask what the ends are doing. The ends are the reason the formula is what it is.
               </div>
@@ -5581,11 +5588,12 @@ This chapter builds the standing-wave model first, then uses boundary conditions
             id: "quiz3-ch1-harmonics",
             title: "Allowed Wavelengths and Harmonics",
             html: `
-              <p>For a string with two fixed ends, or a tube with two open ends, the pattern logic is the same: both ends must match. For a closed-open tube, the ends mismatch, so only odd harmonics survive.</p>
+              <p>A <strong>harmonic</strong> is just one allowed standing-wave pattern. The system does not accept every wavelength. It only accepts the ones that fit the boundary rules.</p>
+              <p>For a string with two fixed ends, or a tube with two open ends, both ends behave the same way, so the allowed patterns line up cleanly. For a closed-open tube, the ends behave differently, so the pattern has to start with a quarter-wave shape and then add half-waves after that.</p>
               <div class="formula-box">fixed-fixed or open-open: λₙ = 2L / n</div>
               <div class="formula-box">closed-open or fixed-free: λₙ = 4L / (2n - 1)</div>
               <div class="takeaway-line">
-                <strong>Memory rule:</strong> if the two ends are different, the shortest pattern is only a quarter wavelength long, and the odd-harmonic pattern follows from that.
+                <strong>Memory rule:</strong> if the two ends are different, the shortest pattern is only a quarter wavelength long, so the allowed patterns go odd-only: 1st, 3rd, 5th, ...
               </div>
             `,
           },
@@ -5628,11 +5636,13 @@ This chapter carries the standing-wave idea into matter waves, photon energy, an
             id: "quiz3-ch2-matter",
             title: "Matter Can Behave Like a Wave",
             html: `
-              <p>The big bridge from standing waves to quantum is this: if a particle behaves like a wave, then a trapped particle cannot fit just any pattern. Only certain wave patterns are allowed, so only certain energies are allowed.</p>
+              <p>This chapter is the reason the standing-wave story matters. In quantum physics, tiny particles can behave like waves, so the same \"only certain patterns fit\" idea comes back.</p>
+              <p>If a particle is trapped in a small region, its wave cannot take just any shape. Only certain wave patterns fit the boundaries, so only certain momenta and energies are allowed.</p>
               <div class="formula-box">de Broglie: λ = h / p</div>
+              <p>Here <code>λ</code> is wavelength, <code>p</code> is momentum, and <code>h</code> is Planck's constant. The key idea is simple: bigger momentum means a shorter wavelength.</p>
               <figure class="concept-figure concept-figure-small">
                 <img src="./assets/figures/quiz2-particle-box.svg" alt="Particle-in-a-box standing-wave idea with de Broglie wavelength" />
-                <figcaption>Particle-in-a-box is the same standing-wave logic in quantum clothing: only the wavelengths that fit the boundaries survive.</figcaption>
+                <figcaption>Particle-in-a-box is the same standing-wave logic in quantum clothing: if only some wavelengths fit, then only some particle states are possible.</figcaption>
               </figure>
             `,
           },
@@ -5640,12 +5650,14 @@ This chapter carries the standing-wave idea into matter waves, photon energy, an
             id: "quiz3-ch2-hydrogen",
             title: "Hydrogen Levels and Exact Energy Gaps",
             html: `
-              <p>Hydrogen does not allow a continuous smear of electron energies. The atom has discrete levels, so absorption and emission must match the energy gap exactly.</p>
+              <p>Hydrogen does not let its electron have just any energy. Instead, the atom has specific allowed energy levels, like steps on a ladder.</p>
+              <p>When the electron jumps from one level to another, the atom must absorb or emit a photon with exactly the right energy for that gap.</p>
               <div class="formula-box">E<sub>photon</sub> = hf = hc / λ</div>
               <div class="formula-box">transition rule: E<sub>photon</sub> = |ΔE|</div>
+              <p>Here <code>ΔE</code> means \"change in energy.\" If the gap is 2 eV, the photon must carry 2 eV. Too little or too much does not work.</p>
               <figure class="concept-figure">
                 <img src="./assets/figures/dl8/dl8-page-02-img-000-obj-0011.png" alt="Hydrogen atom energy-level diagram from DL8" />
-                <figcaption>The level picture is the cleanest reminder that only specific jumps are allowed. No matching gap -> no transition.</figcaption>
+                <figcaption>The level picture is the cleanest reminder that only specific jumps are allowed. No matching gap means no transition.</figcaption>
               </figure>
             `,
           },
@@ -5726,6 +5738,13 @@ This chapter starts with equal-angle reflection, then builds flat, concave, and 
             id: "quiz3-ch3-cases",
             title: "Image Cases You Should Be Able To Predict Before Algebra",
             html: `
+              <p>Before reading the table, keep this shorthand straight:</p>
+              <ul>
+                <li><code>o</code> = object distance</li>
+                <li><code>f</code> = focal length</li>
+                <li><code>2f</code> or <code>C</code> = twice the focal length</li>
+                <li><strong>real image</strong> = rays really meet; <strong>virtual image</strong> = rays only appear to meet when backtraced</li>
+              </ul>
               <table class="data-table">
                 <thead>
                   <tr>
@@ -5737,17 +5756,17 @@ This chapter starts with equal-angle reflection, then builds flat, concave, and 
                 <tbody>
                   <tr>
                     <td>Concave</td>
-                    <td><code>o &gt; 2f</code></td>
+                    <td>Object farther than <code>2f</code></td>
                     <td>Real, inverted, smaller</td>
                   </tr>
                   <tr>
                     <td>Concave</td>
-                    <td><code>f &lt; o &lt; 2f</code></td>
+                    <td>Object between <code>f</code> and <code>2f</code></td>
                     <td>Real, inverted, larger</td>
                   </tr>
                   <tr>
                     <td>Concave</td>
-                    <td><code>o &lt; f</code></td>
+                    <td>Object inside the focal length</td>
                     <td>Virtual, upright, larger</td>
                   </tr>
                   <tr>
@@ -5831,14 +5850,15 @@ This chapter connects time-minimizing paths to Snell's law, bend direction, tota
             id: "quiz3-ch4-language",
             title: "Wavefronts, Rays, and the Fastest-Time Picture",
             html: `
-              <p>For this part of the course, most problems are ray problems, but it still helps to remember what the drawings mean. Wavefronts show equal-phase surfaces. Rays show the travel direction more cleanly.</p>
+              <p>The beginner idea to hold onto is this: light bends at a boundary because its speed changes when it enters a new material.</p>
+              <p>For most quiz problems, you will draw <strong>rays</strong>, which show the direction the light travels. Sometimes the class also uses <strong>wavefronts</strong>, which are just lines connecting points that are in the same stage of the wave.</p>
               <figure class="concept-figure">
                 <img src="./assets/figures/chapter4-wavefronts.png" alt="Wavefront and ray representation figure" />
-                <figcaption>Use wavefronts when you want the equal-phase picture, but switch to rays when you need angle geometry.</figcaption>
+                <figcaption>Use rays for angle geometry. Use wavefronts when you want to picture the wave itself moving forward.</figcaption>
               </figure>
               <figure class="concept-figure">
                 <img src="./assets/figures/dl9/dl9-page-03-img-002-obj-0017.png" alt="Lifeguard-style fastest-path diagram across two regions" />
-                <figcaption>Fermat's principle is the optics version of the lifeguard problem: the minimum-time path is not always the straight-line path.</figcaption>
+                <figcaption>Fermat's principle is the deeper version of the same story: light chooses the path that takes the least time, not always the straight-line path.</figcaption>
               </figure>
             `,
           },
@@ -5846,9 +5866,10 @@ This chapter connects time-minimizing paths to Snell's law, bend direction, tota
             id: "quiz3-ch4-snell",
             title: "Snell's Law, Bend Direction, and Total Internal Reflection",
             html: `
+              <p>The refractive index tells you how much the material slows light down.</p>
               <div class="formula-box">n = c / v</div>
               <div class="formula-box">n₁ sin θ₁ = n₂ sin θ₂</div>
-              <p>Higher index means slower light. So the bend-direction rule becomes easy:</p>
+              <p>Higher index means slower light. Once that is clear, the bend-direction rule becomes easy:</p>
               <ul>
                 <li>fast to slow -> toward the normal</li>
                 <li>slow to fast -> away from the normal</li>
@@ -5864,6 +5885,7 @@ This chapter connects time-minimizing paths to Snell's law, bend direction, tota
                 </figure>
               </div>
               <div class="formula-box">critical angle: sin θc = n₂ / n₁, only when n₁ &gt; n₂</div>
+              <p>The critical angle is the tipping point where the refracted ray would skim along the surface. Past that angle, the light reflects back inside instead of leaving.</p>
               <div class="callout callout-trap">
                 <strong>Trap:</strong> total internal reflection does <em>not</em> happen just because the angle is large. It only happens going from higher index to lower index.
               </div>
@@ -5951,6 +5973,7 @@ This chapter keeps the mirror-style image logic, but switches from reflection to
             id: "quiz3-ch5-equation",
             title: "Thin-Lens Equation, Magnification, and Sign Logic",
             html: `
+              <p>Keep the physical picture first: a <strong>real image</strong> forms where light rays actually meet, while a <strong>virtual image</strong> is where the rays only seem to come from.</p>
               <div class="formula-box">1/o + 1/i = 1/f</div>
               <div class="formula-box">M = h<sub>i</sub> / h<sub>o</sub> = -i / o</div>
               <table class="data-table">
@@ -5971,7 +5994,7 @@ This chapter keeps the mirror-style image logic, but switches from reflection to
                   </tr>
                   <tr>
                     <td><code>i</code></td>
-                    <td>positive for real images, negative for virtual images</td>
+                    <td>positive when the rays really meet, negative when the image is virtual</td>
                   </tr>
                   <tr>
                     <td><code>M</code></td>
@@ -5979,6 +6002,7 @@ This chapter keeps the mirror-style image logic, but switches from reflection to
                   </tr>
                 </tbody>
               </table>
+              <p>If the signs ever feel abstract, translate them back into the picture: where is the image, and do the rays truly cross there?</p>
               <div class="callout callout-priority">
                 <strong>Prediction first:</strong> before you calculate anything, say whether the rays should meet or only appear to meet. The algebra should confirm your picture, not replace it.
               </div>
@@ -6058,8 +6082,10 @@ This chapter chains lenses together, then turns the same image-placement logic t
             id: "quiz3-ch6-eye",
             title: "The Eye, Near Point, Far Point, and Corrective Lenses",
             html: `
-              <p>The eye chapter is still just lens physics. A corrective lens helps by placing a <strong>virtual image</strong> where your eye can focus.</p>
+              <p>The eye chapter is still just lens physics. Your eye focuses best only within a certain distance range.</p>
+              <p>The <strong>near point</strong> is the closest distance your eye can focus clearly. The <strong>far point</strong> is the farthest distance it can focus clearly. Glasses help by creating a <strong>virtual image</strong> at a place where your eye can do the rest.</p>
               <div class="formula-box">optical power: P = 1/f</div>
+              <p>Optical power tells you how strong the lens is. A bigger magnitude of <code>P</code> means a stronger correction.</p>
               <div class="concept-gallery">
                 <figure class="concept-figure">
                   <img src="./assets/figures/dl10/dl10-page-07-img-007-obj-0031.png" alt="Object-lens-distance vision-correction diagram from DL10" />
@@ -6085,12 +6111,12 @@ This chapter chains lenses together, then turns the same image-placement logic t
                 <tbody>
                   <tr>
                     <td>Myopia</td>
-                    <td>Far point is too close</td>
+                    <td>Distant objects are blurry because the far point is too close</td>
                     <td>Diverging lens</td>
                   </tr>
                   <tr>
                     <td>Hyperopia</td>
-                    <td>Near point is too far away</td>
+                    <td>Nearby objects are blurry because the near point is too far away</td>
                     <td>Converging lens</td>
                   </tr>
                 </tbody>
