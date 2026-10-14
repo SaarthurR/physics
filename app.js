@@ -2154,11 +2154,31 @@ function renderUnitQuizSections() {
 }
 
 function renderSectionBody(section) {
+  const html = tagNoteParagraphs(section.html);
   if (!sectionNeedsSolutionToggle(section)) {
-    return section.html;
+    return html;
   }
 
-  return buildStudyExampleMarkup(section.html);
+  return buildStudyExampleMarkup(html);
+}
+
+// "<p><strong>Example:</strong> …" lines become colored note cards so a section isn't one wall of text
+function tagNoteParagraphs(html) {
+  const NOTE_TONES = {
+    example: "example", "real life": "example", setup: "example", problem: "example", "problem start": "example", challenge: "example", starter: "example",
+    "watch out": "trap", trap: "trap", "common confusion": "trap", note: "trap",
+    "think of it like this": "idea", translation: "idea", "memory rule": "idea",
+    "what this means": "meaning", "key insight": "meaning", "why this matters": "meaning", "special case": "meaning",
+  };
+  return html
+    .replace(/<p><strong>([^<:]+):<\/strong>/g, (match, label) => {
+      const tone = NOTE_TONES[label.trim().toLowerCase()];
+      return tone ? `<p class="note note-${tone}"><strong>${label}:</strong>` : match;
+    })
+    .replace(/<div class="callout">(\s*)<strong>([^<:]+):/g, (match, gap, label) => {
+      const tone = NOTE_TONES[label.trim().toLowerCase()];
+      return tone ? `<div class="callout note-${tone}">${gap}<strong>${label}:` : match;
+    });
 }
 
 function sectionNeedsSolutionToggle(section) {
@@ -5157,3 +5177,38 @@ function escapeAttribute(value) {
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
+
+// two sine waves and their sum drift behind the title: the course in one picture
+(function drawTopbarWave() {
+  const canvas = document.getElementById("topbar-wave");
+  const ctx = canvas?.getContext("2d");
+  if (!ctx) return;
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const waves = [
+    { color: "rgba(95, 129, 195, 0.22)", k: 0.012, w: 0.0011, a: 0.16 },
+    { color: "rgba(31, 154, 118, 0.2)", k: 0.017, w: -0.0008, a: 0.12 },
+  ];
+  function frame(t) {
+    const dpr = window.devicePixelRatio || 1;
+    const { width, height } = canvas.getBoundingClientRect();
+    if (canvas.width !== Math.round(width * dpr)) {
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+    }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, width, height);
+    const mid = height * 0.62;
+    const y = (x, wv) => Math.sin(x * wv.k + t * wv.w) * height * wv.a;
+    const line = (color, lw, fy) => {
+      ctx.beginPath();
+      for (let x = width * 0.3; x <= width; x += 4) ctx.lineTo(x, mid + fy(x));
+      ctx.strokeStyle = color;
+      ctx.lineWidth = lw;
+      ctx.stroke();
+    };
+    waves.forEach((wv) => line(wv.color, 1.5, (x) => y(x, wv)));
+    line("rgba(59, 90, 153, 0.35)", 2.5, (x) => y(x, waves[0]) + y(x, waves[1]));
+    if (!still) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();

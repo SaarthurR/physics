@@ -2451,3 +2451,77 @@ body.concept-inspector-open .floating-actions-rail {
     transition: none !important;
   }
 }
+
+/* ---------- Spruce-up: note cards, calmer sidebar, header wave ---------- */
+.doc-section-body > p,
+.doc-section-body > ul,
+.doc-section-body > ol {
+  max-width: 72ch;
+}
+
+.doc-section-body p.note,
+.callout {
+  position: relative;
+  max-width: none;
+  margin: 14px 0;
+  padding: 14px 18px 14px 20px;
+  border: 1px solid var(--note-line, rgba(95, 129, 195, 0.16));
+  border-left: 4px solid var(--note-edge, var(--accent));
+  border-radius: 14px;
+  background: var(--note-bg, rgba(95, 129, 195, 0.07));
+  color: var(--ink);
+  line-height: 1.7;
+}
+
+.doc-section-body p.note strong:first-child,
+.callout > strong:first-child {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--note-edge, var(--accent-deep));
+}
+
+.note-example { --note-edge: #3b6fd1; --note-bg: rgba(59, 111, 209, 0.06); --note-line: rgba(59, 111, 209, 0.14); }
+.note-trap, .callout-trap { --note-edge: #d9622b; --note-bg: rgba(237, 120, 52, 0.08); --note-line: rgba(217, 98, 43, 0.18); }
+.note-idea, .callout-method { --note-edge: #1f9a76; --note-bg: rgba(31, 154, 118, 0.07); --note-line: rgba(31, 154, 118, 0.16); }
+.note-meaning, .callout-review { --note-edge: #7a5bd6; --note-bg: rgba(122, 91, 214, 0.07); --note-line: rgba(122, 91, 214, 0.16); }
+.callout-priority { --note-edge: #c99a1c; --note-bg: rgba(220, 170, 40, 0.1); --note-line: rgba(201, 154, 28, 0.2); }
+
+.concept-figure {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* sidebar: the packet locator under every sub-item was half the noise; chapters keep theirs */
+.outline-sublist .outline-link-meta {
+  display: none;
+}
+
+.doc-section-locator {
+  display: inline-flex;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(95, 129, 195, 0.08);
+  font-size: 0.76rem;
+}
+
+.topbar {
+  position: relative;
+  overflow: hidden;
+}
+
+.topbar > :not(.topbar-wave) {
+  position: relative;
+  z-index: 1;
+}
+
+.topbar-wave {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
